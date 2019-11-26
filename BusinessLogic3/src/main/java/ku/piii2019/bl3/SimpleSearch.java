@@ -5,18 +5,27 @@
  */
 package ku.piii2019.bl3;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
  * @author James
  */
-public class SimpleSearch implements SearchService{
+public class SimpleSearch implements SearchService {
 
     @Override
     public Set<MediaItem> find(String thisSearchTerm, Set<MediaItem> inhere) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String justSpaces = thisSearchTerm.replaceAll(" ", "");
+        if(thisSearchTerm==null || thisSearchTerm.length()==0 || justSpaces.length()==0){
+            return null;
+        }
+        String pattern = "(.*)"+thisSearchTerm.toLowerCase()+"(.*)";
+        return inhere.stream().filter(m -> {
+            return m.getTitle().toLowerCase().matches(pattern) || m.getArtist().toLowerCase().matches(pattern) || m.getAlbum().toLowerCase().matches(pattern);}
+        ).collect(Collectors.toSet());
+       
     }
-    
+
 }

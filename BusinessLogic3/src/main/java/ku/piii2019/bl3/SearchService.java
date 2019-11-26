@@ -15,5 +15,4 @@ public interface SearchService {
     
     Set<MediaItem> find(String  thisSearchTerm, Set<MediaItem> inhere);
     
-    
 }
