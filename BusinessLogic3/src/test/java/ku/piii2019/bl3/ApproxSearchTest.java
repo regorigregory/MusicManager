@@ -43,7 +43,6 @@ public class ApproxSearchTest {
     /**
      * Test of find method, of class ApproxSearch.
      */
-    @Ignore    
     @Test
     public void testFindDifferentCase() {
         System.out.println("find - different case:");
@@ -56,7 +55,6 @@ public class ApproxSearchTest {
         Set<MediaItem> result = instance.find(thisSearchTerm, inHere);
         assertEquals(expResult, result);
     }
-    @Ignore
     @Test
     public void testFindInsertion() {
         System.out.println("find - different case and insertion:");
@@ -69,7 +67,6 @@ public class ApproxSearchTest {
         Set<MediaItem> result = instance.find(thisSearchTerm, inHere);
         assertEquals(expResult, result);
     }
-    @Ignore
     @Test
     public void testFindDeletion() {
         System.out.println("find - deletion:");
@@ -81,7 +78,6 @@ public class ApproxSearchTest {
         Set<MediaItem> result = instance.find(thisSearchTerm, inHere);
         assertEquals(expResult, result);
     }
-    @Ignore
     @Test
     public void testFindSubstition() {
         System.out.println("find - different case and substitution:");
@@ -94,7 +90,6 @@ public class ApproxSearchTest {
         Set<MediaItem> result = instance.find(thisSearchTerm, inHere);
         assertEquals(expResult, result);
     }
-    @Ignore
     @Test
     public void testFindSubstitionAndDeletion() {
         System.out.println("find - different case and substitution and deletion:");
@@ -105,6 +100,7 @@ public class ApproxSearchTest {
         Set<MediaItem> result = instance.find(thisSearchTerm, inHere);
         assertEquals(expResult, result);
     }
+    
     @Ignore
     @Test
     public void testPartBapproxSubstring() {
