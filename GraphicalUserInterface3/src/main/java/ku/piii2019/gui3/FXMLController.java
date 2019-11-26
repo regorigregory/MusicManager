@@ -14,10 +14,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.css.Styleable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TablePosition;
@@ -37,7 +40,6 @@ import ku.piii2019.bl3.*;
 
 public class FXMLController implements Initializable {
 
-    
     @FXML
     private Label label;
     @FXML
@@ -53,18 +55,20 @@ public class FXMLController implements Initializable {
             + "collection-A";
     String collectionRootB = collectionRootAB + File.separator
             + "collection-B";
+    private TableView[] tables;
 
     @FXML
     private void handleButton1Action(ActionEvent event) {
         System.out.println("You clicked me!");
 //        label.setText("Hello World!");
     }
+
     @FXML
     private void delete2(ActionEvent event) {
         System.out.println("You clicked me!");
         List<MediaItem> itemsToDelete = tableView2.getSelectionModel().getSelectedItems();
         tableView2.getItems().removeAll(itemsToDelete);
-        
+
     }
 
     @FXML
@@ -72,21 +76,60 @@ public class FXMLController implements Initializable {
         System.out.println("You clicked me!");
 //        label.setText("Hello World!");
     }
-    
-    
+
     @FXML
     private void handleKeyPressed2(KeyEvent event) {
         System.out.println("You clicked me!");
-        if(event.isControlDown())
-        {
-            if(event.getCode()==KeyCode.X)
-            {
+        if (event.isControlDown()) {
+            if (event.getCode() == KeyCode.X) {
                 doCut();
                 System.out.println("cut");
             }
-            
+
         }
-}
+    }
+
+    @FXML
+    private void searchDialog(ActionEvent e) {
+        Styleable menuElement = (Styleable) e.getSource();
+        String id = menuElement.getId();
+
+        TextInputDialog dialog = new TextInputDialog("Search");
+        dialog.setTitle("Search in Table " + id);
+        dialog.setHeaderText("The results will be shown in Table 3");
+        dialog.setContentText("Please enter your search phrase:");
+
+        // Traditional way to get the response value.
+        Optional<String> result = dialog.showAndWait();
+        String searchPhrase = null;
+        if (result.isPresent()) {
+            searchPhrase = result.get();
+            System.out.println(searchPhrase);
+            TableView currentTable = tables[Integer.parseInt(id)-1];
+            List<MediaItem> currentItemsList = currentTable.getItems();
+            Set<MediaItem> currentItemSet = new HashSet(currentItemsList);
+
+            SimpleSearch searchInstance = new SimpleSearch();
+            Set<MediaItem> results = searchInstance.find(searchPhrase, currentItemSet);
+
+            tables[2].setItems(FXCollections.observableArrayList(results));
+            
+            int itemsFound = results.size();
+            
+            String message = itemsFound+" results have been copied to Table 3!";
+            
+            if (itemsFound == 0) {
+                message = "For the searchphrase " + searchPhrase + " there are no results found.";
+            }
+            Alert searchFeedback = new Alert(AlertType.INFORMATION);
+
+            searchFeedback.setTitle("Search results");
+            searchFeedback.setContentText(message);
+            searchFeedback.setHeaderText("Search results message:");
+            searchFeedback.showAndWait();
+        }
+
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -94,8 +137,7 @@ public class FXMLController implements Initializable {
         MediaItemTableViewFactory.makeTable(tableView1, columns);
         MediaItemTableViewFactory.makeTable(tableView2, columns);
         MediaItemTableViewFactory.makeTable(tableView3, columns);
-        
-        
+
         // you won't need any of this selection or drag code for the Nov 20th 
         // mock test, but I thought I'd keep it in for convenience
         addDragListener(tableView1);
@@ -105,12 +147,15 @@ public class FXMLController implements Initializable {
         tableView1.getSelectionModel().setCellSelectionEnabled(false);
         addSelectListener(tableView2);
         tableView1.setEditable(true);
+        tables = new TableView[]{tableView1, tableView2, tableView3};
+
     }
 
     @FXML
     private void openABIn2(ActionEvent event) {
         open(2, collectionRootAB);
     }
+
     @FXML
     private void insertTable1In2(ActionEvent event) {
 
@@ -121,6 +166,7 @@ public class FXMLController implements Initializable {
         table2Data.addAll(0, table1Data);
 
     }
+
     @FXML
     private void insertTable2In1(ActionEvent event) {
 
@@ -135,7 +181,6 @@ public class FXMLController implements Initializable {
     @FXML
     private void swap(ActionEvent event) {
 
-        
         Scene scene = tableView1.getScene();
         TableView<MediaItem> tableInFocus = null;
         if (scene.focusOwnerProperty().get() instanceof TableView) {
@@ -156,7 +201,6 @@ public class FXMLController implements Initializable {
         ObservableList<MediaItem> dataForTableViewAndModel
                 = FXCollections.observableArrayList(missingItems);
         tableView3.setItems(dataForTableViewAndModel);
-
 
     }
 
@@ -179,11 +223,12 @@ public class FXMLController implements Initializable {
     private void openABIn1(ActionEvent event) {
         open(1, collectionRootAB);
     }
+
     @FXML
     private void cut(ActionEvent event) {
-        
+
         doCut();
- 
+
     }
 
     @FXML
@@ -246,8 +291,8 @@ public class FXMLController implements Initializable {
         addContents(referenceToEitherTable, collectionRoot);
     }
 
-    private void addContents(TableView<MediaItem> referenceToEitherTable, 
-                             String collectionRoot) {
+    private void addContents(TableView<MediaItem> referenceToEitherTable,
+            String collectionRoot) {
         FileService fileService = new FileServiceImpl();
         Set<MediaItem> collectionA = fileService.getAllMediaItems(collectionRoot.toString());
 
@@ -268,18 +313,17 @@ public class FXMLController implements Initializable {
         referenceToEitherTable.setItems(dataForTableViewAndModel);
     }
 
-    
     // I've kept this code in, t
     private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
-    
-        // you won't need any of this selection or drag code for the Nov 20th 
-        // mock test, but I thought I'd keep it in for convenience
+
+    // you won't need any of this selection or drag code for the Nov 20th 
+    // mock test, but I thought I'd keep it in for convenience
     private void addDragListener(TableView<MediaItem> tableView) {
         tableView.setRowFactory(tv -> {
             TableRow<MediaItem> row = new TableRow<>();
 
             row.setOnDragDetected(event -> {
-                if (! row.isEmpty()) {
+                if (!row.isEmpty()) {
                     Integer index = row.getIndex();
                     Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
                     db.setDragView(row.snapshot(null, null));
@@ -293,7 +337,7 @@ public class FXMLController implements Initializable {
             row.setOnDragOver(event -> {
                 Dragboard db = event.getDragboard();
                 if (db.hasContent(SERIALIZED_MIME_TYPE)) {
-                    if (row.getIndex() != ((Integer)db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
+                    if (row.getIndex() != ((Integer) db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
                         event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                         event.consume();
                     }
@@ -305,9 +349,9 @@ public class FXMLController implements Initializable {
                 if (db.hasContent(SERIALIZED_MIME_TYPE)) {
                     int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
                     MediaItem draggedMediaItem = tableView.getItems().remove(draggedIndex);
-                    int dropIndex ; 
+                    int dropIndex;
                     if (row.isEmpty()) {
-                        dropIndex = tableView.getItems().size() ;
+                        dropIndex = tableView.getItems().size();
                     } else {
                         dropIndex = row.getIndex();
                     }
@@ -317,22 +361,22 @@ public class FXMLController implements Initializable {
                     event.consume();
                 }
             });
-            return row ;
+            return row;
         });
     }
-        // you won't need any of this selection or drag code for the Nov 20th 
-        // mock test, but I thought I'd keep it in for convenience
+    // you won't need any of this selection or drag code for the Nov 20th 
+    // mock test, but I thought I'd keep it in for convenience
 
     private void addSelectListener(TableView<MediaItem> tableView) {
-       
+
         tableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             @Override
-            public void changed(ObservableValue observableValue, 
-                                Object oldValue, 
-                                Object newValue) {
-                if(tableView.getSelectionModel().getSelectedItem() != null) {    
-            
-                    MediaItem m =  tableView.getSelectionModel().getSelectedItem();
+            public void changed(ObservableValue observableValue,
+                    Object oldValue,
+                    Object newValue) {
+                if (tableView.getSelectionModel().getSelectedItem() != null) {
+
+                    MediaItem m = tableView.getSelectionModel().getSelectedItem();
                     ObservableList selectedCells = tableView.getSelectionModel().getSelectedCells();
                     TablePosition tablePosition = (TablePosition) selectedCells.get(0);
                     Object val = tablePosition.getTableColumn().getCellData(newValue);
@@ -348,7 +392,7 @@ public class FXMLController implements Initializable {
     }
 
     private void doCut() {
-       TableView tableInFocus = getTableInFocus();
+        TableView tableInFocus = getTableInFocus();
         // do my cut thing here
     }
 }

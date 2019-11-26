@@ -59,6 +59,8 @@
                     <MenuItem text="Open Collections A and B" onAction="#openABIn1" />
                     <SeparatorMenuItem  />
                     <MenuItem text="Insert Table 2" onAction="#insertTable2In1" />
+                    <MenuItem text="Search in Table 1" onAction="#searchDialog" id="1"/>
+
                     <MenuItem text="Exit"/>
                 </items>
             </Menu>
@@ -71,6 +73,8 @@
                     <MenuItem text="delete" onAction="#delete2" />                    
                     <SeparatorMenuItem  />
                     <MenuItem text="Insert Table 1" onAction="#insertTable1In2" />
+                    <MenuItem text="Search in Table 2" onAction="#searchDialog" id="2"/>
+
                 </items>
             </Menu>
             <Menu text="Table 3">
