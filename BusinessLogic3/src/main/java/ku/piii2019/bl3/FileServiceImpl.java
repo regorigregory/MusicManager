@@ -21,7 +21,7 @@ import java.util.Set;
  * @author James
  */
 public class FileServiceImpl implements FileService {
-
+    
     @Override
     public Set<MediaItem> getAllMediaItems(String rootFolder) {
         Path p = Paths.get(rootFolder);

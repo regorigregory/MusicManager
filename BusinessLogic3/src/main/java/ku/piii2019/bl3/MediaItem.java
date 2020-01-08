@@ -5,6 +5,9 @@
  */
 package ku.piii2019.bl3;
 
+import java.io.File;
+import java.nio.file.Paths;
+
 /**
  *
  * @author James
@@ -14,7 +17,7 @@ public class MediaItem {
     private String absolutePath;
     private String title;
     private String album;
-
+   
     public String getTitle() {
         return title;
     }
@@ -33,7 +36,8 @@ public class MediaItem {
     }
 
     public MediaItem setAbsolutePath(String absolutePath) {
-        this.absolutePath = absolutePath;
+        
+        this.absolutePath = Paths.get(absolutePath).toAbsolutePath().toString();
         return this;
     }
 
@@ -68,5 +72,11 @@ public class MediaItem {
     public MediaItem setArtist(String artist) {
         this.artist = artist;
         return this;
+    }
+    
+    public String getFilename(){	 	       	  	 	        	      	   	
+	 	       	  	 	        	      	   	
+    return new File(absolutePath).getName();	 	       	  	 	        	      	   	
+	 	       	  	 	        	      	   	
     }
 }
