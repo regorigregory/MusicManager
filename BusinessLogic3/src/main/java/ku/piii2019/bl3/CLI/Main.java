@@ -27,7 +27,7 @@ public class Main {
         if(cl.hasOption("help")){
             System.out.println("You need some help buddy");
             System.out.println(cl.getOptionValue("help"));
-            System.out.println(Messages.HELP);
+           
 
         }
         }catch(ParseException pex){
