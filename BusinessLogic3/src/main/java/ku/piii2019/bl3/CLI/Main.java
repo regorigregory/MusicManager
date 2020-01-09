@@ -16,16 +16,19 @@ import org.apache.commons.cli.ParseException;
  *
  * @author regor
  */
-public class Playground {
+public class Main {
     public static void main(String... args){
+        System.out.println("Hello");
         CommandLineParser dps = DefaultParserSingleton.getInstance();
         Options ops = new Options();
-        ops.addOption("h", "help", false, "This is just a test help message");
+        ops.addOption("h", "help", true, "This is just a test help message");
         try{
         CommandLine cl = dps.parse(ops, args);
-        if(cl.hasOption("h")){
+        if(cl.hasOption("help")){
             System.out.println("You need some help buddy");
-            System.out.println(cl.getOptionValue("h"));
+            System.out.println(cl.getOptionValue("help"));
+            System.out.println(Messages.HELP);
+
         }
         }catch(ParseException pex){
             pex.printStackTrace();

@@ -15,6 +15,7 @@ import org.apache.commons.cli.DefaultParser;
 public class DefaultParserSingleton {
     
     private static CommandLineParser parserInstance=null;
+    
     public static CommandLineParser getInstance(){
         if(parserInstance==null){
             parserInstance = new DefaultParser();
