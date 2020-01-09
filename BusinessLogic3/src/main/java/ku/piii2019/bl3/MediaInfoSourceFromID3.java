@@ -34,6 +34,7 @@ public class MediaInfoSourceFromID3 implements MediaInfoSource {
             Logger.getLogger(MediaInfoSourceFromID3.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
         }
+        
     }
 
 }

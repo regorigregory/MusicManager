@@ -11,7 +11,7 @@ package ku.piii2019.bl3.CLI;
  */
 public class MenuOption {
     enum Option{
-        COPY, EXIT
+        COPY, EXIT, REMOVE_DUPLICATES, REFILE, CREATE_PLAYLIST
     }
     private int optionID;
     private String optionText;

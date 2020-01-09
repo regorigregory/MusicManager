@@ -6,6 +6,9 @@
 package ku.piii2019.bl3.CLI;
 
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionGroup;
+
 
 /**
  *
@@ -20,16 +23,39 @@ public class DefaultOptions {
     public static Options getDefaultCopyOptions() {
         if (defaultCopyOptions == null) {
             defaultCopyOptions = new Options();
-            defaultCopyOptions.addOption("h", "help", true, "Usage: CLI -option <args>" + newLine);
-            defaultCopyOptions.addOption("src", "source", true, "source folder" + newLine);
-            defaultCopyOptions.addOption("dst", "destination", true, "destination folder" + newLine);
-            defaultCopyOptions.addOption("copy", "source", true, "copy contents of src to dst" + newLine);
-            defaultCopyOptions.addOption("ex", "source", true, "<ID3 | FNAME | NONE > duplicate exclusion mode, can be based on ID3, filename or none" + newLine);
-            defaultCopyOptions.addOption("m", "move", false, "Whether to move the whole folder or copy. Be careful, if used with exclusion, the duplicate files will be deleted from the original folder as well." + newLine);
-            defaultCopyOptions.addOption("r", "recursive", false, "Whether to perform the copy recursively. If no, only the root folder will be processed." + newLine);
-            defaultCopyOptions.addOption("p", "playlist", false, "A playlist will be generated in the destination root folder." + newLine);
-            defaultCopyOptions.addOption("ref", "refile", false, "Rearrange source folder contents and file them first based on artist then album" + newLine);
-        
+            
+            Option o = null;
+            
+            o = Option.builder("h").hasArg(false).longOpt("help").desc("Usage: CLI -option <args>").build();
+            defaultOptions.addOption(o);
+            o = Option.builder("c").hasArg(false).longOpt("copy").desc("command to copy:)").required().build();
+            defaultOptions.addOption(o);
+            
+            o = Option.builder("s").hasArg(true).argName("Path").longOpt("src").desc("source folder").required().build();
+            defaultOptions.addOption(o);
+            
+            o = Option.builder("d").hasArg(true).argName("Path").longOpt("dsc").desc("destination folder").required().build();
+            defaultOptions.addOption(o);
+            
+            OptionGroup og = new OptionGroup();
+            o = Option.builder("ID3EX").hasArg(false).longOpt("exclude-ID3").desc("Excluding duplicates based on ID3 tag").required(false).build();
+            og.addOption(o);
+            
+            o = Option.builder("FEX").hasArg(false).longOpt("exclude-FNAME").desc("Excluding duplicates based on Filename").required(false).build();
+            
+            og.addOption(o);
+            
+            o = Option.builder("NOEX").hasArg(false).longOpt("no-exclusion").desc("No exclusion, duplicates will be copied.").required(false).build();
+            
+            og.addOption(o);
+            defaultCopyOptions.addOptionGroup(og);
+            
+             o = Option.builder("m").hasArg(false).longOpt("move").desc("Using this flag, it will move instead of copying it.").required(false).build();
+            defaultOptions.addOption(o);
+            
+             o = Option.builder("r").hasArg(false).longOpt("recursive").desc("Using this flag, it will copy the folders recursively. Useful if multiple depth folder is used as a source folder.").required(false).build();
+            defaultOptions.addOption(o);
+            
         }
         return defaultCopyOptions;
     }

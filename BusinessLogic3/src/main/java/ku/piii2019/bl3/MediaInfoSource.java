@@ -5,11 +5,36 @@
  */
 package ku.piii2019.bl3;
 
+import com.mpatric.mp3agic.ID3v1;
+import com.mpatric.mp3agic.Mp3File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author James
  */
 public interface MediaInfoSource {
-    void addMediaInfo(MediaItem m) throws Exception;
+
     
+    public  void addMediaInfo(MediaItem m) throws Exception; 
+    public static void staticAddMediaInfo(MediaItem m) throws Exception{
+        Mp3File mp3 = new Mp3File(m.getAbsolutePath());
+        ID3v1 tag = mp3.getId3v1Tag();
+        if (tag == null) {
+            tag = mp3.getId3v2Tag();
+        }
+        if (tag == null) {
+            throw new Exception();
+        }
+        try {
+            m.setTitle(tag.getTitle());
+            m.setAlbum(tag.getAlbum());
+            m.setArtist(tag.getArtist());
+
+        } catch (Exception ex) {
+            Logger.getLogger(MediaInfoSourceFromID3.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        }
+    }
 }

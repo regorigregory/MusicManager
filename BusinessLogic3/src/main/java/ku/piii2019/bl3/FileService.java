@@ -44,11 +44,40 @@ public interface FileService {
         return filteredFiles;    
     }
     
-    default List<MediaItem> getMediaItems(String path) {
+     default void moveFiles(String path){
+        Path candidateFolder = Paths.get(path);
+        throw UnsupportedOpreationException();
+        
+//        try{
+//            if(!Files.isDirectory(candidateFolder)){
+//                Files.createDirectories(candidateFolder);
+//            }
+//        } catch (IOException ex){
+//            //will have to be replaced by logging!!!!
+//            ex.printStackTrace();
+//        }
+//        
+//        return candidateFolder;
+ 
+    }
+    
+    default List<MediaItem> getRawMediaItems(String path) {
         List<Path> rawPaths=  filterFileList(path, "\\.mp3");
-        return rawPaths.stream().map((p)-> new MediaItem().setAbsolutePath(path)).collect(Collectors.toList());
+        return rawPaths.stream().map((p)->{
+                MediaItem m = new MediaItem().setAbsolutePath(path);
+                try{
+                MediaInfoSource.staticAddMediaInfo(m);
+                } catch (Exception ex){
+                    //System.out.println();
+                    ex.printStackTrace();
+                }
+                return m;
+                })
+        .collect(Collectors.toList());
           
     }
+    
+   
     default boolean isFile(String fileName){
         
         Path candidateFile = Paths.get(fileName);
@@ -85,6 +114,8 @@ public interface FileService {
         return candidateFolder;
  
     }
+    
+   
    
     
 }
