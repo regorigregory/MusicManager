@@ -12,10 +12,19 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author James
+ * @author not entirely James
  */
 public class MediaInfoSourceFromID3 implements MediaInfoSource {
-
+    private static MediaInfoSourceFromID3 instance = null;
+    private MediaInfoSourceFromID3(){}
+    public static MediaInfoSourceFromID3 getInstance(){
+        if (instance ==null){
+            instance = new MediaInfoSourceFromID3();
+        }
+        return instance;
+    }
+    
+    
     public void addMediaInfo(MediaItem m) throws Exception {
         Mp3File mp3 = new Mp3File(m.getAbsolutePath());
         ID3v1 tag = mp3.getId3v1Tag();

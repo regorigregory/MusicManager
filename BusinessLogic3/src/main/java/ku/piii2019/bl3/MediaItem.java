@@ -10,14 +10,21 @@ import java.nio.file.Paths;
 
 /**
  *
- * @author James
+ * @author James & Gergo...
  */
 public class MediaItem {
 
     private String absolutePath;
     private String title;
     private String album;
-   
+    private String artist;
+
+    public MediaItem(){
+        this.title = "unknown";
+        this.album = "unknown";
+        this.artist = "unknown";
+    }
+    
     public String getTitle() {
         return title;
     }
@@ -29,7 +36,6 @@ public class MediaItem {
     public String getArtist() {
         return artist;
     }
-    private String artist;
             
     public String getAbsolutePath() {
         return absolutePath;
