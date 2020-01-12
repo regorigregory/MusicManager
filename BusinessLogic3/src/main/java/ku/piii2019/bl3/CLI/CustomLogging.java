@@ -10,8 +10,12 @@ package ku.piii2019.bl3.CLI;
  * @author regor
  */
 public interface CustomLogging {
-    
-    public static void logIt(Exception ex){
+
+    public static void logIt(Exception ex) {
         ex.printStackTrace();
+    }
+
+    public static void logIt(String msg) {
+        System.out.println(msg);
     }
 }

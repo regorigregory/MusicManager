@@ -27,15 +27,15 @@ public class DefaultOptions {
             Option o = null;
             
             o = Option.builder("h").hasArg(false).longOpt("help").desc("Usage: CLI -option <args>").build();
-            defaultOptions.addOption(o);
+            defaultCopyOptions.addOption(o);
 //            o = Option.builder("c").hasArg(false).longOpt("copy").desc("command to copy:)").required().build();
 //            defaultOptions.addOption(o);
             
             o = Option.builder("s").hasArg(true).argName("Path").longOpt("src").desc("source folder").required().build();
-            defaultOptions.addOption(o);
+            defaultCopyOptions.addOption(o);
             
             o = Option.builder("d").hasArg(true).argName("Path").longOpt("dsc").desc("destination folder").required().build();
-            defaultOptions.addOption(o);
+            defaultCopyOptions.addOption(o);
             
             OptionGroup og = new OptionGroup();
             o = Option.builder("ID3EX").hasArg(false).longOpt("exclude-ID3").desc("Excluding duplicates based on ID3 tag").required(false).build();
@@ -50,11 +50,10 @@ public class DefaultOptions {
             og.addOption(o);
             defaultCopyOptions.addOptionGroup(og);
             
-             o = Option.builder("m").hasArg(false).longOpt("move").desc("Using this flag, it will move instead of copying it.").required(false).build();
-            defaultOptions.addOption(o);
+//             o = Option.builder("m").hasArg(false).longOpt("move").desc("Using this flag, it will move instead of copying it.").required(false).build();
+//            defaultOptions.addOption(o);
             
-             o = Option.builder("r").hasArg(false).longOpt("recursive").desc("Using this flag, it will copy the folders recursively. Useful if multiple depth folder is used as a source folder.").required(false).build();
-            defaultOptions.addOption(o);
+ 
             
         }
         return defaultCopyOptions;

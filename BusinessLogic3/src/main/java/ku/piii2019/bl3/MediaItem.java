@@ -19,11 +19,7 @@ public class MediaItem {
     private String album;
     private String artist;
 
-    public MediaItem(){
-        this.title = "unknown";
-        this.album = "unknown";
-        this.artist = "unknown";
-    }
+  
     
     public String getTitle() {
         return title;

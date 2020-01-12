@@ -25,7 +25,6 @@ public class DuplicateFindFromID3 implements DuplicateFinder {
 //            }
 //
 //        }
-
         return !m1.getAbsolutePath().equals(m2.getAbsolutePath())
                 && m1.getArtist().trim().toLowerCase().equals(m2.getArtist().trim().toLowerCase())
                 && m1.getAlbum().trim().toLowerCase().equals(m2.getAlbum().trim().toLowerCase())

@@ -11,22 +11,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import ku.piii2019.bl3.CLI.CustomLogging;
 
 /**
  *
- * @author James
+ * @author James & Gergo
  */
 public interface FileService {
 
@@ -55,13 +53,11 @@ public interface FileService {
     static Consumer<Path> copyFilesBody(Path sourceFolder, Path targetFolder) {
         return (Path filePath) -> {
             Path relativePath = sourceFolder.relativize(filePath);
-            
             Path targetPath = Paths.get(targetFolder.toString(), relativePath.toString());
             Path newFolder = getFolder(targetPath.getParent().toString());
-            System.out.println(newFolder);
             try {
                 System.out.println(targetPath);
-                Files.copy(filePath, targetPath);
+                Files.copy(filePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException ioex) {
                 CustomLogging.logIt(ioex);
             }
@@ -94,7 +90,7 @@ public interface FileService {
     
     default void copyMediaFiles(String srcFolder, String targetBasePath, DuplicateFinder df) {
         
-        Set<MediaItem> foundMediaItems = getAllMediaItems(srcFolder);
+        Set<MediaItem> foundMediaItems = getAllID3MediaItems(srcFolder);
         Set<MediaItem> copiedItems = new HashSet<>();
         Set<MediaItem> foundDuplicates = new HashSet<>();
 
@@ -109,7 +105,7 @@ public interface FileService {
                         foundDuplicates.addAll(tempDuplicates);
                         return false;
                     }
-                    copiedItems.add(m);
+                  copiedItems.add(m);
                   return true;  
                 };
         
@@ -118,11 +114,20 @@ public interface FileService {
                 .filter(processDuplicates)
                 .map(MediaItem::getAbsolutePath).map(Paths::get)
                 .forEach(selectedConsumer);
+            
+            
         } else {
               foundMediaItems.stream()
                 .map(MediaItem::getAbsolutePath).map(Paths::get)
                 .forEach(selectedConsumer);
         }        
+        
+        if(foundDuplicates.size()>0){
+            System.out.println("The following duplicates were excluded from the copy process:");
+            for(MediaItem m : foundDuplicates){
+                System.out.println(m.getAbsolutePath());
+            }
+        }
         
     }
 
