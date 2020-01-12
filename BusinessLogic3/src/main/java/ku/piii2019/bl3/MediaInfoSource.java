@@ -15,9 +15,9 @@ import java.util.logging.Logger;
  * @author James
  */
 public interface MediaInfoSource {
-
     
     public  void addMediaInfo(MediaItem m) throws Exception; 
+    
     public static void staticAddMediaInfo(MediaItem m) throws Exception{
         Mp3File mp3 = new Mp3File(m.getAbsolutePath());
         ID3v1 tag = mp3.getId3v1Tag();
