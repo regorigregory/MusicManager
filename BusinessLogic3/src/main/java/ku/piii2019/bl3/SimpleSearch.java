@@ -18,16 +18,29 @@ public class SimpleSearch implements SearchService {
 
     @Override
     public Set<MediaItem> find(String thisSearchTerm, Set<MediaItem> inhere) {
-        
-        String justSpaces = (thisSearchTerm!=null) ? thisSearchTerm.replaceAll(" ", "") : "";
-        if(justSpaces.length()==0){
+
+        String justSpaces = (thisSearchTerm != null) ? thisSearchTerm.replaceAll(" ", "") : "";
+        if (justSpaces.length() == 0) {
             return new HashSet<>();
         }
-        String pattern = "(.*)"+thisSearchTerm.toLowerCase().trim()+"(.*)";
+        String pattern = "(.*)" + thisSearchTerm.toLowerCase().trim() + "(.*)";
         return inhere.stream().filter(m -> {
-            return m.getTitle().toLowerCase().matches(pattern) || m.getArtist().toLowerCase().matches(pattern) || m.getAlbum().toLowerCase().matches(pattern);}
+            return m.getTitle().toLowerCase().matches(pattern) || m.getArtist().toLowerCase().matches(pattern) || m.getAlbum().toLowerCase().matches(pattern);
+        }
         ).collect(Collectors.toSet());
-       
+
+    }
+
+    public Set<MediaItem> findByArtists(String[] artists, Set<MediaItem> inhere) {
+        throw new UnsupportedOperationException("Eeek, not yet implemented.");
+    }
+
+    
+    @Override
+    public Set<MediaItem> findByGenres(String[] genres, Set<MediaItem> inhere) {
+
+        throw new UnsupportedOperationException("Eeek, not yet implemented.");
+
     }
 
 }
