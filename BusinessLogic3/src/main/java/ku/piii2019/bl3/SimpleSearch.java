@@ -32,14 +32,47 @@ public class SimpleSearch implements SearchService {
     }
 
     public Set<MediaItem> findByArtists(String[] artists, Set<MediaItem> inhere) {
-        throw new UnsupportedOperationException("Eeek, not yet implemented.");
+        Set<MediaItem> matchingItems = new HashSet<>();
+        if (artists.length == 0 || inhere.size() == 0) {
+            return matchingItems;
+        }
+        for (String thisSearchTerm : artists) {
+            String justSpaces = (thisSearchTerm != null) ? thisSearchTerm.replaceAll(" ", "") : "";
+            if (justSpaces.length() == 0) {
+                continue;
+            }
+            String pattern = "(.*)" + thisSearchTerm.toLowerCase().trim() + "(.*)";
+            inhere.stream().filter(m -> {
+                return m.getArtist().toLowerCase().matches(pattern);
+            }
+            ).forEach(m->matchingItems.add(m));
+
+        }
+
+        return matchingItems;
     }
 
-    
     @Override
     public Set<MediaItem> findByGenres(String[] genres, Set<MediaItem> inhere) {
 
-        throw new UnsupportedOperationException("Eeek, not yet implemented.");
+     Set<MediaItem> matchingItems = new HashSet<>();
+        if (genres.length == 0 || inhere.size() == 0) {
+            return matchingItems;
+        }
+        for (String thisSearchTerm : genres) {
+            String justSpaces = (thisSearchTerm != null) ? thisSearchTerm.replaceAll(" ", "") : "";
+            if (justSpaces.length() == 0) {
+                continue;
+            }
+            String pattern = "(.*)" + thisSearchTerm.toLowerCase().trim() + "(.*)";
+            inhere.stream().filter(m -> {
+                return m.getGenre().toLowerCase().matches(pattern);
+            }
+            ).forEach(m->matchingItems.add(m));
+
+        }
+
+        return matchingItems;
 
     }
 

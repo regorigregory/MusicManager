@@ -35,17 +35,56 @@ public class ApproxSearch implements SearchService {
         ).collect(Collectors.toSet());
 
     }
+
     @Override
     public Set<MediaItem> findByArtists(String[] artists, Set<MediaItem> inhere) {
+        Set<MediaItem> matchingItems = new HashSet<>();
+        if (artists.length == 0 || inhere.size() == 0) {
+            return matchingItems;
+        }
 
-        
-        throw new UnsupportedOperationException("Eeek, not yet implemented.");
+        LevenshteinDistance instance = new LevenshteinDistance();
+
+        for (String artist : artists) {
+            
+            String justSpaces = (artist != null) ? artist.replaceAll(" ", "") : "";
+            
+            if (justSpaces.length() == 0) {
+                continue;
+            }
+            
+            String pattern = artist.toLowerCase().trim();
+            inhere.stream()
+            .filter( m -> (instance.apply(pattern, m.getArtist().toLowerCase().trim()) <= 1))
+            .forEach(m->matchingItems.add(m));
+        }
+        return matchingItems;
     }
 
     @Override
     public Set<MediaItem> findByGenres(String[] genres, Set<MediaItem> inhere) {
 
-        throw new UnsupportedOperationException("Eeek, not yet implemented.");
+         Set<MediaItem> matchingItems = new HashSet<>();
+        if (genres.length == 0 || inhere.size() == 0) {
+            return matchingItems;
+        }
+
+        LevenshteinDistance instance = new LevenshteinDistance();
+
+        for (String genre : genres) {
+            
+            String justSpaces = (genre != null) ? genre.replaceAll(" ", "") : "";
+            
+            if (justSpaces.length() == 0) {
+                continue;
+            }
+            
+            String pattern = genre.toLowerCase().trim();
+            inhere.stream()
+            .filter( m -> (instance.apply(pattern, m.getGenre().toLowerCase().trim()) <= 1))
+            .forEach(m->matchingItems.add(m));
+        }
+        return matchingItems;
 
     }
 
