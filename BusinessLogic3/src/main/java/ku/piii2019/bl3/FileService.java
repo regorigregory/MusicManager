@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import ku.piii2019.bl3.CLI.CustomLogging;
@@ -91,23 +92,38 @@ public interface FileService {
 
     }
     
-    
-    
-    
-    
     default void copyMediaFiles(String srcFolder, String targetBasePath, DuplicateFinder df) {
         
         Set<MediaItem> foundMediaItems = getAllMediaItems(srcFolder);
-        Set<Set<MediaItem>> foundDuplicates = df.getAllDuplicates(foundMediaItems);
-        
-        foundDuplicates.stream().forEach(dupes->foundMediaItems.removeAll(dupes));
+        Set<MediaItem> copiedItems = new HashSet<>();
+        Set<MediaItem> foundDuplicates = new HashSet<>();
 
         Path sourceFolder = getFolder(srcFolder);
         Path targetFolder = getFolder(targetBasePath);
         
         Consumer<Path> selectedConsumer = copyFilesBody(sourceFolder, targetFolder);
-
-        foundMediaItems.stream().map(MediaItem::getAbsolutePath).map(Paths::get).forEach(selectedConsumer);
+        Predicate<MediaItem> processDuplicates =
+                (MediaItem m) ->{
+                    Set<MediaItem> tempDuplicates = df.getDuplicates(copiedItems, m);
+                    if(tempDuplicates.size()>0){
+                        foundDuplicates.addAll(tempDuplicates);
+                        return false;
+                    }
+                    copiedItems.add(m);
+                  return true;  
+                };
+        
+        if(df!=null){
+            foundMediaItems.stream()
+                .filter(processDuplicates)
+                .map(MediaItem::getAbsolutePath).map(Paths::get)
+                .forEach(selectedConsumer);
+        } else {
+              foundMediaItems.stream()
+                .map(MediaItem::getAbsolutePath).map(Paths::get)
+                .forEach(selectedConsumer);
+        }        
+        
     }
 
     static boolean isFile(String fileName) {

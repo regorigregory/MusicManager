@@ -28,8 +28,8 @@ public class DefaultOptions {
             
             o = Option.builder("h").hasArg(false).longOpt("help").desc("Usage: CLI -option <args>").build();
             defaultOptions.addOption(o);
-            o = Option.builder("c").hasArg(false).longOpt("copy").desc("command to copy:)").required().build();
-            defaultOptions.addOption(o);
+//            o = Option.builder("c").hasArg(false).longOpt("copy").desc("command to copy:)").required().build();
+//            defaultOptions.addOption(o);
             
             o = Option.builder("s").hasArg(true).argName("Path").longOpt("src").desc("source folder").required().build();
             defaultOptions.addOption(o);

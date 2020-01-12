@@ -25,8 +25,7 @@ public interface DuplicateFinder {
        //throw new UnsupportedOperationException("Not written yet."); //To change body of generated methods, choose Tools | Templates.
    }
     
-  
-    
+
     default boolean hasDuplicates(Set<MediaItem> inThese, MediaItem toThis){
         return getDuplicates(inThese, toThis).size()>0 ? true : false;  
     };

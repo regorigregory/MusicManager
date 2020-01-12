@@ -12,9 +12,9 @@ import org.apache.commons.text.similarity.LevenshteinDistance;
  */
 public class PlayGround {
     public static void main(String... args){
-        LevenshteinDistance instance = new LevenshteinDistance();
-        String a = "billy evans";
-        String b = "Bill evans  ".toLowerCase().trim();
-        System.out.println(instance.apply(a, b));
+        
+        
+        
+        
     }
 }
