@@ -3,40 +3,24 @@ package ku.piii2019.gui3;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.css.Styleable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TablePosition;
-import javafx.scene.control.TableRow;
+import javafx.collections.ModifiableObservableListBase;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TableView.TableViewSelectionModel;
-import javafx.scene.control.TextInputDialog;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.TransferMode;
-import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import ku.piii2019.bl3.*;
+import java.lang.UnsupportedOperationException;
+import javafx.beans.property.SimpleListProperty;
+
+
 
 public class FXMLController implements Initializable {
 
@@ -48,88 +32,18 @@ public class FXMLController implements Initializable {
     private TableView<MediaItem> tableView2;
     @FXML
     private TableView<MediaItem> tableView3;
-
+    
+    private ListSelectionEventController selectionController;
+    private DirectionTeller getDirections;
+    private DragEventController dragEventController;
+    private ObservableList<MediaItem> clipboard;
+    
     String collectionRootAB = "test_folders" + File.separator
             + "original_filenames";
     String collectionRootA = collectionRootAB + File.separator
             + "collection-A";
     String collectionRootB = collectionRootAB + File.separator
             + "collection-B";
-    private TableView[] tables;
-
-    @FXML
-    private void handleButton1Action(ActionEvent event) {
-        System.out.println("You clicked me!");
-//        label.setText("Hello World!");
-    }
-
-    @FXML
-    private void delete2(ActionEvent event) {
-        System.out.println("You clicked me!");
-        List<MediaItem> itemsToDelete = tableView2.getSelectionModel().getSelectedItems();
-        tableView2.getItems().removeAll(itemsToDelete);
-
-    }
-
-    @FXML
-    private void handleButton2Action(ActionEvent event) {
-        System.out.println("You clicked me!");
-//        label.setText("Hello World!");
-    }
-
-    @FXML
-    private void handleKeyPressed2(KeyEvent event) {
-        System.out.println("You clicked me!");
-        if (event.isControlDown()) {
-            if (event.getCode() == KeyCode.X) {
-                doCut();
-                System.out.println("cut");
-            }
-
-        }
-    }
-
-    @FXML
-    private void searchDialog(ActionEvent e) {
-        Styleable menuElement = (Styleable) e.getSource();
-        String id = menuElement.getId();
-
-        TextInputDialog dialog = new TextInputDialog("Search");
-        dialog.setTitle("Search in Table " + id);
-        dialog.setHeaderText("The results will be shown in Table 3");
-        dialog.setContentText("Please enter your search phrase:");
-
-        // Traditional way to get the response value.
-        Optional<String> result = dialog.showAndWait();
-        String searchPhrase = null;
-        if (result.isPresent()) {
-            searchPhrase = result.get();
-            System.out.println(searchPhrase);
-            TableView currentTable = tables[Integer.parseInt(id)-1];
-            List<MediaItem> currentItemsList = currentTable.getItems();
-            Set<MediaItem> currentItemSet = new HashSet(currentItemsList);
-
-            SimpleSearch searchInstance = new SimpleSearch();
-            Set<MediaItem> results = searchInstance.find(searchPhrase, currentItemSet);
-
-            tables[2].setItems(FXCollections.observableArrayList(results));
-            
-            int itemsFound = results.size();
-            
-            String message = itemsFound+" results have been copied to Table 3!";
-            
-            if (itemsFound == 0) {
-                message = "For the searchphrase " + searchPhrase + " there are no results found.";
-            }
-            Alert searchFeedback = new Alert(AlertType.INFORMATION);
-
-            searchFeedback.setTitle("Search results");
-            searchFeedback.setContentText(message);
-            searchFeedback.setHeaderText("Search results message:");
-            searchFeedback.showAndWait();
-        }
-
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -137,139 +51,144 @@ public class FXMLController implements Initializable {
         MediaItemTableViewFactory.makeTable(tableView1, columns);
         MediaItemTableViewFactory.makeTable(tableView2, columns);
         MediaItemTableViewFactory.makeTable(tableView3, columns);
-
-        // you won't need any of this selection or drag code for the Nov 20th 
-        // mock test, but I thought I'd keep it in for convenience
-        addDragListener(tableView1);
-        addDragListener(tableView2);
-        addDragListener(tableView3);
-        tableView1.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        tableView1.getSelectionModel().setCellSelectionEnabled(false);
-        addSelectListener(tableView2);
-        tableView1.setEditable(true);
-        tables = new TableView[]{tableView1, tableView2, tableView3};
-
+        
+        
+        this.getDirections = new DirectionTeller(new TableView[]{tableView1, tableView2, tableView3} );
+        this.selectionController = new ListSelectionEventController(new TableView[]{tableView1, tableView2, tableView3});
+        this.dragEventController = new DragEventController(new TableView[]{tableView1, tableView2, tableView3});
+    }
+    
+    @FXML
+    private void toClipboard(ActionEvent e)
+    {
+        TableView source = getDirections.urinaryAction(e);
+        this.clipboard = FXCollections.observableArrayList(source.getSelectionModel().getSelectedItems());
+    
+    } 
+    @FXML
+    private void cutToClipboard(ActionEvent e){
+         TableView source = getDirections.urinaryAction(e);
+         this.toClipboard(e);
+         source.getItems().removeAll(FXCollections.observableArrayList(this.clipboard));
+    }
+    
+    @FXML
+    private void fromClipboardToIndex(ActionEvent e){
+        TableView source = getDirections.urinaryAction(e);
+        
+        ObservableList<Integer> selectedIndices = source.getSelectionModel().getSelectedIndices();
+        
+        Integer highestIndex = null;
+        int noSelected = selectedIndices.size();
+        
+        if (selectedIndices.size()>1){
+            highestIndex = selectedIndices.stream().max(Integer::compareTo).get();
+        } else if(noSelected ==1){
+            highestIndex = selectedIndices.get(0);
+        } 
+        
+        if(highestIndex!=null){
+            ModifiableObservableListBase<MediaItem> currentList = (ModifiableObservableListBase<MediaItem>) FXCollections.observableArrayList(source.getItems());
+            
+            currentList.addAll(highestIndex+1, this.clipboard);
+            source.setItems(currentList);
+        }
+    }
+    
+    @FXML
+    private void fromClipboard(ActionEvent e)
+    {
+        if(this.clipboard != null)
+        {
+         TableView destination = getDirections.urinaryAction(e);
+        
+        ObservableList<MediaItem> currentElements = FXCollections.observableArrayList(destination.getItems());
+        ObservableList<MediaItem> newElements = FXCollections.observableArrayList(this.clipboard);
+        newElements.addAll(currentElements);
+        destination.setItems(newElements);
+        
+        }
+        
+    } 
+   
+    @FXML
+    private void insertOneToAnother(ActionEvent e){
+    
+       TableView[] addresses = getDirections.binaryAction(e);
+       insert(addresses[0], addresses[1]);
+        
+    }
+    
+    @FXML
+    private void showMissing(ActionEvent e){
+   
+        TableView[] itenerary = getDirections.binaryAction(e);
+        
+        TableView<MediaItem> myList = itenerary[1];
+        TableView<MediaItem> yourList = itenerary[0];
+  
+        List<MediaItem> myRealList = myList.getItems(); 
+        List<MediaItem> yourRealList = yourList.getItems(); 
+        
+        DuplicateFinder df = new DuplicateFindFromID3();
+        Set<MediaItem> missingElements = df.getMissingItems(new HashSet(myRealList), new HashSet(yourRealList));
+        
+        ObservableList<MediaItem> result = FXCollections.observableArrayList(missingElements);
+        
+        yourList.setItems(result);
+            
     }
 
     @FXML
-    private void openABIn2(ActionEvent event) {
-        open(2, collectionRootAB);
+    private void openIn(ActionEvent event) {
+        TableView referenceToTheTable = getDirections.urinaryAction(event);
+        open(referenceToTheTable, null);
     }
 
     @FXML
-    private void insertTable1In2(ActionEvent event) {
+    private void openA(ActionEvent event) {
+        TableView referenceToTheTable = getDirections.urinaryAction(event);
 
-        ObservableList<MediaItem> table1Data
-                = tableView1.getItems();
-        ObservableList<MediaItem> table2Data
-                = tableView2.getItems();
-        table2Data.addAll(0, table1Data);
-
+        open(referenceToTheTable, collectionRootA);
     }
 
     @FXML
-    private void insertTable2In1(ActionEvent event) {
+    private void openB(ActionEvent event) {
+        TableView referenceToTheTable = getDirections.urinaryAction(event);
+        open(referenceToTheTable, collectionRootB);
+    }
 
-        ObservableList<MediaItem> table1Data
-                = tableView1.getItems();
-        ObservableList<MediaItem> table2Data
-                = tableView2.getItems();
-        table1Data.addAll(0, table2Data);
+    @FXML
+    private void openAB(ActionEvent event) {
+        TableView referenceToTheTable = getDirections.urinaryAction(event);
+        open(referenceToTheTable, collectionRootAB);
+    }
+     private void insert(TableView src, TableView dst) {
+        List<MediaItem> itemsToComeFirst = src.getItems();
+        List<MediaItem> itemsToComeLast = dst.getItems();
 
+        ObservableList<MediaItem> newList
+                = FXCollections.observableArrayList(itemsToComeFirst);
+        newList.addAll(itemsToComeLast);
+        dst.setItems(newList);
     }
 
     @FXML
     private void swap(ActionEvent event) {
 
-        Scene scene = tableView1.getScene();
-        TableView<MediaItem> tableInFocus = null;
-        if (scene.focusOwnerProperty().get() instanceof TableView) {
-            tableInFocus = (TableView) scene.focusOwnerProperty().get();
-            MediaItem m = tableInFocus.getSelectionModel().getSelectedItem();
-            System.out.println("m " + m.getAlbum());
-        }
-    }
-
-    @FXML
-    private void showMissingItems(ActionEvent event) {
-        Set<MediaItem> table1Data = new HashSet(tableView1.getItems());
-        Set<MediaItem> table2Data = new HashSet(tableView2.getItems());
-
-        DuplicateFinder d = new DuplicateFindFromID3();
-        Set<MediaItem> missingItems = d.getMissingItems(table1Data, table2Data);
-
-        ObservableList<MediaItem> dataForTableViewAndModel
-                = FXCollections.observableArrayList(missingItems);
-        tableView3.setItems(dataForTableViewAndModel);
+        ObservableList<MediaItem> table1Data
+                = tableView1.getItems();
+        ObservableList<MediaItem> table2Data
+                = tableView2.getItems();
+        tableView1.setItems(table2Data);
+        tableView2.setItems(table1Data);
 
     }
 
-    @FXML
-    private void openIn2(ActionEvent event) {
-        open(2, null);
-    }
-
-    @FXML
-    private void openAIn2(ActionEvent event) {
-        open(2, collectionRootA);
-    }
-
-    @FXML
-    private void openBIn2(ActionEvent event) {
-        open(2, collectionRootB);
-    }
-
-    @FXML
-    private void openABIn1(ActionEvent event) {
-        open(1, collectionRootAB);
-    }
-
-    @FXML
-    private void cut(ActionEvent event) {
-
-        doCut();
-
-    }
-
-    @FXML
-    private void openIn1(ActionEvent event) {
-        open(1, null);
-    }
-
-    @FXML
-    private void openAIn1(ActionEvent event) {
-        open(1, collectionRootA);
-    }
-
-    @FXML
-    private void openBIn1(ActionEvent event) {
-        open(1, collectionRootB);
-    }
-
-    @FXML
-    private void openABIn3(ActionEvent event) {
-        open(3, collectionRootAB);
-    }
-
-    @FXML
-    private void openIn3(ActionEvent event) {
-        open(3, null);
-    }
-
-    @FXML
-    private void openAIn3(ActionEvent event) {
-        open(3, collectionRootA);
-    }
-
-    @FXML
-    private void openBIn3(ActionEvent event) {
-        open(3, collectionRootB);
-    }
-
-    private void open(int tableNumber, String collectionRoot) {
+    private void open(TableView table, String collectionRoot) {
         if (collectionRoot == null) {
             DirectoryChooser dirChooser = new DirectoryChooser();
-            dirChooser.setTitle("Open Media Folder for Table " + tableNumber);
+            dirChooser.setTitle("Open Media Folder for Table " + getDirections.getTableNumber(table));
             File path = dirChooser.showDialog(null).getAbsoluteFile();
             collectionRoot = path.toString();
         } else {
@@ -279,24 +198,16 @@ public class FXMLController implements Initializable {
                     "..",
                     collectionRoot).toString();
         }
-        TableView<MediaItem> referenceToEitherTable = null;
-        if (tableNumber == 1) {
-            referenceToEitherTable = tableView1;
-        } else if (tableNumber == 2) {
-            referenceToEitherTable = tableView2;
-        } else if (tableNumber == 3) {
-            referenceToEitherTable = tableView3;
-        }
-
+        TableView<MediaItem> referenceToEitherTable = table;
+    
         addContents(referenceToEitherTable, collectionRoot);
     }
 
-    private void addContents(TableView<MediaItem> referenceToEitherTable,
-            String collectionRoot) {
-        FileService fileService = new FileServiceImpl();
+    private void addContents(TableView<MediaItem> referenceToEitherTable, String collectionRoot) {
+        FileService fileService =  FileServiceImpl.getInstance();
         Set<MediaItem> collectionA = fileService.getAllMediaItems(collectionRoot.toString());
 
-        MediaInfoSource myInfoSource = new MediaInfoSourceFromID3();
+        MediaInfoSource myInfoSource = MediaInfoSourceFromID3.getInstance();
         for (MediaItem item : collectionA) {
             try {
                 myInfoSource.addMediaInfo(item);
@@ -304,95 +215,18 @@ public class FXMLController implements Initializable {
 
             }
         }
-
         List<MediaItem> currentItems = referenceToEitherTable.getItems();
         collectionA.addAll(currentItems);
-
         ObservableList<MediaItem> dataForTableViewAndModel
                 = FXCollections.observableArrayList(collectionA);
         referenceToEitherTable.setItems(dataForTableViewAndModel);
     }
-
-    // I've kept this code in, t
-    private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
-
-    // you won't need any of this selection or drag code for the Nov 20th 
-    // mock test, but I thought I'd keep it in for convenience
-    private void addDragListener(TableView<MediaItem> tableView) {
-        tableView.setRowFactory(tv -> {
-            TableRow<MediaItem> row = new TableRow<>();
-
-            row.setOnDragDetected(event -> {
-                if (!row.isEmpty()) {
-                    Integer index = row.getIndex();
-                    Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
-                    db.setDragView(row.snapshot(null, null));
-                    ClipboardContent cc = new ClipboardContent();
-                    cc.put(SERIALIZED_MIME_TYPE, index);
-                    db.setContent(cc);
-                    event.consume();
-                }
-            });
-
-            row.setOnDragOver(event -> {
-                Dragboard db = event.getDragboard();
-                if (db.hasContent(SERIALIZED_MIME_TYPE)) {
-                    if (row.getIndex() != ((Integer) db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
-                        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                        event.consume();
-                    }
-                }
-            });
-
-            row.setOnDragDropped(event -> {
-                Dragboard db = event.getDragboard();
-                if (db.hasContent(SERIALIZED_MIME_TYPE)) {
-                    int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
-                    MediaItem draggedMediaItem = tableView.getItems().remove(draggedIndex);
-                    int dropIndex;
-                    if (row.isEmpty()) {
-                        dropIndex = tableView.getItems().size();
-                    } else {
-                        dropIndex = row.getIndex();
-                    }
-                    tableView.getItems().add(dropIndex, draggedMediaItem);
-                    event.setDropCompleted(true);
-                    tableView.getSelectionModel().select(dropIndex);
-                    event.consume();
-                }
-            });
-            return row;
-        });
+      @FXML
+    private void clearTable(ActionEvent event) {
+        TableView table = getDirections.urinaryAction(event);
+        //table.getItems().removeAll();
+        throw new UnsupportedOperationException("This has not been implemented yet!");
     }
-    // you won't need any of this selection or drag code for the Nov 20th 
-    // mock test, but I thought I'd keep it in for convenience
-
-    private void addSelectListener(TableView<MediaItem> tableView) {
-
-        tableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observableValue,
-                    Object oldValue,
-                    Object newValue) {
-                if (tableView.getSelectionModel().getSelectedItem() != null) {
-
-                    MediaItem m = tableView.getSelectionModel().getSelectedItem();
-                    ObservableList selectedCells = tableView.getSelectionModel().getSelectedCells();
-                    TablePosition tablePosition = (TablePosition) selectedCells.get(0);
-                    Object val = tablePosition.getTableColumn().getCellData(newValue);
-                    System.out.println("Selected Value" + val);
-                    System.out.println("Selected item " + m.getAlbum());
-                }
-            }
-        });
-    }
-
-    private TableView getTableInFocus() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private void doCut() {
-        TableView tableInFocus = getTableInFocus();
-        // do my cut thing here
-    }
+    
+    
 }

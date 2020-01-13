@@ -10,16 +10,14 @@ import javafx.stage.Stage;
 
 public class MainApp extends Application {
 
-    Scene scene;
-    
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
         
-        scene = new Scene(root);
+        Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
         
-        stage.setTitle("Mock In-class Test");
+        stage.setTitle("Worksheet 7");
         stage.setScene(scene);
         stage.show();
     }
