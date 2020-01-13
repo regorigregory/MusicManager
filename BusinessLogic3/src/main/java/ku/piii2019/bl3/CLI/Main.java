@@ -39,7 +39,7 @@ public class Main {
         String[] testArgs = new String[]{"-s", srcDir, "-d", dstDir, "-ID3EX"};
         
 
-          DoCopy.processArgs(testArgs);
+          DoCopy.getInstance().processArgs(testArgs);
 //        DuplicateFinder df = new DuplicateFindFromID3();
 //        FileService fs = new FileServiceImpl();
 //        Set<MediaItem> mis = fs.getAllMediaItems(srcDir);

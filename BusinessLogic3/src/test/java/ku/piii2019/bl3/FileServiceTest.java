@@ -20,6 +20,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.Ignore;
+
 import static org.junit.Assert.*;
 
 /**
@@ -103,6 +105,7 @@ public class FileServiceTest {
     /**
      * Test of getAllMediaItems method, of class FileService.
      */
+    @Ignore
     @Test
     public void testGetAllMediaItems() {
 
@@ -113,7 +116,7 @@ public class FileServiceTest {
         
         Path currentWorkingFolder = Paths.get("").toAbsolutePath();
         String rootFolder = Worksheet8TestHelper.TEST_SCRATCH_FOLDER;
-        FileService instance = new FileServiceImpl();
+        FileService instance = FileServiceImpl.getInstance();
         String rootTestFolder = Paths.get(Worksheet8TestHelper.TEST_SCRATCH_FOLDER)
                                      .toAbsolutePath()
                                      .toString();
@@ -140,7 +143,7 @@ public class FileServiceTest {
         System.out.println("getListToRemove");
         assertTrue(testEquals());
         assertTrue(testHashCode());
-        FileService instance = new FileServiceImpl();
+        FileService instance = FileServiceImpl.getInstance();
         String rootTestFolder = Paths.get(Worksheet8TestHelper.TEST_SCRATCH_FOLDER)
                                      .toAbsolutePath()
                                      .toString();
@@ -183,7 +186,7 @@ public class FileServiceTest {
                         fileStore.getAllMediaItems(rootTestFolder, null);
         assertTrue(Worksheet8TestHelper.filesExist(allMediaItems));
 
-        FileService instance = new FileServiceImpl();
+        FileService instance =  FileServiceImpl.getInstance();
         
         Set<MediaItem> allDuplicates = new HashSet<>();
         Set<Set<MediaItem>> duplicates = 

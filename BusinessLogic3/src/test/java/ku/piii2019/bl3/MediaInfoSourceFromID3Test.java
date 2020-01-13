@@ -53,7 +53,7 @@ public class MediaInfoSourceFromID3Test {
                               .toAbsolutePath();
                 
         MediaItem itemToTest = new MediaItem().setAbsolutePath(testPath.toString());        
-        MediaInfoSourceFromID3 instance = new MediaInfoSourceFromID3();
+        MediaInfoSourceFromID3 instance = MediaInfoSourceFromID3.getInstance();
         instance.addMediaInfo(itemToTest);
         
         MediaItem expectedItem = new MediaItem().setAbsolutePath(testPath.toString());

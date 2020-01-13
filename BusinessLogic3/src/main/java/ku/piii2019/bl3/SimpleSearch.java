@@ -18,16 +18,62 @@ public class SimpleSearch implements SearchService {
 
     @Override
     public Set<MediaItem> find(String thisSearchTerm, Set<MediaItem> inhere) {
-        
-        String justSpaces = (thisSearchTerm!=null) ? thisSearchTerm.replaceAll(" ", "") : "";
-        if(justSpaces.length()==0){
+
+        String justSpaces = (thisSearchTerm != null) ? thisSearchTerm.replaceAll(" ", "") : "";
+        if (justSpaces.length() == 0) {
             return new HashSet<>();
         }
-        String pattern = "(.*)"+thisSearchTerm.toLowerCase().trim()+"(.*)";
+        String pattern = "(.*)" + thisSearchTerm.toLowerCase().trim() + "(.*)";
         return inhere.stream().filter(m -> {
-            return m.getTitle().toLowerCase().matches(pattern) || m.getArtist().toLowerCase().matches(pattern) || m.getAlbum().toLowerCase().matches(pattern);}
+            return m.getTitle().toLowerCase().matches(pattern) || m.getArtist().toLowerCase().matches(pattern) || m.getAlbum().toLowerCase().matches(pattern);
+        }
         ).collect(Collectors.toSet());
-       
+
+    }
+
+    public Set<MediaItem> findByArtists(String[] artists, Set<MediaItem> inhere) {
+        Set<MediaItem> matchingItems = new HashSet<>();
+        if (artists.length == 0 || inhere.size() == 0) {
+            return matchingItems;
+        }
+        for (String thisSearchTerm : artists) {
+            String justSpaces = (thisSearchTerm != null) ? thisSearchTerm.replaceAll(" ", "") : "";
+            if (justSpaces.length() == 0) {
+                continue;
+            }
+            String pattern = "(.*)" + thisSearchTerm.toLowerCase().trim() + "(.*)";
+            inhere.stream().filter(m -> {
+                return m.getArtist().toLowerCase().matches(pattern);
+            }
+            ).forEach(m->matchingItems.add(m));
+
+        }
+
+        return matchingItems;
+    }
+
+    @Override
+    public Set<MediaItem> findByGenres(String[] genres, Set<MediaItem> inhere) {
+
+     Set<MediaItem> matchingItems = new HashSet<>();
+        if (genres.length == 0 || inhere.size() == 0) {
+            return matchingItems;
+        }
+        for (String thisSearchTerm : genres) {
+            String justSpaces = (thisSearchTerm != null) ? thisSearchTerm.replaceAll(" ", "") : "";
+            if (justSpaces.length() == 0) {
+                continue;
+            }
+            String pattern = "(.*)" + thisSearchTerm.toLowerCase().trim() + "(.*)";
+            inhere.stream().filter(m -> {
+                return m.getGenre().toLowerCase().matches(pattern);
+            }
+            ).forEach(m->matchingItems.add(m));
+
+        }
+
+        return matchingItems;
+
     }
 
 }

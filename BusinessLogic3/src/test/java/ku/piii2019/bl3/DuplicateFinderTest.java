@@ -45,7 +45,7 @@ public class DuplicateFinderTest {
         // for Question 2: 
         listOfInstances.add(new Object[]{new DuplicateFindFromID3(),
                                          new FileStoreShortNames(),
-                                         new MediaInfoSourceFromID3(), 
+                                         MediaInfoSourceFromID3.getInstance(), 
                                          rightAnswersForID3});
         
         return listOfInstances;
@@ -116,6 +116,7 @@ public class DuplicateFinderTest {
     /**
      * Test of getAllDuplicates method, of class DuplicateFindFromFilename.
      */
+    @Ignore
     @Test
     public void testGetAllDuplicates() {
         System.out.println("getAllDuplicates");

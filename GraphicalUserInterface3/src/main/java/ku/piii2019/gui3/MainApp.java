@@ -7,20 +7,29 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
 public class MainApp extends Application {
 
-    Scene scene;
-    
+    static Stage primaryStage = null;
+
+    private static void setPrimaryStage(Stage stage) {
+        MainApp.primaryStage = stage;
+    }
+
+    static public Stage getPrimaryStage() {
+        return MainApp.primaryStage;
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
-        
-        scene = new Scene(root);
+
+        Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
-        
-        stage.setTitle("Mock In-class Test");
+
+        stage.setTitle("Music Manager");
         stage.setScene(scene);
+        MainApp.setPrimaryStage(stage);
+
         stage.show();
     }
 

@@ -33,10 +33,6 @@ public class MediaItemTableViewFactory {
     
     static public void processInput(MediaItem editItem, String newValue, String editProperty)
     {
-        if(editProperty.equals("album"))
-        {
-            editItem.setAlbum(newValue);
-        }
         System.out.println("New value is " + newValue + " for property " + editProperty);
     }
     public static List<MediaItemColumnInfo> makeColumnInfoList() {
@@ -95,8 +91,8 @@ public class MediaItemTableViewFactory {
             thisColumn.setOnEditCommit(
                 new EventHandler<TableColumn.CellEditEvent<MediaItem, String>>() {
                     @Override
-                    public void handle(TableColumn.
-                            CellEditEvent<MediaItem,String> editEvent) {
+                    public void handle(TableColumn.CellEditEvent<MediaItem, 
+                                       String> editEvent) {
                     
                         int editRow = editEvent.getTablePosition().getRow();
                         MediaItem editItem = editEvent.getTableView()

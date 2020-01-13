@@ -18,7 +18,16 @@ public class MediaItem {
     private String title;
     private String album;
     private String artist;
+    private String genre;
 
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+    
   
     
     public String getTitle() {
@@ -39,7 +48,7 @@ public class MediaItem {
 
     public MediaItem setAbsolutePath(String absolutePath) {
         
-        this.absolutePath = Paths.get(absolutePath).toAbsolutePath().toString();
+        this.absolutePath = Paths.get(absolutePath).toAbsolutePath().normalize().toString();
         return this;
     }
 
