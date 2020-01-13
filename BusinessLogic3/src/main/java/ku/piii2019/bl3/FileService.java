@@ -108,4 +108,5 @@ public interface FileService {
         return candidateFolder;
         
     }
+    void refileAndCopyOne(String basepath, MediaItem m);
 }

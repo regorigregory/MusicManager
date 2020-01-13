@@ -16,7 +16,7 @@ import org.apache.commons.cli.OptionGroup;
  */
 public class DefaultOptions {
 
-    private static Options defaultOptions = null;
+    private static Options defaultRefileOptions = null;
     private static Options defaultCopyOptions = null;
     private static Options defaultM3UOptions = null;
 
@@ -112,8 +112,48 @@ public class DefaultOptions {
         return defaultM3UOptions;
     }
     public static Options getDefaultRefileOptions() {
-        
-        throw new UnsupportedOperationException("Has not been implemented.");
+         if (defaultRefileOptions == null) {
+            defaultRefileOptions = new Options();
+            
+            Option o = null;
+            
+            o = Option.builder("h").hasArg(false).longOpt("help").desc("Usage: CLI -option <args>").build();
+            defaultRefileOptions.addOption(o);
+
+            o = Option.builder("s").hasArg(true).argName("source-folder").longOpt("src").desc("Source folder to scan. If no artist or genre filter is given, then every single file in the folder will be processed.").required(true).build();
+            defaultRefileOptions.addOption(o);
+            
+            o = Option.builder("d").hasArg(true).argName("destination-folder").longOpt("dsc").desc("Optional destination folder to save the m3u file.").required(false).build();
+            defaultRefileOptions.addOption(o);
+            
+            //Filters group xtra mile
+            OptionGroup og = new OptionGroup();
+            o = Option.builder("a").hasArgs().longOpt("artist").desc("Filtering playlist by a single or multiple artists.").build();
+            og.addOption(o);
+            
+            o = Option.builder("g").hasArgs().longOpt("genre").desc("Filtering playlist by a single or multiple genres.").build();
+            og.addOption(o);
+              og.addOption(o);
+            og.setRequired(false);
+            defaultRefileOptions.addOptionGroup(og);
+          
+           //Optional duplicate filter enabling xtra mile
+           
+            og = new OptionGroup();
+            o = Option.builder("ID3EX").hasArg(false).longOpt("exclude-ID3").desc("Excluding duplicates based on ID3 tag").required(false).build();
+            og.addOption(o);
+            
+            o = Option.builder("FEX").hasArg(false).longOpt("exclude-FNAME").desc("Excluding duplicates based on Filename").required(false).build();
+            
+            og.addOption(o);
+            
+            o = Option.builder("NOEX").hasArg(false).longOpt("no-exclusion").desc("No exclusion, duplicates will be copied.").required(false).build();
+            
+            og.addOption(o);
+            defaultRefileOptions.addOptionGroup(og);
+     
+        }
+        return defaultRefileOptions;
     }
 
     public static Options getDefaultPlaylistCreationOptions() {

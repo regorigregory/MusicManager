@@ -7,11 +7,13 @@ package ku.piii2019.bl3;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.file.CopyOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashSet;
@@ -215,6 +217,23 @@ public class FileServiceImpl implements FileService {
         } catch (Exception ex) {
             CustomLogging.logIt(ex);
         } 
+    }
+    
+    @Override
+    public void refileAndCopyOne(String basePath, MediaItem m){
+        //should filter for not allowed characters later on...
+        String artist = m.getArtist();
+        String album = m.getAlbum();
+        Path src = Paths.get(m.getAbsolutePath());
+        String fileName = Paths.get(m.getAbsolutePath()).getFileName().toString();
+        Path dst = Paths.get(basePath, artist, album), filename;
+        Path newDirectories = Paths.get(basePath, artist, album);
+        try{
+            Files.createDirectories(newDirectories);
+            Files.copy(src, dst, StandardCopyOption.REPLACE_EXISTING);
+        } catch(Exception ex){
+            CustomLogging.logIt(ex);
+        }
     }
 
 }
