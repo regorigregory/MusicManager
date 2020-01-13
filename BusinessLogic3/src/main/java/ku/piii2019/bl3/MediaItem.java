@@ -48,7 +48,7 @@ public class MediaItem {
 
     public MediaItem setAbsolutePath(String absolutePath) {
         
-        this.absolutePath = Paths.get(absolutePath).toAbsolutePath().toString();
+        this.absolutePath = Paths.get(absolutePath).toAbsolutePath().normalize().toString();
         return this;
     }
 

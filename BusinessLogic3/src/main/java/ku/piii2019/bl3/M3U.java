@@ -14,7 +14,7 @@ import ku.piii2019.bl3.CustomLogging;
  * @author regor
  */
 public class M3U {
-    public static final String SEPARATOR = "\\r\\n";
+    public static final String SEPARATOR = "\r\n";
     public static String getHeader() {
         return "#EXTM3U"+SEPARATOR;
     }

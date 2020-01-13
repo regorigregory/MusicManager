@@ -27,58 +27,55 @@ import static org.junit.Assert.fail;
  */
 public class Worksheet8TestHelper {
 
-    public static final String TEST_SRC_FOLDER =  ".." + 
-                                                  File.separator + 
-                                                  "test_folders";
-    public static final String TEST_SCRATCH_FOLDER = ".." + 
-                                                     File.separator + 
-                                                    "tmp_folders";
+    public static final String TEST_SRC_FOLDER = ".."
+            + File.separator
+            + "test_folders";
+    public static final String TEST_SCRATCH_FOLDER = ".."
+            + File.separator
+            + "tmp_folders";
 
-    
-    
-    public static void copyFolder(Path absSrcRoot, 
-                                  Path absDestRoot,
-                                  Path relativeDestFolder)  {
- //       try {
- //           Files.createDirectory(Paths.get(destFolder.toString()));
- //       }
- //       catch(IOException e){
- //           e.printStackTrace();
- //       }
-       final String c = absSrcRoot.toString();
-       final String d = absDestRoot.toString();
-       final String e = relativeDestFolder.toString();
-       
-        try (Stream<Path> stream = Files.walk(absSrcRoot)) {
+    public static void copyFolder(Path absSrcRoot,
+            Path absDestRoot,
+            Path relativeDestFolder) {
+        //       try {
+        //           Files.createDirectory(Paths.get(destFolder.toString()));
+        //       }
+        //       catch(IOException e){
+        //           e.printStackTrace();
+        //       }
+        final String c = absSrcRoot.toString();
+        final String d = absDestRoot.toString();
+        final String e = relativeDestFolder.toString();
+
+        try ( Stream<Path> stream = Files.walk(absSrcRoot)) {
             stream.forEach(absSrcPath -> {
 
                 try {
-                    
+
 //                    System.out.println("absSrcPath is " + absSrcPath);   
                     Path relSrcPath = Paths.get(c).relativize(absSrcPath);
 //                    System.out.println("relSrcPath is " + relSrcPath);
                     Path absDestPath = Paths.get(d, e, relSrcPath.toString());
 //                    System.out.println("absDestPath is " + absDestPath);
-                    
+
 //                    Path absSourcePath = Paths.get(commonFolder.toString(), 
 //                                                   sourcePath.toString());
 //                    
 //                    Path relSrcPath = absSourcePath.relativize(Paths.get(absSrcFolder.toString()));
 //                    Path absDestPath = Paths.get(commonFolder.toString(),
 //                                                 destFolder.toString(), sourcePath.toString());
-                    Files.copy(absSrcPath,absDestPath);
+                    Files.copy(absSrcPath, absDestPath);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             });
-        }
-        catch(IOException ex){
+        } catch (IOException ex) {
             ex.printStackTrace();
             fail();
         }
 
     }
-    
+
 //    public static void copyFolder(Path commonFolder, 
 //                                  File absSrcFolder, 
 //                                  File destFolder)  {
@@ -122,31 +119,45 @@ public class Worksheet8TestHelper {
 
         SimpleFileVisitor myDeleteVisitor = new SimpleFileVisitor<Path>() {
             @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                if(Files.isRegularFile(file)){
-                    Files.delete(file);
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                file = file.normalize().toAbsolutePath();
+                if (Files.isRegularFile(file)) {
+                    try {
+                        Files.delete(file);
+                    } catch (Exception ex) {
+                        System.out.println("There is an error for some reason? Might be open explorer window?");
+                        ex.printStackTrace();
+                    }
                 }
                 return FileVisitResult.CONTINUE;
             }
+
             @Override
             public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
-                    try {
-                        Files.delete(dir);
-                    }
-                    catch (IOException e) {
-                        e.printStackTrace();                        
-                    }
-                return FileVisitResult.CONTINUE;               
+                try {
+                    Files.delete(dir);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return FileVisitResult.CONTINUE;
             }
         };
         try {
-            Files.walkFileTree(Paths.get(rootFolder), myDeleteVisitor);
+            if(Files.isDirectory(Paths.get(rootFolder))){
+                 Files.walkFileTree(Paths.get(rootFolder).normalize(), myDeleteVisitor);
+
+            }
         } catch (IOException ex) {
+            System.out.println("Have no idea why it throws an error here.");
+            System.out.println(rootFolder);
+            System.out.println(Paths.get(rootFolder).normalize().toString());
+
             ex.printStackTrace();
             return false;
         }
         return true;
     }
+
     public static boolean deleteFolderRecursively(File dir) {
 
         if (dir.isDirectory()) {
@@ -158,33 +169,32 @@ public class Worksheet8TestHelper {
                 }
                 try {
                     Files.delete(Paths.get(children[i].toString()));
-                }
-                catch (IOException e){
-                    
+                } catch (IOException e) {
+
                 }
             }
         }
         try {
             Files.delete(Paths.get(dir.toString()));
-        }
-        catch (IOException e) {
-            
+        } catch (IOException e) {
+
         }
         return true;
     }
 
     static void print1(Set<Set<MediaItem>> result) {
-        for(Set<MediaItem> s : result) {
+        for (Set<MediaItem> s : result) {
             System.out.println("the next duplicate set:");
             for (MediaItem m : s) {
                 System.out.println(m.getAbsolutePath());
             }
         }
     }
+
     static void print2(Set<MediaItem> result) {
-        for(MediaItem s : result) {
-                System.out.println(s.getAbsolutePath());
-            
+        for (MediaItem s : result) {
+            System.out.println(s.getAbsolutePath());
+
         }
     }
 
@@ -192,38 +202,37 @@ public class Worksheet8TestHelper {
         Path p = Paths.get(thisItem.getAbsolutePath());
         String filenameToSearchFor = p.getFileName().toString();
 
-        int num=0;
-        for(MediaItem m : otherItems) {
+        int num = 0;
+        for (MediaItem m : otherItems) {
             Path otherP = Paths.get(m.getAbsolutePath());
             String otherFilename = otherP.getFileName().toString();
-            if(filenameToSearchFor.equals(otherFilename)) {
+            if (filenameToSearchFor.equals(otherFilename)) {
 //                System.out.println("same: " + filenameToSearchFor + " is the same as " + otherFilename);
                 num++;
-            }
-            else {
+            } else {
 //                System.out.println("different: " + filenameToSearchFor + 
 //                        " is NOT the same as " + otherFilename);                
             }
         }
-        return num;    
+        return num;
     }
 
     static boolean filesExist(Set<MediaItem> allMediaItems) {
-        for(MediaItem m : allMediaItems) {
-            if(Files.exists(Paths.get(m.getAbsolutePath()))==false)
+        for (MediaItem m : allMediaItems) {
+            if (Files.exists(Paths.get(m.getAbsolutePath())) == false) {
                 return false;
+            }
         }
         return true;
     }
 
     static boolean filesDontExist(Set<MediaItem> allDuplicates) {
-        for(MediaItem m : allDuplicates){
-            if(Files.exists(Paths.get(m.getAbsolutePath())))
+        for (MediaItem m : allDuplicates) {
+            if (Files.exists(Paths.get(m.getAbsolutePath()))) {
                 return false;
+            }
         }
-        return true;    
+        return true;
     }
-
-   
 
 }
