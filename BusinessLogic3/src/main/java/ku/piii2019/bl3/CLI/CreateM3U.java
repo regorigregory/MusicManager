@@ -10,7 +10,7 @@ import ku.piii2019.bl3.CustomLogging;
 import ku.piii2019.bl3.DuplicateFindFromFilename;
 import ku.piii2019.bl3.DuplicateFindFromID3;
 import ku.piii2019.bl3.DuplicateFinder;
-import ku.piii2019.bl3.FileServiceImpl;
+import ku.piii2019.bl3.MediaFileService;
 import ku.piii2019.bl3.M3U;
 import ku.piii2019.bl3.MediaItem;
 import ku.piii2019.bl3.SearchService;
@@ -72,7 +72,7 @@ public class CreateM3U implements CLICommandProcessor {
         
         FilterType type = null;
 
-        Set<MediaItem> foundItems = FileServiceImpl.getInstance().getAllID3MediaItems(srcFolder, df);
+        Set<MediaItem> foundItems = MediaFileService.getInstance().getAllID3MediaItems(srcFolder, df);
         String[] searchTerms = null;
         if (cmd.hasOption("a")) {
                 searchTerms = cmd.getOptionValue("a").split(" ");
@@ -89,12 +89,12 @@ public class CreateM3U implements CLICommandProcessor {
 
        
 
-        FileServiceImpl.getInstance().writeLineToFile(fileNameToSave, destinationFolder, header);
+        MediaFileService.getInstance().writeLineToFile(fileNameToSave, destinationFolder, header);
 
         
         for(MediaItem mi : filteredItems){
-            String line = M3U.getMediaItemInf(mi);
-            FileServiceImpl.getInstance().writeLineToFile(fileNameToSave, destinationFolder, line);
+            String line = M3U.getMediaItemInf(mi, false);
+            MediaFileService.getInstance().writeLineToFile(fileNameToSave, destinationFolder, line);
         }
         
         

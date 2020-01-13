@@ -10,7 +10,7 @@ import ku.piii2019.bl3.CustomLogging;
 import ku.piii2019.bl3.DuplicateFindFromFilename;
 import ku.piii2019.bl3.DuplicateFindFromID3;
 import ku.piii2019.bl3.DuplicateFinder;
-import ku.piii2019.bl3.FileServiceImpl;
+import ku.piii2019.bl3.MediaFileService;
 import ku.piii2019.bl3.M3U;
 import ku.piii2019.bl3.MediaItem;
 import ku.piii2019.bl3.SearchService;
@@ -69,7 +69,7 @@ public class DoRefile implements CLICommandProcessor{
         
         SearchService.FilterType type = null;
 
-        Set<MediaItem> foundItems = FileServiceImpl.getInstance().getAllID3MediaItems(srcFolder, df);
+        Set<MediaItem> foundItems = MediaFileService.getInstance().getAllID3MediaItems(srcFolder, df);
         String[] searchTerms = null;
         if (cmd.hasOption("a")) {
                 searchTerms = cmd.getOptionValue("a").split(" ");
@@ -86,7 +86,7 @@ public class DoRefile implements CLICommandProcessor{
         Set<MediaItem> filteredItems = searchService.filterBy(searchTerms, foundItems, type);
         
         for(MediaItem m : filteredItems){
-            FileServiceImpl.getInstance().refileAndCopyOne(srcFolder, m);
+            MediaFileService.getInstance().refileAndCopyMediaItem(srcFolder, m);
         }
         
         

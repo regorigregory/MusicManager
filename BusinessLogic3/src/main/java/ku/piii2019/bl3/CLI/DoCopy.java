@@ -9,7 +9,7 @@ import ku.piii2019.bl3.CustomLogging;
 import ku.piii2019.bl3.DuplicateFindFromFilename;
 import ku.piii2019.bl3.DuplicateFindFromID3;
 import ku.piii2019.bl3.DuplicateFinder;
-import ku.piii2019.bl3.FileServiceImpl;
+import ku.piii2019.bl3.MediaFileService;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
@@ -55,7 +55,7 @@ public class DoCopy implements CLICommandProcessor {
             df = new DuplicateFindFromFilename();
         }
 
-        FileServiceImpl fsi =  FileServiceImpl.getInstance();
+        MediaFileService fsi =  MediaFileService.getInstance();
         fsi.copyMediaFiles(srcFolder, dstFolder, df);
 
     }

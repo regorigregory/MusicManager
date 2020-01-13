@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 import ku.piii2019.bl3.DuplicateFindFromID3;
 import ku.piii2019.bl3.DuplicateFinder;
 import ku.piii2019.bl3.FileService;
-import ku.piii2019.bl3.FileServiceImpl;
+import ku.piii2019.bl3.MediaFileService;
 import ku.piii2019.bl3.MediaItem;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;

@@ -116,7 +116,7 @@ public class FileServiceTest {
         
         Path currentWorkingFolder = Paths.get("").toAbsolutePath();
         String rootFolder = Worksheet8TestHelper.TEST_SCRATCH_FOLDER;
-        FileService instance = FileServiceImpl.getInstance();
+        MediaFileService instance = MediaFileService.getInstance();
         String rootTestFolder = Paths.get(Worksheet8TestHelper.TEST_SCRATCH_FOLDER)
                                      .toAbsolutePath()
                                      .toString();
@@ -143,7 +143,7 @@ public class FileServiceTest {
         System.out.println("getListToRemove");
         assertTrue(testEquals());
         assertTrue(testHashCode());
-        FileService instance = FileServiceImpl.getInstance();
+        MediaFileService instance = MediaFileService.getInstance();
         String rootTestFolder = Paths.get(Worksheet8TestHelper.TEST_SCRATCH_FOLDER)
                                      .toAbsolutePath()
                                      .toString();
@@ -151,7 +151,7 @@ public class FileServiceTest {
         Set<Set<MediaItem>> duplicates = 
                 fileStore.getAllDuplicates(rootTestFolder, null);
 
-        Set<MediaItem> itemsToRemove = instance.getItemsToRemove(duplicates);
+        Set<MediaItem> itemsToRemove = instance.getMediaItemsToRemove(duplicates);
         
         System.out.println("the duplicates to choose from:");
         Worksheet8TestHelper.print1(duplicates);
@@ -186,14 +186,14 @@ public class FileServiceTest {
                         fileStore.getAllMediaItems(rootTestFolder, null);
         assertTrue(Worksheet8TestHelper.filesExist(allMediaItems));
 
-        FileService instance =  FileServiceImpl.getInstance();
+        MediaFileService instance =  MediaFileService.getInstance();
         
         Set<MediaItem> allDuplicates = new HashSet<>();
         Set<Set<MediaItem>> duplicates = 
                         fileStore.getAllDuplicates(rootTestFolder, null);
         for(Set<MediaItem> m : duplicates)
             allDuplicates.addAll(m);
-        instance.removeFiles(allDuplicates);
+        instance.removeMediaFiles(allDuplicates);
         allMediaItems.removeAll(allDuplicates);
         assertTrue(Worksheet8TestHelper.filesExist(allMediaItems));
         assertTrue(Worksheet8TestHelper.filesDontExist(allDuplicates));

@@ -26,7 +26,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Window;
 import ku.piii2019.bl3.FileService;
-import ku.piii2019.bl3.FileServiceImpl;
+import ku.piii2019.bl3.MediaFileService;
 
 public class FXMLController implements Initializable {
 
@@ -208,7 +208,7 @@ public class FXMLController implements Initializable {
     }
 
     private void addContents(TableView<MediaItem> referenceToEitherTable, String collectionRoot) {
-        FileService fileService = FileServiceImpl.getInstance();
+        MediaFileService fileService = MediaFileService.getInstance();
         Set<MediaItem> collectionA = fileService.getAllMediaItems(collectionRoot.toString());
 
         MediaInfoSource myInfoSource = MediaInfoSourceFromID3.getInstance();
@@ -261,13 +261,45 @@ public class FXMLController implements Initializable {
             CustomLogging.logIt(ioex);
         }
 
-        System.out.println(file.getPath());
+        String destinationFolder = file.getParent();
+        String fileName = file.getName();
+       
+        MediaFileService.getInstance().saveM3UFile(tableDataSet, fileName, destinationFolder, false);
+
+    }
+      @FXML
+    private void saveAsM3UandCopy(ActionEvent event) {
+        
+         TableView table = getDirections.urinaryAction(event);
+        ObservableList<MediaItem> tableData
+                = table.getItems();
+        Set<MediaItem> tableDataSet = new HashSet(tableData);
+        if (tableDataSet.size() == 0) {
+            String[] args = new String[]{"Table 3 is empty", "Table 3 is empty", "Please add items to table 3 before trying to save an M3U List"};
+            ErrorPopups.alertUser(args);
+            return;
+        }
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new ExtensionFilter("M3U files", "*.m3u"));
+        fileChooser.setTitle("Select save directory and m3u filename.");
+
+        Window stage = MainApp.getPrimaryStage();
+
+        File file = fileChooser.showSaveDialog(stage);
+
+        try {
+            file.delete();
+            file.createNewFile();
+
+        } catch (IOException ioex) {
+            CustomLogging.logIt(ioex);
+        }
+        
         String destinateionFolder = file.getParent();
         String fileName = file.getName();
-        System.out.println(destinateionFolder);
-        System.out.println(fileName);
-        FileServiceImpl.getInstance().saveM3UFile(tableDataSet, fileName, destinateionFolder);
-
+        MediaFileService.getInstance().saveM3UFile(tableDataSet, fileName, destinateionFolder, true);
+        
+        MediaFileService.getInstance().copyMediaFilesWithoutDirectoryStructure(tableDataSet, destinateionFolder, null);
     }
 
 }
