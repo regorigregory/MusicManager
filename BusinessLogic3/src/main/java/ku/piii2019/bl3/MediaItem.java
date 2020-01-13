@@ -17,10 +17,10 @@ public class MediaItem {
 
     private String absolutePath;
     private String relativePath;
-    private String title;
-    private String album;
-    private String artist;
-    private String genre;
+    public String title;
+    public String album;
+    public String artist;
+    public String genre;
 
     public String getGenre() {
         return genre;

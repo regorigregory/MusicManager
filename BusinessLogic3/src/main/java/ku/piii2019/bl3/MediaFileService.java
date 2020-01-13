@@ -203,16 +203,22 @@ public class MediaFileService extends GenericFileService {
     }
 
         public void refileAndCopyMediaItem(String basePath, MediaItem m) {
-        //should filter for not allowed characters later on...
+        
+        
         String artist = m.getArtist();
         String album = m.getAlbum();
         Path src = Paths.get(m.getAbsolutePath());
+        
         String fileName = Paths.get(m.getAbsolutePath()).getFileName().toString();
-        Path dst = Paths.get(basePath, artist, album), filename;
+        Path dst = Paths.get(basePath, artist, album, m.getFilename());
         Path newDirectories = Paths.get(basePath, artist, album);
         try {
+            if(!Files.isDirectory(newDirectories)){
             Files.createDirectories(newDirectories);
+            }
+            System.out.println(dst.toString());
             Files.copy(src, dst, StandardCopyOption.REPLACE_EXISTING);
+            
         } catch (Exception ex) {
             CustomLogging.logIt(ex);
         }

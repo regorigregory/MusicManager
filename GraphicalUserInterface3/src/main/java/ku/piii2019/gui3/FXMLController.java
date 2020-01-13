@@ -57,6 +57,11 @@ public class FXMLController implements Initializable {
         MediaItemTableViewFactory.makeTable(tableView1, columns);
         MediaItemTableViewFactory.makeTable(tableView2, columns);
         MediaItemTableViewFactory.makeTable(tableView3, columns);
+        
+        tableView1.setEditable(true);
+        tableView2.setEditable(true);
+        tableView3.setEditable(true);
+
 
         this.getDirections = new DirectionTeller(new TableView[]{tableView1, tableView2, tableView3});
         this.selectionController = new ListSelectionEventController(new TableView[]{tableView1, tableView2, tableView3});
@@ -263,14 +268,15 @@ public class FXMLController implements Initializable {
 
         String destinationFolder = file.getParent();
         String fileName = file.getName();
-       
+
         MediaFileService.getInstance().saveM3UFile(tableDataSet, fileName, destinationFolder, false);
 
     }
-      @FXML
+
+    @FXML
     private void saveAsM3UandCopy(ActionEvent event) {
-        
-         TableView table = getDirections.urinaryAction(event);
+
+        TableView table = getDirections.urinaryAction(event);
         ObservableList<MediaItem> tableData
                 = table.getItems();
         Set<MediaItem> tableDataSet = new HashSet(tableData);
@@ -294,12 +300,30 @@ public class FXMLController implements Initializable {
         } catch (IOException ioex) {
             CustomLogging.logIt(ioex);
         }
-        
+
         String destinateionFolder = file.getParent();
         String fileName = file.getName();
         MediaFileService.getInstance().saveM3UFile(tableDataSet, fileName, destinateionFolder, true);
-        
+
         MediaFileService.getInstance().copyMediaFilesWithoutDirectoryStructure(tableDataSet, destinateionFolder, null);
     }
 
+    @FXML
+    private void refileSelectedTracks(ActionEvent event) {
+        ObservableList<MediaItem> tableSelection1 = FXCollections.observableArrayList(tableView1.getSelectionModel().getSelectedItems());
+        ObservableList<MediaItem> tableSelection2 = FXCollections.observableArrayList(tableView2.getSelectionModel().getSelectedItems());
+        ObservableList<MediaItem> tableSelection3 = FXCollections.observableArrayList(tableView3.getSelectionModel().getSelectedItems());
+        tableSelection1.addAll(tableSelection2);
+        tableSelection2.addAll(tableSelection3);
+
+        DirectoryChooser fileChooser = new DirectoryChooser();
+        fileChooser.setTitle("Select save directory and m3u filename.");
+
+        Window stage = MainApp.getPrimaryStage();
+
+        File directory = fileChooser.showDialog(stage);
+        for(MediaItem m : tableSelection1){
+            MediaFileService.getInstance().refileAndCopyMediaItem(directory.getAbsolutePath(), m);
+        }
+    }
 }
