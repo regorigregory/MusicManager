@@ -38,6 +38,9 @@ public interface FileService {
     Set<MediaItem> getAllID3MediaItems(String rootFolder, DuplicateFinder df);
     
     void writeLineToFile(String fileName, String path, String line);
+    
+     void refileAndCopyOne(String basepath, MediaItem m);
+    void saveM3UFile(Set<MediaItem> filteredItems, String fileNameToSave, String destinationFolder);
  
     static Consumer<Path> copyFilesBody(Path sourceFolder, Path targetFolder) {
         return (Path filePath) -> {
@@ -108,5 +111,5 @@ public interface FileService {
         return candidateFolder;
         
     }
-    void refileAndCopyOne(String basepath, MediaItem m);
+   
 }

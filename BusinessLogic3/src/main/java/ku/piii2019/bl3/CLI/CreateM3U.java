@@ -83,12 +83,14 @@ public class CreateM3U implements CLICommandProcessor {
 
         } 
         
-        
+         SearchService searchService = new SimpleSearch();
+        Set<MediaItem> filteredItems = searchService.filterBy(searchTerms, foundItems, type);
         String header = M3U.getHeader();
 
-        SearchService searchService = new SimpleSearch(); 
-        Set<MediaItem> filteredItems = searchService.filterBy(searchTerms, foundItems, type);
+       
+
         FileServiceImpl.getInstance().writeLineToFile(fileNameToSave, destinationFolder, header);
+
         
         for(MediaItem mi : filteredItems){
             String line = M3U.getMediaItemInf(mi);

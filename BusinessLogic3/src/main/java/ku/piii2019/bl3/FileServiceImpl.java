@@ -216,11 +216,11 @@ public class FileServiceImpl implements FileService {
             bw.write(line);
         } catch (Exception ex) {
             CustomLogging.logIt(ex);
-        } 
+        }
     }
-    
+
     @Override
-    public void refileAndCopyOne(String basePath, MediaItem m){
+    public void refileAndCopyOne(String basePath, MediaItem m) {
         //should filter for not allowed characters later on...
         String artist = m.getArtist();
         String album = m.getAlbum();
@@ -228,12 +228,24 @@ public class FileServiceImpl implements FileService {
         String fileName = Paths.get(m.getAbsolutePath()).getFileName().toString();
         Path dst = Paths.get(basePath, artist, album), filename;
         Path newDirectories = Paths.get(basePath, artist, album);
-        try{
+        try {
             Files.createDirectories(newDirectories);
             Files.copy(src, dst, StandardCopyOption.REPLACE_EXISTING);
-        } catch(Exception ex){
+        } catch (Exception ex) {
             CustomLogging.logIt(ex);
         }
+    }
+
+    public void saveM3UFile(Set<MediaItem> filteredItems, String fileNameToSave, String destinationFolder) {
+        String header = M3U.getHeader();
+
+        FileServiceImpl.getInstance().writeLineToFile(fileNameToSave, destinationFolder, header);
+
+        for (MediaItem mi : filteredItems) {
+            String line = M3U.getMediaItemInf(mi);
+            FileServiceImpl.getInstance().writeLineToFile(fileNameToSave, destinationFolder, line);
+        }
+
     }
 
 }
