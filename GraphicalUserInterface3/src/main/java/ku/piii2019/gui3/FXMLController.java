@@ -269,5 +269,9 @@ public class FXMLController implements Initializable {
         FileServiceImpl.getInstance().saveM3UFile(tableDataSet, fileName, destinateionFolder);
 
     }
+      @FXML
+    private void saveAsM3UandCopy(ActionEvent event) {
+        throw new UnsupportedOperationException("Yet to be implemented.");
+    }
 
 }
