@@ -9,7 +9,7 @@
 
 <GridPane alignment="CENTER" hgap="10.0" vgap="10.0"
           xmlns:fx="http://javafx.com/fxml"
-          fx:controller="ku.piii2019.gui2.FXMLController">
+          fx:controller="ku.piii2019.gui3.FXMLController">
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding> 
@@ -110,7 +110,7 @@
                     <SeparatorMenuItem  />
                     <MenuItem text="Copy selected elements." id="3" onAction="#toClipboard" />
                     <MenuItem text="Insert clipboard elements to this list" id="3" onAction="#fromClipboard" />  
-                    <MenuItem text="Save list as M3U" id="3" onAction="#saveAsM3U" id="3" /> 
+                    <MenuItem text="Save list as M3U" id="3" onAction="#saveAsM3U" /> 
 
                 </items>
             </Menu>

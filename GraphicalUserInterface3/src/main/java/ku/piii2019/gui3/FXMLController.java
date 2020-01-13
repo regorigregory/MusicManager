@@ -1,6 +1,7 @@
 package ku.piii2019.gui3;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.HashSet;
@@ -20,8 +21,12 @@ import ku.piii2019.bl3.*;
 import java.lang.UnsupportedOperationException;
 import javafx.beans.property.SimpleListProperty;
 import javafx.scene.Node;
+import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Window;
+import ku.piii2019.bl3.FileService;
+import ku.piii2019.bl3.FileServiceImpl;
 
 public class FXMLController implements Initializable {
 
@@ -235,25 +240,34 @@ public class FXMLController implements Initializable {
         ObservableList<MediaItem> tableData
                 = table.getItems();
         Set<MediaItem> tableDataSet = new HashSet(tableData);
-       
+        if (tableDataSet.size() == 0) {
+            String[] args = new String[]{"Table 3 is empty", "Table 3 is empty", "Please add items to table 3 before trying to save an M3U List"};
+            ErrorPopups.alertUser(args);
+            return;
+        }
         FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new ExtensionFilter("M3U files", "*.m3u"));
         fileChooser.setTitle("Select save location and filename");
-        
-          Node source = (Node) event.getSource();
-          Window stage = source.getScene().getWindow();
-        
-        
-        
-            File file = fileChooser.showSaveDialog(stage);
-            if (file != null) {
-                String destinateionFolder = file.getPath();;
-                String fileName = file.getName();
-                FileServiceImpl.getInstance().saveM3UFile(tableDataSet, destinateionFolder, fileName);
 
-            }
+        Window stage = MainApp.getPrimaryStage();
 
-        
-        
-        
+        File file = fileChooser.showSaveDialog(stage);
+
+        try {
+            file.delete();
+            file.createNewFile();
+
+        } catch (IOException ioex) {
+            CustomLogging.logIt(ioex);
+        }
+
+        System.out.println(file.getPath());
+        String destinateionFolder = file.getParent();
+        String fileName = file.getName();
+        System.out.println(destinateionFolder);
+        System.out.println(fileName);
+        FileServiceImpl.getInstance().saveM3UFile(tableDataSet, fileName, destinateionFolder);
+
     }
+
 }
