@@ -18,6 +18,8 @@ public class DefaultOptions {
 
     private static Options defaultOptions = null;
     private static Options defaultCopyOptions = null;
+    private static Options defaultM3UOptions = null;
+
     private static String newLine = "";
 
     public static Options getDefaultCopyOptions() {
@@ -58,7 +60,57 @@ public class DefaultOptions {
         }
         return defaultCopyOptions;
     }
+    public static Options getDefaultM3UOptions() {
+        if (defaultM3UOptions == null) {
+            defaultM3UOptions = new Options();
+            
+            Option o = null;
+            
+            o = Option.builder("h").hasArg(false).longOpt("help").desc("Usage: CLI -option <args>").build();
+            defaultM3UOptions.addOption(o);
 
+            o = Option.builder("f").hasArg(true).argName("output-file").longOpt("filename").desc("Filename to be used to save the generated list.").required(true).build();
+            defaultM3UOptions.addOption(o);
+            
+            o = Option.builder("s").hasArg(true).argName("source-folder").longOpt("src").desc("Source folder to scan. If no artist or genre filter is given, then every single file in the folder will be processed.").required(true).build();
+            defaultM3UOptions.addOption(o);
+            
+            o = Option.builder("d").hasArg(true).argName("destination-folder").longOpt("dsc").desc("Optional destination folder to save the m3u file.").required(false).build();
+            defaultM3UOptions.addOption(o);
+            
+            //Filters group
+            OptionGroup og = new OptionGroup();
+            o = Option.builder("a").hasArgs().longOpt("artist").desc("Filtering playlist by a single or multiple artists.").build();
+            og.addOption(o);
+            
+            o = Option.builder("g").hasArgs().longOpt("genre").desc("Filtering playlist by a single or multiple genres.").build();
+            og.addOption(o);
+              og.addOption(o);
+            og.setRequired(false);
+             defaultM3UOptions.addOptionGroup(og);
+          
+            //optional length specification
+            o = Option.builder("ml").hasArg(true).longOpt("max-length").desc("The maximum length of the playlist in seconds.").required(false).build();
+            
+            defaultM3UOptions.addOption(o);
+           //Optional duplicate filter enabling
+           
+            og = new OptionGroup();
+            o = Option.builder("ID3EX").hasArg(false).longOpt("exclude-ID3").desc("Excluding duplicates based on ID3 tag").required(false).build();
+            og.addOption(o);
+            
+            o = Option.builder("FEX").hasArg(false).longOpt("exclude-FNAME").desc("Excluding duplicates based on Filename").required(false).build();
+            
+            og.addOption(o);
+            
+            o = Option.builder("NOEX").hasArg(false).longOpt("no-exclusion").desc("No exclusion, duplicates will be copied.").required(false).build();
+            
+            og.addOption(o);
+            defaultM3UOptions.addOptionGroup(og);
+     
+        }
+        return defaultM3UOptions;
+    }
     public static Options getDefaultRefileOptions() {
         
         throw new UnsupportedOperationException("Has not been implemented.");

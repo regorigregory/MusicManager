@@ -5,17 +5,13 @@
  */
 package ku.piii2019.bl3.CLI;
 
+import org.apache.commons.cli.CommandLine;
+
 /**
  *
  * @author regor
  */
-public interface CustomLogging {
-
-    public static void logIt(Exception ex) {
-        ex.printStackTrace();
-    }
-
-    public static void logIt(String msg) {
-        System.out.println(msg);
-    }
+public interface CLICommandProcessor {
+    public  void processArgs(String... args);
+    public  void processArgsBody(CommandLine cmd);
 }
