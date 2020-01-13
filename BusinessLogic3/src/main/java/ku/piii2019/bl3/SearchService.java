@@ -22,12 +22,16 @@ public interface SearchService {
     default Set<MediaItem> filterBy(String[] filterWords, Set<MediaItem> inhere, FilterType FILTER_TYPE){
         
         Set<MediaItem> filteredList = null;
+        if(FILTER_TYPE==null){
+            return inhere;
+        }
+        
         if(FILTER_TYPE == FilterType.ARTIST){
             filteredList = findByArtists(filterWords, inhere);
         } else if(FILTER_TYPE == FilterType.GENRE){
             filteredList = findByArtists(filterWords, inhere);
 
-        }
+        } 
         return filteredList;
     };
 }
