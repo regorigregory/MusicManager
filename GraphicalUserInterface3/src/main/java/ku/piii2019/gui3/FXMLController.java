@@ -19,8 +19,9 @@ import javafx.stage.DirectoryChooser;
 import ku.piii2019.bl3.*;
 import java.lang.UnsupportedOperationException;
 import javafx.beans.property.SimpleListProperty;
-
-
+import javafx.scene.Node;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 
 public class FXMLController implements Initializable {
 
@@ -32,12 +33,12 @@ public class FXMLController implements Initializable {
     private TableView<MediaItem> tableView2;
     @FXML
     private TableView<MediaItem> tableView3;
-    
+
     private ListSelectionEventController selectionController;
     private DirectionTeller getDirections;
     private DragEventController dragEventController;
     private ObservableList<MediaItem> clipboard;
-    
+
     String collectionRootAB = "test_folders" + File.separator
             + "original_filenames";
     String collectionRootA = collectionRootAB + File.separator
@@ -51,92 +52,89 @@ public class FXMLController implements Initializable {
         MediaItemTableViewFactory.makeTable(tableView1, columns);
         MediaItemTableViewFactory.makeTable(tableView2, columns);
         MediaItemTableViewFactory.makeTable(tableView3, columns);
-        
-        
-        this.getDirections = new DirectionTeller(new TableView[]{tableView1, tableView2, tableView3} );
+
+        this.getDirections = new DirectionTeller(new TableView[]{tableView1, tableView2, tableView3});
         this.selectionController = new ListSelectionEventController(new TableView[]{tableView1, tableView2, tableView3});
         this.dragEventController = new DragEventController(new TableView[]{tableView1, tableView2, tableView3});
     }
-    
+
     @FXML
-    private void toClipboard(ActionEvent e)
-    {
+    private void toClipboard(ActionEvent e) {
         TableView source = getDirections.urinaryAction(e);
         this.clipboard = FXCollections.observableArrayList(source.getSelectionModel().getSelectedItems());
-    
-    } 
-    @FXML
-    private void cutToClipboard(ActionEvent e){
-         TableView source = getDirections.urinaryAction(e);
-         this.toClipboard(e);
-         source.getItems().removeAll(FXCollections.observableArrayList(this.clipboard));
+
     }
-    
+
     @FXML
-    private void fromClipboardToIndex(ActionEvent e){
+    private void cutToClipboard(ActionEvent e) {
         TableView source = getDirections.urinaryAction(e);
-        
+        this.toClipboard(e);
+        source.getItems().removeAll(FXCollections.observableArrayList(this.clipboard));
+    }
+
+    @FXML
+    private void fromClipboardToIndex(ActionEvent e) {
+        TableView source = getDirections.urinaryAction(e);
+
         ObservableList<Integer> selectedIndices = source.getSelectionModel().getSelectedIndices();
-        
+
         Integer highestIndex = null;
         int noSelected = selectedIndices.size();
-        
-        if (selectedIndices.size()>1){
+
+        if (selectedIndices.size() > 1) {
             highestIndex = selectedIndices.stream().max(Integer::compareTo).get();
-        } else if(noSelected ==1){
+        } else if (noSelected == 1) {
             highestIndex = selectedIndices.get(0);
-        } 
-        
-        if(highestIndex!=null){
+        }
+
+        if (highestIndex != null) {
             ModifiableObservableListBase<MediaItem> currentList = (ModifiableObservableListBase<MediaItem>) FXCollections.observableArrayList(source.getItems());
-            
-            currentList.addAll(highestIndex+1, this.clipboard);
+
+            currentList.addAll(highestIndex + 1, this.clipboard);
             source.setItems(currentList);
         }
     }
-    
+
     @FXML
-    private void fromClipboard(ActionEvent e)
-    {
-        if(this.clipboard != null)
-        {
-         TableView destination = getDirections.urinaryAction(e);
-        
-        ObservableList<MediaItem> currentElements = FXCollections.observableArrayList(destination.getItems());
-        ObservableList<MediaItem> newElements = FXCollections.observableArrayList(this.clipboard);
-        newElements.addAll(currentElements);
-        destination.setItems(newElements);
-        
+    private void fromClipboard(ActionEvent e) {
+        if (this.clipboard != null) {
+            TableView destination = getDirections.urinaryAction(e);
+
+            ObservableList<MediaItem> currentElements = FXCollections.observableArrayList(destination.getItems());
+            ObservableList<MediaItem> newElements = FXCollections.observableArrayList(this.clipboard);
+            newElements.addAll(currentElements);
+            destination.setItems(newElements);
+
         }
-        
-    } 
-   
-    @FXML
-    private void insertOneToAnother(ActionEvent e){
-    
-       TableView[] addresses = getDirections.binaryAction(e);
-       insert(addresses[0], addresses[1]);
-        
+
     }
-    
+
     @FXML
-    private void showMissing(ActionEvent e){
-   
+    private void insertOneToAnother(ActionEvent e) {
+
+        TableView[] addresses = getDirections.binaryAction(e);
+        insert(addresses[0], addresses[1]);
+
+    }
+
+    @FXML
+    private void showMissing(ActionEvent e) {
+
         TableView[] itenerary = getDirections.binaryAction(e);
-        
+
         TableView<MediaItem> myList = itenerary[1];
         TableView<MediaItem> yourList = itenerary[0];
-  
-        List<MediaItem> myRealList = myList.getItems(); 
-        List<MediaItem> yourRealList = yourList.getItems(); 
-        
+
+        List<MediaItem> myRealList = myList.getItems();
+        List<MediaItem> yourRealList = yourList.getItems();
+
         DuplicateFinder df = new DuplicateFindFromID3();
         Set<MediaItem> missingElements = df.getMissingItems(new HashSet(myRealList), new HashSet(yourRealList));
-        
+
         ObservableList<MediaItem> result = FXCollections.observableArrayList(missingElements);
-        
+
         yourList.setItems(result);
-            
+
     }
 
     @FXML
@@ -163,7 +161,8 @@ public class FXMLController implements Initializable {
         TableView referenceToTheTable = getDirections.urinaryAction(event);
         open(referenceToTheTable, collectionRootAB);
     }
-     private void insert(TableView src, TableView dst) {
+
+    private void insert(TableView src, TableView dst) {
         List<MediaItem> itemsToComeFirst = src.getItems();
         List<MediaItem> itemsToComeLast = dst.getItems();
 
@@ -199,12 +198,12 @@ public class FXMLController implements Initializable {
                     collectionRoot).toString();
         }
         TableView<MediaItem> referenceToEitherTable = table;
-    
+
         addContents(referenceToEitherTable, collectionRoot);
     }
 
     private void addContents(TableView<MediaItem> referenceToEitherTable, String collectionRoot) {
-        FileService fileService =  FileServiceImpl.getInstance();
+        FileService fileService = FileServiceImpl.getInstance();
         Set<MediaItem> collectionA = fileService.getAllMediaItems(collectionRoot.toString());
 
         MediaInfoSource myInfoSource = MediaInfoSourceFromID3.getInstance();
@@ -221,12 +220,40 @@ public class FXMLController implements Initializable {
                 = FXCollections.observableArrayList(collectionA);
         referenceToEitherTable.setItems(dataForTableViewAndModel);
     }
-      @FXML
+
+    @FXML
     private void clearTable(ActionEvent event) {
         TableView table = getDirections.urinaryAction(event);
         //table.getItems().removeAll();
         throw new UnsupportedOperationException("This has not been implemented yet!");
+
     }
-    
-    
+
+    @FXML
+    private void saveAsM3U(ActionEvent event) {
+        TableView table = getDirections.urinaryAction(event);
+        ObservableList<MediaItem> tableData
+                = table.getItems();
+        Set<MediaItem> tableDataSet = new HashSet(tableData);
+       
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select save location and filename");
+        
+          Node source = (Node) event.getSource();
+          Window stage = source.getScene().getWindow();
+        
+        
+        
+            File file = fileChooser.showSaveDialog(stage);
+            if (file != null) {
+                String destinateionFolder = file.getPath();;
+                String fileName = file.getName();
+                FileServiceImpl.getInstance().saveM3UFile(tableDataSet, destinateionFolder, fileName);
+
+            }
+
+        
+        
+        
+    }
 }
