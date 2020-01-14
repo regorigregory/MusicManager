@@ -112,6 +112,8 @@
                     <MenuItem text="Insert clipboard elements to this list" id="3" onAction="#fromClipboard" />  
                     <MenuItem text="Save list as M3U" id="3" onAction="#saveAsM3U" /> 
                     <MenuItem text="Copy list to a new folder with m3u" id="3" onAction="#saveAsM3UandCopy" /> 
+                    <MenuItem text="Copy and refile selected tracks" onAction="#refileSelectedTracks" />
+
 
 
                 </items>
