@@ -28,7 +28,7 @@ public class DefaultOptions {
             
             Option o = null;
             
-            o = Option.builder("h").hasArg(false).longOpt("help").desc("Usage: CLI -option <args>").build();
+            o = Option.builder("h").hasArg(false).longOpt("help").desc("This screen").build();
             defaultCopyOptions.addOption(o);
 //            o = Option.builder("c").hasArg(false).longOpt("copy").desc("command to copy:)").required().build();
 //            defaultOptions.addOption(o);
@@ -66,7 +66,7 @@ public class DefaultOptions {
             
             Option o = null;
             
-            o = Option.builder("h").hasArg(false).longOpt("help").desc("Usage: CLI -option <args>").build();
+            o = Option.builder("h").hasArg(false).longOpt("help").desc("This screen").build();
             defaultM3UOptions.addOption(o);
 
             o = Option.builder("f").hasArg(true).argName("output-file").longOpt("filename").desc("Filename to be used to save the generated list.").required(true).build();
@@ -117,7 +117,7 @@ public class DefaultOptions {
             
             Option o = null;
             
-            o = Option.builder("h").hasArg(false).longOpt("help").desc("Usage: CLI -option <args>").build();
+            o = Option.builder("h").hasArg(false).longOpt("help").desc("This screen.").build();
             defaultRefileOptions.addOption(o);
 
             o = Option.builder("s").hasArg(true).argName("source-folder").longOpt("src").desc("Source folder to scan. If no artist or genre filter is given, then every single file in the folder will be processed.").required(true).build();

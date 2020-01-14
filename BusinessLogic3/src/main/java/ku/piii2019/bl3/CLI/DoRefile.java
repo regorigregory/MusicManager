@@ -47,7 +47,7 @@ public class DoRefile implements CLICommandProcessor{
         try {
 
             CommandLine cmd = clp.parse(opts, args);
-            processArgsBody(cmd);
+            processArgsBody(cmd, null);
         } catch (ParseException pex) {
             CustomLogging.logIt(pex);
 
@@ -56,7 +56,7 @@ public class DoRefile implements CLICommandProcessor{
     }
 
     @Override
-    public void processArgsBody(CommandLine cmd) {
+    public void processArgsBody(CommandLine cmd, Options opts) {
         String srcFolder = cmd.getOptionValue('s');
         String destinationFolder = cmd.hasOption("d") ? cmd.getOptionValue("d") : srcFolder;
 

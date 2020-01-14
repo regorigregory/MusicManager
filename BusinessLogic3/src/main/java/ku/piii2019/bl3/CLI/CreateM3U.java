@@ -6,6 +6,9 @@
 package ku.piii2019.bl3.CLI;
 
 import java.util.Set;
+import ku.piii2019.bl3.CLI.CLICommandProcessor;
+import ku.piii2019.bl3.CLI.DefaultOptions;
+import ku.piii2019.bl3.CLI.DefaultParserSingleton;
 import ku.piii2019.bl3.CustomLogging;
 import ku.piii2019.bl3.DuplicateFindFromFilename;
 import ku.piii2019.bl3.DuplicateFindFromID3;
@@ -48,7 +51,7 @@ public class CreateM3U implements CLICommandProcessor {
         try {
 
             CommandLine cmd = clp.parse(opts, args);
-            processArgsBody(cmd);
+            processArgsBody(cmd, null);
         } catch (ParseException pex) {
             CustomLogging.logIt(pex);
 
@@ -57,7 +60,7 @@ public class CreateM3U implements CLICommandProcessor {
     }
 
     @Override
-    public void processArgsBody(CommandLine cmd) {
+    public void processArgsBody(CommandLine cmd, Options opts) {
         String fileNameToSave = cmd.getOptionValue('f');
         String srcFolder = cmd.getOptionValue('s');
         String destinationFolder = cmd.hasOption("d") ? cmd.getOptionValue("d") : srcFolder;

@@ -12,16 +12,20 @@ import ku.piii2019.bl3.DuplicateFinder;
 import ku.piii2019.bl3.MediaFileService;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+//import org.apache.commons.cli.ParseException;
 
 /**
  *
  * @author regor
  */
 public class DoCopy implements CLICommandProcessor {
+    
     public static CLICommandProcessor instance = null;
     private DoCopy(){};
+    
+    
     public static CLICommandProcessor getInstance(){
         if(instance==null){
             instance = new DoCopy();
@@ -31,13 +35,14 @@ public class DoCopy implements CLICommandProcessor {
     @Override
     public void processArgs(String... args) {
         CommandLineParser clp = DefaultParserSingleton.getInstance();
+        
         Options opts = DefaultOptions.getDefaultCopyOptions();
 
         try {
 
             CommandLine cmd = clp.parse(opts, args);
-            processArgsBody(cmd);
-        } catch (ParseException pex) {
+            processArgsBody(cmd, opts);
+        } catch (Exception pex) {
             CustomLogging.logIt(pex);
 
         }
@@ -45,7 +50,11 @@ public class DoCopy implements CLICommandProcessor {
     }
 
     @Override
-    public void processArgsBody(CommandLine cmd) {
+    public void processArgsBody(CommandLine cmd, Options opts) {
+        if(cmd.hasOption("h")){
+            String usage = "-s <source_folder> -d <destination_folder <ID3EX | FEX | NOEX>";
+            CLIHelpFormatter.printHelp(opts, usage);
+        }
         String srcFolder = cmd.getOptionValue('s');
         String dstFolder = cmd.getOptionValue('d');
         DuplicateFinder df = null;
@@ -60,6 +69,5 @@ public class DoCopy implements CLICommandProcessor {
 
     }
 
-    public static void checkForError() {
-    }
+  
 }
