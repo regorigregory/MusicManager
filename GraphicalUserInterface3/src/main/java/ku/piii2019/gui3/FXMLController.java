@@ -57,6 +57,11 @@ public class FXMLController implements Initializable {
         MediaItemTableViewFactory.makeTable(tableView1, columns);
         MediaItemTableViewFactory.makeTable(tableView2, columns);
         MediaItemTableViewFactory.makeTable(tableView3, columns);
+        
+        tableView1.setEditable(true);
+        tableView2.setEditable(true);
+        tableView3.setEditable(true);
+
 
         this.getDirections = new DirectionTeller(new TableView[]{tableView1, tableView2, tableView3});
         this.selectionController = new ListSelectionEventController(new TableView[]{tableView1, tableView2, tableView3});
