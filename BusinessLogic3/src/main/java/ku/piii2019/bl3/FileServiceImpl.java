@@ -141,7 +141,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public void copyMediaFiles(String srcFolder, String targetBasePath, DuplicateFinder df) {
 
-        Set<MediaItem> foundMediaItems = getAllID3MediaItems(srcFolder, null);
+        Set<MediaItem> foundMediaItems = getAllID3MediaItems(srcFolder, df);
         Set<MediaItem> copiedItems = new HashSet<>();
         Set<MediaItem> foundDuplicates = new HashSet<>();
 
@@ -149,6 +149,37 @@ public class FileServiceImpl implements FileService {
         Path targetFolder = getFolder(targetBasePath);
 
         Consumer<Path> selectedConsumer = copyFilesBody(sourceFolder, targetFolder);
+        Predicate<MediaItem> processDuplicates = getProcessDuplicatesBody(df, copiedItems, foundDuplicates);
+
+        if (df != null) {
+            foundMediaItems.stream()
+                    .filter(processDuplicates)
+                    .map(MediaItem::getAbsolutePath).map(Paths::get)
+                    .forEach(selectedConsumer);
+
+        } else {
+            foundMediaItems.stream()
+                    .map(MediaItem::getAbsolutePath).map(Paths::get)
+                    .forEach(selectedConsumer);
+        }
+
+        if (foundDuplicates.size() > 0) {
+            System.out.println("The following duplicates were excluded from the copy process:");
+            for (MediaItem m : foundDuplicates) {
+                System.out.println(m.getAbsolutePath());
+            }
+        }
+
+    }
+    
+     public void copyMediaFilesWithoutDirectoryStructure(Set<MediaItem> foundMediaItems, String targetBasePath, DuplicateFinder df) {
+         
+        Set<MediaItem> copiedItems = new HashSet<>();
+        Set<MediaItem> foundDuplicates = new HashSet<>();
+
+        Path targetFolder = getFolder(targetBasePath);
+
+        Consumer<Path> selectedConsumer = copyFilesBody(targetFolder);
         Predicate<MediaItem> processDuplicates = getProcessDuplicatesBody(df, copiedItems, foundDuplicates);
 
         if (df != null) {
@@ -236,13 +267,13 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    public void saveM3UFile(Set<MediaItem> filteredItems, String fileNameToSave, String destinationFolder) {
+    public void saveM3UFile(Set<MediaItem> filteredItems, String fileNameToSave, String destinationFolder, boolean relativePath) {
         String header = M3U.getHeader();
 
         FileServiceImpl.getInstance().writeLineToFile(fileNameToSave, destinationFolder, header);
 
         for (MediaItem mi : filteredItems) {
-            String line = M3U.getMediaItemInf(mi);
+            String line = M3U.getMediaItemInf(mi, relativePath);
             FileServiceImpl.getInstance().writeLineToFile(fileNameToSave, destinationFolder, line);
         }
 

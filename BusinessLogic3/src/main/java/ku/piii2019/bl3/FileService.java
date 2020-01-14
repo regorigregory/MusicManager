@@ -40,7 +40,7 @@ public interface FileService {
     void writeLineToFile(String fileName, String path, String line);
     
      void refileAndCopyOne(String basepath, MediaItem m);
-    void saveM3UFile(Set<MediaItem> filteredItems, String fileNameToSave, String destinationFolder);
+    void saveM3UFile(Set<MediaItem> filteredItems, String fileNameToSave, String destinationFolder, boolean relativePath);
  
     static Consumer<Path> copyFilesBody(Path sourceFolder, Path targetFolder) {
         return (Path filePath) -> {
@@ -57,6 +57,24 @@ public interface FileService {
         };
         
     }
+    
+    static Consumer<Path> copyFilesBody(Path targetFolder) {
+        return (Path filePath) -> {
+            Path targetPath = Paths.get(targetFolder.toString());
+            Path fileName = filePath.getFileName();
+            Path compiledTargetPath = Paths.get(targetPath.toString(), fileName.toString());
+            try {
+                System.out.println(targetPath);
+                Files.copy(filePath, compiledTargetPath, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException ioex) {
+                CustomLogging.logIt(ioex);
+            }
+            
+        };
+        
+    }
+    
+    
     public static Predicate<MediaItem> getProcessDuplicatesBody(DuplicateFinder df, Set<MediaItem> copiedItems, Set<MediaItem> foundDuplicates) {
         return (MediaItem m) -> {
             Set<MediaItem> tempDuplicates = df.getDuplicates(copiedItems, m);

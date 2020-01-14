@@ -93,7 +93,7 @@ public class CreateM3U implements CLICommandProcessor {
 
         
         for(MediaItem mi : filteredItems){
-            String line = M3U.getMediaItemInf(mi);
+            String line = M3U.getMediaItemInf(mi, false);
             FileServiceImpl.getInstance().writeLineToFile(fileNameToSave, destinationFolder, line);
         }
         

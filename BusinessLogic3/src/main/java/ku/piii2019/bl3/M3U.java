@@ -26,7 +26,7 @@ public class M3U {
         return "#EXGENRE:"+genre+SEPARATOR;
     }
 
-    public static String getMediaItemInf(MediaItem extractFromThis) {
+    public static String getMediaItemInf(MediaItem extractFromThis, boolean relativePath) {
         StringBuilder s = new StringBuilder();
         try {
             Mp3File mp3 = new Mp3File(extractFromThis.getAbsolutePath());
@@ -35,7 +35,13 @@ public class M3U {
             String title = extractFromThis.getTitle();
             String album = extractFromThis.getAlbum();
             s.append("#EXTINF:"+length+", "+artist+" - "+title+"(from the album "+album+")"+SEPARATOR );
-            s.append(extractFromThis.getAbsolutePath()+SEPARATOR);
+            if(relativePath){
+                String fileName = extractFromThis.getFilename();
+                s.append(fileName+SEPARATOR);
+            } else {
+               s.append(extractFromThis.getAbsolutePath()+SEPARATOR);
+
+            }
            
 
         } catch (Exception ex) {
