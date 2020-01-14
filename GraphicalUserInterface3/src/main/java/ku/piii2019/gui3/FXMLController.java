@@ -26,7 +26,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Window;
 import ku.piii2019.bl3.FileService;
-import ku.piii2019.bl3.FileServiceImpl;
+import ku.piii2019.bl3.MediaFileService;
 
 public class FXMLController implements Initializable {
 
@@ -208,7 +208,7 @@ public class FXMLController implements Initializable {
     }
 
     private void addContents(TableView<MediaItem> referenceToEitherTable, String collectionRoot) {
-        FileService fileService = FileServiceImpl.getInstance();
+        MediaFileService fileService = MediaFileService.getInstance();
         Set<MediaItem> collectionA = fileService.getAllMediaItems(collectionRoot.toString());
 
         MediaInfoSource myInfoSource = MediaInfoSourceFromID3.getInstance();
@@ -261,10 +261,10 @@ public class FXMLController implements Initializable {
             CustomLogging.logIt(ioex);
         }
 
-        String destinateionFolder = file.getParent();
+        String destinationFolder = file.getParent();
         String fileName = file.getName();
        
-        FileServiceImpl.getInstance().saveM3UFile(tableDataSet, fileName, destinateionFolder, false);
+        MediaFileService.getInstance().saveM3UFile(tableDataSet, fileName, destinationFolder, false);
 
     }
       @FXML
@@ -297,10 +297,9 @@ public class FXMLController implements Initializable {
         
         String destinateionFolder = file.getParent();
         String fileName = file.getName();
-       
-        FileServiceImpl.getInstance().saveM3UFile(tableDataSet, fileName, destinateionFolder, true);
+        MediaFileService.getInstance().saveM3UFile(tableDataSet, fileName, destinateionFolder, true);
         
-        FileServiceImpl.getInstance().copyMediaFilesWithoutDirectoryStructure(tableDataSet, destinateionFolder, null);
+        MediaFileService.getInstance().copyMediaFilesWithoutDirectoryStructure(tableDataSet, destinateionFolder, null);
     }
 
 }
