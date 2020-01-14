@@ -26,24 +26,27 @@ public class DefaultOptions {
         if (defaultCopyOptions == null) {
             defaultCopyOptions = new Options();
             
+            
+            
+            
             Option o = null;
             
-            o = Option.builder("h").hasArg(false).longOpt("help").desc("This screen").build();
+            o = Option.builder("h").hasArg(false).longOpt("help").desc("This screen.").build();
             defaultCopyOptions.addOption(o);
 //            o = Option.builder("c").hasArg(false).longOpt("copy").desc("command to copy:)").required().build();
 //            defaultOptions.addOption(o);
             
-            o = Option.builder("s").hasArg(true).argName("Path").longOpt("src").desc("source folder").required().build();
+            o = Option.builder("s").hasArg(true).argName("Path").longOpt("src").desc("Source folder path.").required(false).build();
             defaultCopyOptions.addOption(o);
             
-            o = Option.builder("d").hasArg(true).argName("Path").longOpt("dsc").desc("destination folder").required().build();
+            o = Option.builder("d").hasArg(true).argName("Path").longOpt("dsc").desc("Destination folder path.").required(false).build();
             defaultCopyOptions.addOption(o);
             
             OptionGroup og = new OptionGroup();
-            o = Option.builder("ID3EX").hasArg(false).longOpt("exclude-ID3").desc("Excluding duplicates based on ID3 tag").required(false).build();
+            o = Option.builder("ID3EX").hasArg(false).longOpt("exclude-ID3").desc("Excluding duplicates based on ID3 tag.").required(false).build();
             og.addOption(o);
             
-            o = Option.builder("FEX").hasArg(false).longOpt("exclude-FNAME").desc("Excluding duplicates based on Filename").required(false).build();
+            o = Option.builder("FEX").hasArg(false).longOpt("exclude-FNAME").desc("Excluding duplicates based on Filename.").required(false).build();
             
             og.addOption(o);
             
@@ -96,10 +99,10 @@ public class DefaultOptions {
            //Optional duplicate filter enabling
            
             og = new OptionGroup();
-            o = Option.builder("ID3EX").hasArg(false).longOpt("exclude-ID3").desc("Excluding duplicates based on ID3 tag").required(false).build();
+            o = Option.builder("ID3EX").hasArg(false).longOpt("exclude-ID3").desc("Excluding duplicates based on ID3 tag.").required(false).build();
             og.addOption(o);
             
-            o = Option.builder("FEX").hasArg(false).longOpt("exclude-FNAME").desc("Excluding duplicates based on Filename").required(false).build();
+            o = Option.builder("FEX").hasArg(false).longOpt("exclude-FNAME").desc("Excluding duplicates based on filename.").required(false).build();
             
             og.addOption(o);
             
@@ -140,10 +143,10 @@ public class DefaultOptions {
            //Optional duplicate filter enabling xtra mile
            
             og = new OptionGroup();
-            o = Option.builder("ID3EX").hasArg(false).longOpt("exclude-ID3").desc("Excluding duplicates based on ID3 tag").required(false).build();
+            o = Option.builder("ID3EX").hasArg(false).longOpt("exclude-ID3").desc("Excluding duplicates based on ID3 tag.").required(false).build();
             og.addOption(o);
             
-            o = Option.builder("FEX").hasArg(false).longOpt("exclude-FNAME").desc("Excluding duplicates based on Filename").required(false).build();
+            o = Option.builder("FEX").hasArg(false).longOpt("exclude-FNAME").desc("Excluding duplicates based on filename.").required(false).build();
             
             og.addOption(o);
             

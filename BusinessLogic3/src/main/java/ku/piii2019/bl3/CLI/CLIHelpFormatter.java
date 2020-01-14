@@ -5,6 +5,7 @@
  */
 package ku.piii2019.bl3.CLI;
 
+import java.io.PrintWriter;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 
@@ -14,6 +15,9 @@ import org.apache.commons.cli.Options;
  */
 public class CLIHelpFormatter {
     private static HelpFormatter helpFormatter =null;
+
+    public CLIHelpFormatter() {
+    }
     private static HelpFormatter getHelpFormatter(){
         if(helpFormatter == null){
             helpFormatter = new HelpFormatter();
@@ -21,6 +25,8 @@ public class CLIHelpFormatter {
         return helpFormatter;
     }
     public static void printHelp(Options opts, String usage){
-        getHelpFormatter().printHelp(usage, opts);
+        PrintWriter pw =new PrintWriter(System.out, true);
+        getHelpFormatter().printHelp(pw, 100, usage, "\r\n", opts, 1, 10, "\r\n");
+
     }
 }

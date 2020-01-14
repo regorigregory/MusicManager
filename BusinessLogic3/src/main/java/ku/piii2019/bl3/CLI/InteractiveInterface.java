@@ -5,6 +5,7 @@
  */
 package ku.piii2019.bl3.CLI;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import ku.piii2019.bl3.CustomLogging;
@@ -31,23 +32,48 @@ public class InteractiveInterface {
             System.out.println("Please select one of the available options:");
             //What if the user enters something other than int?
             printAvailableOptions();
-            int userSelectedOption = sc.nextInt();
-            MenuOption selected = getSelectedOption(userSelectedOption);
-            processOption(selected);
-            while(selected.getOp() != MenuOption.Option.BACK){
-                System.out.println("Your choice is:");
-                System.out.println(selected.getOptionText());
-                System.out.println("For help use -h");
-                String[] args = sc.nextLine().split(" ");
+            String userSelectedOption = sc.nextLine();
+            MenuOption selected = null;
+            try {
+                int selectedMenuID = Integer.parseInt(userSelectedOption);
+                selected = getSelectedOption(selectedMenuID);
+                //processOption(selected);
+            } catch (Exception ex) {
+                System.out.println("\r\nError. The entered option has to be a single integer value.\r\n");
             }
+            if (selected != null) {
+                while (selected.getOp() != MenuOption.Option.BACK) {
+
+                    System.out.println("Your choice is:");
+                    System.out.println(selected.getOptionText());
+                    System.out.println("For help use \"-h\" or \"--help\".");
+
+                    CLICommandProcessor clip = selected.getOp().getProcessor();
+                    String[] args = sc.nextLine().split(" ");
+                    try {
+                        if (MenuOption.Option.BACK == getSelectedOption(Integer.parseInt(args[0])).getOp()) {
+                            break;
+                        }
+                    } catch (Exception ex) {
+                      //nothing to do here. I was just curious if you wanted to return to the main menu.:)))
+                    }
+
+                    Arrays.asList(args).stream().forEach(System.out::println);
+
+                    if (clip != null && args.length > 0) {
+                        clip.processArgs(args);
+                    }
+                }
+
+            }
+
         }
 
     }
 
-
-
     public static void printAvailableOptions() {
         for (MenuOption mi : availableMenuOptions) {
+
             StringBuilder output = new StringBuilder();
             output.append(mi.getOptionID());
             output.append(")");
@@ -61,11 +87,12 @@ public class InteractiveInterface {
         MenuOption copy = new MenuOption(MenuOption.Option.COPY, ++optionID, "Copy files from one folder to another, optionally, without duplicates.");
         MenuOption refile = new MenuOption(MenuOption.Option.REFILE, ++optionID, "Refile by artist-album a folder to a target folder.");
         MenuOption playlist = new MenuOption(MenuOption.Option.CREATE_PLAYLIST, ++optionID, "Refile by artist-album a folder to a target folder.");
-        
+        MenuOption back = new MenuOption(MenuOption.Option.BACK, ++optionID, "Back to the main menu. It only works if used from a submenu.");
         MenuOption exit = new MenuOption(MenuOption.Option.EXIT, ++optionID, "Exit this program.");
         availableMenuOptions.add(copy);
         availableMenuOptions.add(refile);
         availableMenuOptions.add(playlist);
+        availableMenuOptions.add(back);
         availableMenuOptions.add(exit);
         optionID = 0;
     }
@@ -77,6 +104,8 @@ public class InteractiveInterface {
                 return mo;
             }
         }
+        
+        System.out.println("\r\nThe selected option is invalid. Please use a single integer value when selecting it.\r\n");
         return null;
     }
 
@@ -108,10 +137,8 @@ public class InteractiveInterface {
                     return;
             }
 
-           
-
-    }
+        } else {
+           System.out.println("The selected option is invalid. Retard.");
+        }
     }
 }
-
-

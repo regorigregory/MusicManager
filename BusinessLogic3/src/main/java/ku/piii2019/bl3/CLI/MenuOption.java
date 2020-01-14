@@ -26,6 +26,14 @@ public class MenuOption {
             this.CLIPro = cli;
         }
 
+        public CLICommandProcessor getCLIPro() {
+            return CLIPro;
+        }
+
+        public void setCLIPro(CLICommandProcessor CLIPro) {
+            this.CLIPro = CLIPro;
+        }
+        
         public CLICommandProcessor getProcessor() {
             return this.CLIPro;
         }

@@ -51,10 +51,11 @@ public class DoCopy implements CLICommandProcessor {
 
     @Override
     public void processArgsBody(CommandLine cmd, Options opts) {
+       
         if(cmd.hasOption("h")){
-            String usage = "-s <source_folder> -d <destination_folder <ID3EX | FEX | NOEX>";
+            String usage = "-s <source_folder> -d <destination_folder> [ID3EX | FEX | NOEX]";
             CLIHelpFormatter.printHelp(opts, usage);
-        }
+        } else if (cmd.hasOption("s") && cmd.hasOption("d")){
         String srcFolder = cmd.getOptionValue('s');
         String dstFolder = cmd.getOptionValue('d');
         DuplicateFinder df = null;
@@ -66,6 +67,10 @@ public class DoCopy implements CLICommandProcessor {
 
         MediaFileService fsi =  MediaFileService.getInstance();
         fsi.copyMediaFiles(srcFolder, dstFolder, df);
+        } else {
+            System.out.println("The provided arguments are not valid. Use \"-h\" to view usage");
+        }
+        return;
 
     }
 
