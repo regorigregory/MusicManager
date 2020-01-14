@@ -5,6 +5,7 @@
  */
 package ku.piii2019.gui3;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.EventHandler;
@@ -12,6 +13,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import ku.piii2019.bl3.CustomLogging;
 import ku.piii2019.bl3.MediaInfoSourceFromID3;
 import ku.piii2019.bl3.MediaItem;
 
@@ -35,6 +37,12 @@ public class MediaItemTableViewFactory {
     static public void processInput(MediaItem editItem, String newValue, String editProperty)
     {
         System.out.println("New value is " + newValue + " for property " + editProperty);
+        try{
+        Field editedField = editItem.getClass().getDeclaredField(editProperty);
+        editedField.set(editItem, newValue);
+        }catch(Exception ex){
+            CustomLogging.logIt(ex);
+        }
         MediaInfoSourceFromID3.updateBasicMetaTags(editItem);
 
     }
