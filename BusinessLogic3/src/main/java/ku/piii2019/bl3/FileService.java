@@ -21,26 +21,16 @@ import java.util.function.Predicate;
  */
 public interface FileService {
     
-    Set<MediaItem> getAllMediaItems(String rootFolder);
-    
-    Set<MediaItem> getItemsToRemove(Set<Set<MediaItem>> duplicates);
-    
-    boolean removeFiles(Set<MediaItem> listToRemove);
-    
     void copyFiles(String srcFolder, String targetBasePath);
     
     void copyFiles(String srcFolder, String targetBasePath, String filter);
     
-    void copyMediaFiles(String srcFolder, String targetBasePath, DuplicateFinder df);
     
     List<Path> filterFileList(String path, String filter);
 
-    Set<MediaItem> getAllID3MediaItems(String rootFolder, DuplicateFinder df);
     
     void writeLineToFile(String fileName, String path, String line);
     
-     void refileAndCopyOne(String basepath, MediaItem m);
-    void saveM3UFile(Set<MediaItem> filteredItems, String fileNameToSave, String destinationFolder, boolean relativePath);
  
     static Consumer<Path> copyFilesBody(Path sourceFolder, Path targetFolder) {
         return (Path filePath) -> {
@@ -75,18 +65,7 @@ public interface FileService {
     }
     
     
-    public static Predicate<MediaItem> getProcessDuplicatesBody(DuplicateFinder df, Set<MediaItem> copiedItems, Set<MediaItem> foundDuplicates) {
-        return (MediaItem m) -> {
-            Set<MediaItem> tempDuplicates = df.getDuplicates(copiedItems, m);
-            if (tempDuplicates.size() > 0) {
-                foundDuplicates.addAll(tempDuplicates);
-                return false;
-            }
-            copiedItems.add(m);
-            return true;            
-        };
-        
-    }
+   
 
     static boolean isFile(String fileName) {
         

@@ -25,27 +25,25 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 import static ku.piii2019.bl3.FileService.copyFilesBody;
 import static ku.piii2019.bl3.FileService.getFolder;
-import static ku.piii2019.bl3.FileService.getProcessDuplicatesBody;
 
 /**
  *
  * @author James
  */
-public class FileServiceImpl implements FileService {
+public class MediaFileService extends GenericFileService {
 
-    private static FileServiceImpl instance = null;
+    private static MediaFileService instance = null;
 
-    private FileServiceImpl() {
+    private MediaFileService() {
     }
 
-    public static FileServiceImpl getInstance() {
+    public static MediaFileService getInstance() {
         if (instance == null) {
-            instance = new FileServiceImpl();
+            instance = new MediaFileService();
         }
         return instance;
     }
 
-    @Override
     public Set<MediaItem> getAllMediaItems(String rootFolder) {
         Path p = Paths.get(rootFolder);
         if (!p.isAbsolute()) {
@@ -71,8 +69,7 @@ public class FileServiceImpl implements FileService {
         return items;
     }
 
-    @Override
-    public Set<MediaItem> getItemsToRemove(Set<Set<MediaItem>> duplicates) {
+    public Set<MediaItem> getMediaItemsToRemove(Set<Set<MediaItem>> duplicates) {
         Set<MediaItem> outputSet = new HashSet<>();
         for (Set<MediaItem> s : duplicates) {
 
@@ -83,8 +80,7 @@ public class FileServiceImpl implements FileService {
         return outputSet;
     }
 
-    @Override
-    public boolean removeFiles(Set<MediaItem> listToRemove) {
+    public boolean removeMediaFiles(Set<MediaItem> listToRemove) {
         boolean retVal = true;
         for (MediaItem m : listToRemove) {
             try {
@@ -97,51 +93,20 @@ public class FileServiceImpl implements FileService {
         return retVal;
     }
 
-    @Override
-    public List<Path> filterFileList(String path, String filter) {
-        Path basePath = Paths.get(path);
-        List<Path> filteredFiles = new LinkedList<>();
-        String regexMask = "(.*)" + filter + "$";
-        if (filter != null && filter.length() > 0)
-            try {
-            Stream<Path> filterable = Files.walk(basePath);
-            filterable.filter((p) -> p.toString().matches(regexMask)).forEach((p) -> filteredFiles.add(p));
+  
 
-        } catch (IOException ex) {
 
-        }
+   
 
-        return filteredFiles;
-    }
-
-    @Override
-    public void copyFiles(String srcFolder, String targetBasePath) {
-        Path sourceFolder = getFolder(srcFolder);
-        Path targetFolder = getFolder(targetBasePath);
-        Consumer<Path> selectedConsumer = copyFilesBody(sourceFolder, targetFolder);
-        try {
-            Files.walk(sourceFolder).forEach(selectedConsumer);
-        } catch (IOException ioex) {
-            CustomLogging.logIt(ioex);
-
-        }
-    }
-
-    @Override
-    public void copyFiles(String srcFolder, String targetBasePath, String filter) {
-        List<Path> filteredPaths = filterFileList(srcFolder, filter);
-        Path sourceFolder = getFolder(srcFolder);
-        Path targetFolder = getFolder(targetBasePath);
-        Consumer<Path> selectedConsumer = copyFilesBody(sourceFolder, targetFolder);
-
-        filteredPaths.forEach(selectedConsumer);
-
-    }
-
-    @Override
     public void copyMediaFiles(String srcFolder, String targetBasePath, DuplicateFinder df) {
 
-        Set<MediaItem> foundMediaItems = getAllID3MediaItems(srcFolder, df);
+       Set<MediaItem> foundMediaItems = getAllID3MediaItems(srcFolder, df);
+       copyMediaFiles(foundMediaItems, srcFolder, targetBasePath, df);
+
+    }
+    
+    public void copyMediaFiles(Set<MediaItem> foundMediaItems, String srcFolder, String targetBasePath, DuplicateFinder df) {
+
         Set<MediaItem> copiedItems = new HashSet<>();
         Set<MediaItem> foundDuplicates = new HashSet<>();
 
@@ -203,7 +168,6 @@ public class FileServiceImpl implements FileService {
 
     }
 
-    @Override
     public Set<MediaItem> getAllID3MediaItems(String rootFolder, DuplicateFinder df) {
         Path p = Paths.get(rootFolder);
         if (!p.isAbsolute()) {
@@ -238,20 +202,7 @@ public class FileServiceImpl implements FileService {
 
     }
 
-    @Override
-    public void writeLineToFile(String fileName, String path, String line) {
-        Path candidateFolder = FileService.getFolder(path);
-        Path candidateFile = Paths.get(candidateFolder.toString(), fileName);
-        Path realFile = FileService.getFile(candidateFile.toString());
-        try ( BufferedWriter bw = Files.newBufferedWriter(realFile, StandardOpenOption.APPEND)) {
-            bw.write(line);
-        } catch (Exception ex) {
-            CustomLogging.logIt(ex);
-        }
-    }
-
-    @Override
-    public void refileAndCopyOne(String basePath, MediaItem m) {
+        public void refileAndCopyMediaItem(String basePath, MediaItem m) {
         //should filter for not allowed characters later on...
         String artist = m.getArtist();
         String album = m.getAlbum();
@@ -270,13 +221,26 @@ public class FileServiceImpl implements FileService {
     public void saveM3UFile(Set<MediaItem> filteredItems, String fileNameToSave, String destinationFolder, boolean relativePath) {
         String header = M3U.getHeader();
 
-        FileServiceImpl.getInstance().writeLineToFile(fileNameToSave, destinationFolder, header);
+        MediaFileService.getInstance().writeLineToFile(fileNameToSave, destinationFolder, header);
 
         for (MediaItem mi : filteredItems) {
             String line = M3U.getMediaItemInf(mi, relativePath);
-            FileServiceImpl.getInstance().writeLineToFile(fileNameToSave, destinationFolder, line);
+            MediaFileService.getInstance().writeLineToFile(fileNameToSave, destinationFolder, line);
         }
 
+    }
+    
+     public static Predicate<MediaItem> getProcessDuplicatesBody(DuplicateFinder df, Set<MediaItem> copiedItems, Set<MediaItem> foundDuplicates) {
+        return (MediaItem m) -> {
+            Set<MediaItem> tempDuplicates = df.getDuplicates(copiedItems, m);
+            if (tempDuplicates.size() > 0) {
+                foundDuplicates.addAll(tempDuplicates);
+                return false;
+            }
+            copiedItems.add(m);
+            return true;            
+        };
+        
     }
 
 }

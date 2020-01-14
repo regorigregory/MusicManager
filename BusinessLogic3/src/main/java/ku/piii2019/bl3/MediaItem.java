@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 public class MediaItem {
 
     private String absolutePath;
+    private String relativePath;
     private String title;
     private String album;
     private String artist;
@@ -90,4 +91,13 @@ public class MediaItem {
     return new File(absolutePath).getName();	 	       	  	 	        	      	   	
 	 	       	  	 	        	      	   	
     }
+
+    public String getRelativePath() {
+        return relativePath;
+    }
+
+    public void setRelativePath(String relativePath) {
+        this.relativePath = relativePath;
+    }
+    
 }
