@@ -261,17 +261,46 @@ public class FXMLController implements Initializable {
             CustomLogging.logIt(ioex);
         }
 
-        System.out.println(file.getPath());
         String destinateionFolder = file.getParent();
         String fileName = file.getName();
-        System.out.println(destinateionFolder);
-        System.out.println(fileName);
-        FileServiceImpl.getInstance().saveM3UFile(tableDataSet, fileName, destinateionFolder);
+       
+        FileServiceImpl.getInstance().saveM3UFile(tableDataSet, fileName, destinateionFolder, false);
 
     }
       @FXML
     private void saveAsM3UandCopy(ActionEvent event) {
-        throw new UnsupportedOperationException("Yet to be implemented.");
+        
+         TableView table = getDirections.urinaryAction(event);
+        ObservableList<MediaItem> tableData
+                = table.getItems();
+        Set<MediaItem> tableDataSet = new HashSet(tableData);
+        if (tableDataSet.size() == 0) {
+            String[] args = new String[]{"Table 3 is empty", "Table 3 is empty", "Please add items to table 3 before trying to save an M3U List"};
+            ErrorPopups.alertUser(args);
+            return;
+        }
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new ExtensionFilter("M3U files", "*.m3u"));
+        fileChooser.setTitle("Select save directory and m3u filename.");
+
+        Window stage = MainApp.getPrimaryStage();
+
+        File file = fileChooser.showSaveDialog(stage);
+
+        try {
+            file.delete();
+            file.createNewFile();
+
+        } catch (IOException ioex) {
+            CustomLogging.logIt(ioex);
+        }
+        
+        String destinateionFolder = file.getParent();
+        String fileName = file.getName();
+       
+        FileServiceImpl.getInstance().saveM3UFile(tableDataSet, fileName, destinateionFolder, true);
+        
+        FileServiceImpl.getInstance().copyMediaFilesWithoutDirectoryStructure(tableDataSet, destinateionFolder, null);
     }
 
 }
