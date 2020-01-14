@@ -6,6 +6,7 @@
 package ku.piii2019.bl3;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
@@ -28,9 +29,7 @@ public class MediaItem {
     public void setGenre(String genre) {
         this.genre = genre;
     }
-    
-  
-    
+
     public String getTitle() {
         return title;
     }
@@ -42,13 +41,13 @@ public class MediaItem {
     public String getArtist() {
         return artist;
     }
-            
+
     public String getAbsolutePath() {
         return absolutePath;
     }
 
     public MediaItem setAbsolutePath(String absolutePath) {
-        
+
         this.absolutePath = Paths.get(absolutePath).toAbsolutePath().normalize().toString();
         return this;
     }
@@ -66,17 +65,18 @@ public class MediaItem {
         }
         return this.absolutePath.equals(((MediaItem) obj).getAbsolutePath());
     }
+
     @Override
     public int hashCode() {
         return this.absolutePath.hashCode();
     }
 
-    public MediaItem  setTitle(String title) {
+    public MediaItem setTitle(String title) {
         this.title = title;
         return this;
     }
 
-    public MediaItem  setAlbum(String album) {
+    public MediaItem setAlbum(String album) {
         this.album = album;
         return this;
     }
@@ -85,11 +85,11 @@ public class MediaItem {
         this.artist = artist;
         return this;
     }
-    
-    public String getFilename(){	 	       	  	 	        	      	   	
-	 	       	  	 	        	      	   	
-    return new File(absolutePath).getName();	 	       	  	 	        	      	   	
-	 	       	  	 	        	      	   	
+
+    public String getFilename() {
+
+        return new File(absolutePath).getName();
+
     }
 
     public String getRelativePath() {
@@ -99,5 +99,9 @@ public class MediaItem {
     public void setRelativePath(String relativePath) {
         this.relativePath = relativePath;
     }
-    
+
+    public void relativizeMyself(Path sourceFolder) {
+        Path relativePath = sourceFolder.relativize(Paths.get(getAbsolutePath()));
+        setRelativePath(relativePath.toString());
+    }
 }
