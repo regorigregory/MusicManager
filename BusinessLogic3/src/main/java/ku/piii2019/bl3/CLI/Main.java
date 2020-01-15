@@ -12,7 +12,7 @@ package ku.piii2019.bl3.CLI;
 public class Main {
     public static void main(String[] args){
         
-        InteractiveInterface.interrogateUser();
+        InteractiveCLIInterface.interrogateUser();
         
         
     }

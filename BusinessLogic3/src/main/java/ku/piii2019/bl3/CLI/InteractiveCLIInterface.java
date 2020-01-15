@@ -16,7 +16,7 @@ import java.util.Scanner;
  *
  * @author regor
  */
-public class InteractiveInterface {
+public class InteractiveCLIInterface {
 
     private static int optionID = 0;
     static List<MenuOption> availableMenuOptions;
