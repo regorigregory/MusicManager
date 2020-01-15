@@ -123,7 +123,7 @@ public class DefaultOptions {
             o = Option.builder("h").hasArg(false).longOpt("help").desc("This screen.").build();
             defaultRefileOptions.addOption(o);
 
-            o = Option.builder("s").hasArg(true).argName("source-folder").longOpt("src").desc("Source folder to scan. If no artist or genre filter is given, then every single file in the folder will be processed.").required(true).build();
+            o = Option.builder("s").hasArg(true).argName("source-folder").longOpt("src").desc("Source folder to scan. If no artist or genre filter is given, then every single file in the folder will be processed.").required(false).build();
             defaultRefileOptions.addOption(o);
             
             o = Option.builder("d").hasArg(true).argName("destination-folder").longOpt("dsc").desc("Optional destination folder to save the m3u file.").required(false).build();
@@ -136,7 +136,6 @@ public class DefaultOptions {
             
             o = Option.builder("g").hasArgs().longOpt("genre").desc("Filtering playlist by a single or multiple genres.").build();
             og.addOption(o);
-              og.addOption(o);
             og.setRequired(false);
             defaultRefileOptions.addOptionGroup(og);
           

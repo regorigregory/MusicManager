@@ -5,6 +5,7 @@
  */
 package ku.piii2019.bl3.CLI;
 
+import java.nio.file.Paths;
 import ku.piii2019.bl3.CustomLogging;
 import ku.piii2019.bl3.DuplicateFindFromFilename;
 import ku.piii2019.bl3.DuplicateFindFromID3;
@@ -53,12 +54,14 @@ public class DoCopy implements CLICommandProcessor {
     public void processArgsBody(CommandLine cmd, Options opts) {
        
         if(cmd.hasOption("h")){
-            String usage = "-s <source_folder> -d <destination_folder> [ID3EX | FEX | NOEX]";
+            String usage = "-s <source_folder> -d <destination_folder> [-ID3EX | -FEX | -NOEX]";
             CLIHelpFormatter.printHelp(opts, usage);
         } else if (cmd.hasOption("s") && cmd.hasOption("d")){
         String srcFolder = cmd.getOptionValue('s');
         String dstFolder = cmd.getOptionValue('d');
         DuplicateFinder df = null;
+        
+        
         if (cmd.hasOption("ID3EX")) {
             df = new DuplicateFindFromID3();
         } else if (cmd.hasOption("FEX")) {

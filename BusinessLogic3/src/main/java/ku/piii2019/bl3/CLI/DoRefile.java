@@ -24,8 +24,9 @@ import org.apache.commons.cli.ParseException;
  *
  * @author regor
  */
-public class DoRefile implements CLICommandProcessor{
-      public static CLICommandProcessor instance = null;
+public class DoRefile implements CLICommandProcessor {
+
+    public static CLICommandProcessor instance = null;
 
     private DoRefile() {
     }
@@ -38,7 +39,6 @@ public class DoRefile implements CLICommandProcessor{
         return instance;
     }
 
-    
     @Override
     public void processArgs(String... args) {
         CommandLineParser clp = DefaultParserSingleton.getInstance();
@@ -47,7 +47,7 @@ public class DoRefile implements CLICommandProcessor{
         try {
 
             CommandLine cmd = clp.parse(opts, args);
-            processArgsBody(cmd, null);
+            processArgsBody(cmd, opts);
         } catch (ParseException pex) {
             CustomLogging.logIt(pex);
 
@@ -57,39 +57,41 @@ public class DoRefile implements CLICommandProcessor{
 
     @Override
     public void processArgsBody(CommandLine cmd, Options opts) {
-        String srcFolder = cmd.getOptionValue('s');
-        String destinationFolder = cmd.hasOption("d") ? cmd.getOptionValue("d") : srcFolder;
+        if (cmd.hasOption("h")) {
+            String usage = "-s <source_folder> -d <destination_folder> [-ID3EX | -FEX | -NOEX] [-g <genre_filter> | -a <artist_filter>]";
+            CLIHelpFormatter.printHelp(opts, usage);
+        } else if (cmd.hasOption("s")){
 
-        DuplicateFinder df = null;
-        if (cmd.hasOption("ID3EX")) {
-            df = new DuplicateFindFromID3();
-        } else if (cmd.hasOption("FEX")) {
-            df = new DuplicateFindFromFilename();
-        }
-        
-        SearchService.FilterType type = null;
+            String srcFolder = cmd.getOptionValue("s");
+            String destinationFolder = cmd.hasOption("d") ? cmd.getOptionValue("d") : srcFolder;
 
-        Set<MediaItem> foundItems = MediaFileService.getInstance().getAllID3MediaItems(srcFolder, df)[0];
-        String[] searchTerms = null;
-        if (cmd.hasOption("a")) {
+            DuplicateFinder df = null;
+            if (cmd.hasOption("ID3EX")) {
+                df = new DuplicateFindFromID3();
+            } else if (cmd.hasOption("FEX")) {
+                df = new DuplicateFindFromFilename();
+            }
+
+            SearchService.FilterType type = null;
+
+            Set<MediaItem> foundItems = MediaFileService.getInstance().getAllID3MediaItems(srcFolder, df)[0];
+            String[] searchTerms = null;
+            if (cmd.hasOption("a")) {
                 searchTerms = cmd.getOptionValue("a").split(" ");
                 type = SearchService.FilterType.ARTIST;
-        } else if (cmd.hasOption("g")) {
+            } else if (cmd.hasOption("g")) {
                 searchTerms = cmd.getOptionValue("a").split(" ");
                 type = SearchService.FilterType.GENRE;
 
-        } 
-        
-        
+            }
 
-        SearchService searchService = new SimpleSearch(); 
-        Set<MediaItem> filteredItems = searchService.filterBy(searchTerms, foundItems, type);
-        
-        for(MediaItem m : filteredItems){
-            MediaFileService.getInstance().refileAndCopyMediaItem(srcFolder, m);
+            SearchService searchService = new SimpleSearch();
+            Set<MediaItem> filteredItems = searchService.filterBy(searchTerms, foundItems, type);
+
+            for (MediaItem m : filteredItems) {
+                MediaFileService.getInstance().refileAndCopyMediaItem(srcFolder, m);
+            }
         }
-        
-        
-        
+
     }
 }
