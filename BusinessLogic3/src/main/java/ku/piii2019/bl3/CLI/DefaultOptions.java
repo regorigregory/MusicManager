@@ -72,21 +72,21 @@ public class DefaultOptions {
             o = Option.builder("h").hasArg(false).longOpt("help").desc("This screen").build();
             defaultM3UOptions.addOption(o);
 
-            o = Option.builder("f").hasArg(true).argName("output-file").longOpt("filename").desc("Filename to be used to save the generated list.").required(true).build();
+            o = Option.builder("f").hasArg(true).argName("output-file").longOpt("filename").desc("Filename to be used to save the generated list.").required(false).build();
             defaultM3UOptions.addOption(o);
             
-            o = Option.builder("s").hasArg(true).argName("source-folder").longOpt("src").desc("Source folder to scan. If no artist or genre filter is given, then every single file in the folder will be processed.").required(true).build();
+            o = Option.builder("s").hasArg(true).argName("source-folder").longOpt("src").desc("Source folder to scan. If no artist or genre filter is given, then every single file in the folder will be processed.").required(false).build();
             defaultM3UOptions.addOption(o);
             
-            o = Option.builder("d").hasArg(true).argName("destination-folder").longOpt("dsc").desc("Optional destination folder to save the m3u file.").required(false).build();
+            o = Option.builder("d").hasArg(true).argName("destination-folder").longOpt("dsc").desc("Optional destination folder to save the m3u file. If not specified, it will be saved in the src folder.").required(false).build();
             defaultM3UOptions.addOption(o);
             
             //Filters group
             OptionGroup og = new OptionGroup();
-            o = Option.builder("a").hasArgs().longOpt("artist").desc("Filtering playlist by a single or multiple artists.").build();
+            o = Option.builder("a").hasArgs().valueSeparator(',').longOpt("artist").desc("Filtering playlist by a single or multiple artists.").build();
             og.addOption(o);
             
-            o = Option.builder("g").hasArgs().longOpt("genre").desc("Filtering playlist by a single or multiple genres.").build();
+            o = Option.builder("g").hasArgs().valueSeparator(',').longOpt("genre").desc("Filtering playlist by a single or multiple genres.").build();
             og.addOption(o);
               og.addOption(o);
             og.setRequired(false);
