@@ -31,8 +31,7 @@ public class CustomLogging {
     public static void defaultSetup(){
         CustomLogging.getInstance().setLevel(DEFAULT_LOG_LEVEL);
         CustomLogging.getInstance().addHandler(getConsoleHandler());
-        CustomLogging.getInstance().addHandler(getFileHandler(null));
-        
+     
 
     }
     
@@ -105,4 +104,10 @@ public class CustomLogging {
         }
         return null;
     }
+
+    public static Level getDEFAULT_LOG_LEVEL() {
+        return DEFAULT_LOG_LEVEL;
+    }
+    
+    
 }
