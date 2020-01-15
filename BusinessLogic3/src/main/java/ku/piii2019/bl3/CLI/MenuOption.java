@@ -12,8 +12,34 @@ package ku.piii2019.bl3.CLI;
 public class MenuOption {
 
     enum Option {
-        COPY, EXIT, REMOVE_DUPLICATES, REFILE, CREATE_PLAYLIST
+        START(null),
+        COPY(DoCopy.getInstance()),
+        BACK(null),
+        EXIT(null),
+        REFILE(DoRefile.getInstance()),
+        CREATE_PLAYLIST(CreateM3U.getInstance());
+        
+        
+        CLICommandProcessor CLIPro = null;
+
+        Option(CLICommandProcessor cli) {
+            this.CLIPro = cli;
+        }
+
+        public CLICommandProcessor getCLIPro() {
+            return CLIPro;
+        }
+
+        public void setCLIPro(CLICommandProcessor CLIPro) {
+            this.CLIPro = CLIPro;
+        }
+        
+        public CLICommandProcessor getProcessor() {
+            return this.CLIPro;
+        }
+
     }
+
     private int optionID;
     private String optionText;
     private Option op;

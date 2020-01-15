@@ -6,6 +6,9 @@
 package ku.piii2019.bl3.CLI;
 
 import java.util.Set;
+import ku.piii2019.bl3.CLI.CLICommandProcessor;
+import ku.piii2019.bl3.CLI.DefaultOptions;
+import ku.piii2019.bl3.CLI.DefaultParserSingleton;
 import ku.piii2019.bl3.CustomLogging;
 import ku.piii2019.bl3.DuplicateFindFromFilename;
 import ku.piii2019.bl3.DuplicateFindFromID3;
@@ -48,7 +51,7 @@ public class CreateM3U implements CLICommandProcessor {
         try {
 
             CommandLine cmd = clp.parse(opts, args);
-            processArgsBody(cmd);
+            processArgsBody(cmd, opts);
         } catch (ParseException pex) {
             CustomLogging.logIt(pex);
 
@@ -57,48 +60,69 @@ public class CreateM3U implements CLICommandProcessor {
     }
 
     @Override
-    public void processArgsBody(CommandLine cmd) {
-        String fileNameToSave = cmd.getOptionValue('f');
-        String srcFolder = cmd.getOptionValue('s');
-        String destinationFolder = cmd.hasOption("d") ? cmd.getOptionValue("d") : srcFolder;
-        String maximumLength = cmd.hasOption("ml") ? cmd.getOptionValue("ml") : null;
+    public void processArgsBody(CommandLine cmd, Options opts) {
 
-        DuplicateFinder df = null;
-        if (cmd.hasOption("ID3EX")) {
-            df = new DuplicateFindFromID3();
-        } else if (cmd.hasOption("FEX")) {
-            df = new DuplicateFindFromFilename();
-        }
-        
-        FilterType type = null;
+        if (cmd.hasOption("h")) {
+            String usage = "-s <source_folder>  -f <output_filename> [-d <destination_folder>][-ID3EX | -FEX | -NOEX] [-g <genre_filter1>, <genre_filter2>, <genre_filtern>"
+                    + " | -a <artist_filter1>, <artist_filter2>, <artist_filtern>]";
+            CLIHelpFormatter.printHelp(opts, usage);
+        } else if (cmd.hasOption("s") && cmd.hasOption("f")) {
+            
+            String fileNameToSave = cmd.getOptionValue('f');
+            if(!fileNameToSave.endsWith(".m3u")){
+                fileNameToSave+= ".m3u";
+            }
+            String srcFolder = cmd.getOptionValue('s');
+            String destinationFolder = cmd.hasOption("d") ? cmd.getOptionValue("d") : srcFolder;
+            String maximumLength = cmd.hasOption("ml") ? cmd.getOptionValue("ml") : null;
+            Double parsedMaximumLength = null;
+            if(maximumLength!=null){
+                parsedMaximumLength = Double.parseDouble(maximumLength);
+                parsedMaximumLength = parsedMaximumLength*60;
+            }
+            DuplicateFinder df = null;
+            if (cmd.hasOption("ID3EX")) {
+                df = new DuplicateFindFromID3();
+            } else if (cmd.hasOption("FEX")) {
+                df = new DuplicateFindFromFilename();
+            }
 
-        Set<MediaItem> foundItems = MediaFileService.getInstance().getAllID3MediaItems(srcFolder, df);
-        String[] searchTerms = null;
-        if (cmd.hasOption("a")) {
-                searchTerms = cmd.getOptionValue("a").split(" ");
+            FilterType type = null;
+
+            Set<MediaItem> foundItems = MediaFileService.getInstance().getAllID3MediaItems(srcFolder, df)[0];
+            String[] searchTerms = null;
+            if (cmd.hasOption("a")) {
+                searchTerms = cmd.getOptionValues("a");
                 type = FilterType.ARTIST;
-        } else if (cmd.hasOption("g")) {
-                searchTerms = cmd.getOptionValue("a").split(" ");
+            } else if (cmd.hasOption("g")) {
+                searchTerms = cmd.getOptionValues("g");
                 type = FilterType.GENRE;
 
-        } 
-        
-         SearchService searchService = new SimpleSearch();
-        Set<MediaItem> filteredItems = searchService.filterBy(searchTerms, foundItems, type);
-        String header = M3U.getHeader();
+            }
 
-       
+            SearchService searchService = new SimpleSearch();
+            Set<MediaItem> filteredItems = searchService.filterBy(searchTerms, foundItems, type);
+            String header = M3U.getHeader();
 
-        MediaFileService.getInstance().writeLineToFile(fileNameToSave, destinationFolder, header);
-
-        
-        for(MediaItem mi : filteredItems){
-            String line = M3U.getMediaItemInf(mi, false);
-            MediaFileService.getInstance().writeLineToFile(fileNameToSave, destinationFolder, line);
+            MediaFileService.getInstance().writeLineToFile(fileNameToSave, destinationFolder, header);
+            Integer currentLength = 0;
+            for (MediaItem mi : filteredItems) {
+                String line = M3U.getMediaItemInf(mi, false);
+                if(parsedMaximumLength!=0){
+                    int lengthWhatIF = currentLength+mi.getLengthInSeconds();
+                    if(lengthWhatIF>parsedMaximumLength)
+                    {
+                    continue;
+                    
+                    }
+                    currentLength+=mi.getLengthInSeconds();
+                }
+                MediaFileService.getInstance().writeLineToFile(fileNameToSave, destinationFolder, line);
+            }
+            System.out.println("The following playlist has been created:");
+            System.out.println(fileNameToSave+" in the folder: "+destinationFolder);
         }
-        
-        
-        
+
     }
 
 }

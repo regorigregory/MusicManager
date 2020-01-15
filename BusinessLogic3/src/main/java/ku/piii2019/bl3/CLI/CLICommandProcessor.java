@@ -6,6 +6,7 @@
 package ku.piii2019.bl3.CLI;
 
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Options;
 
 /**
  *
@@ -13,5 +14,5 @@ import org.apache.commons.cli.CommandLine;
  */
 public interface CLICommandProcessor {
     public  void processArgs(String... args);
-    public  void processArgsBody(CommandLine cmd);
+    public  void processArgsBody(CommandLine cmd, Options opts);
 }

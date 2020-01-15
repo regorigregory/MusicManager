@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +36,7 @@ public class MediaInfoSourceFromID3 implements MediaInfoSource {
     public void addMediaInfo(MediaItem m) throws Exception {
         Mp3File mp3 = new Mp3File(m.getAbsolutePath());
         ID3v1 tag = mp3.getId3v1Tag();
+        int length = (int) mp3.getLengthInSeconds();
         if (tag == null) {
             tag = mp3.getId3v2Tag();
         }
@@ -46,7 +48,7 @@ public class MediaInfoSourceFromID3 implements MediaInfoSource {
             m.setAlbum(tag.getAlbum());
             m.setArtist(tag.getArtist());
             m.setGenre(tag.getGenreDescription());
-
+            m.setLengthInSeconds(length);
         } catch (Exception ex) {
             Logger.getLogger(MediaInfoSourceFromID3.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;

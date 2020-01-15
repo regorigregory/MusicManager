@@ -14,7 +14,7 @@ import org.apache.commons.text.similarity.LevenshteinDistance;
 public class PlayGround {
     public static void main(String... args){
         String folder = "C:\\gdrive\\NetBeansProjects\\music-manager-assignment\\test_folders\\original_filenames\\collection-B\\After Many Days";
-        Set<MediaItem> test = MediaFileService.getInstance().getAllID3MediaItems(folder, null);
+        Set<MediaItem> test = MediaFileService.getInstance().getAllID3MediaItems(folder, null)[0];
         MediaItem m = test.iterator().next();
         m.setArtist("pussy");
         MediaInfoSourceFromID3.updateBasicMetaTags(m);
