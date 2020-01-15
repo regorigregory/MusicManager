@@ -29,7 +29,7 @@ public class InteractiveInterface {
         MenuOption selectedOption = new MenuOption(MenuOption.Option.START, 0, "Starting interactive mode");
 
         while (selectedOption.getOp() != MenuOption.Option.EXIT) {
-            System.out.println("Please select one of the available options:");
+            System.out.println("What would you like to do today? Please select:");
             //What if the user enters something other than int?
             printAvailableOptions();
             String userSelectedOption = sc.nextLine();
@@ -86,7 +86,7 @@ public class InteractiveInterface {
         availableMenuOptions = new LinkedList<>();
         MenuOption copy = new MenuOption(MenuOption.Option.COPY, ++optionID, "Copy files from one folder to another, optionally, without duplicates.");
         MenuOption refile = new MenuOption(MenuOption.Option.REFILE, ++optionID, "Refile by artist-album a folder to a target folder.");
-        MenuOption playlist = new MenuOption(MenuOption.Option.CREATE_PLAYLIST, ++optionID, "Refile by artist-album a folder to a target folder.");
+        MenuOption playlist = new MenuOption(MenuOption.Option.CREATE_PLAYLIST, ++optionID, "Create playlists.");
         MenuOption back = new MenuOption(MenuOption.Option.BACK, ++optionID, "Back to the main menu. It only works if used from a submenu.");
         MenuOption exit = new MenuOption(MenuOption.Option.EXIT, ++optionID, "Exit this program.");
         availableMenuOptions.add(copy);

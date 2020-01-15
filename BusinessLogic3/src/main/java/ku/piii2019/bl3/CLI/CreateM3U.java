@@ -51,7 +51,7 @@ public class CreateM3U implements CLICommandProcessor {
         try {
 
             CommandLine cmd = clp.parse(opts, args);
-            processArgsBody(cmd, null);
+            processArgsBody(cmd, opts);
         } catch (ParseException pex) {
             CustomLogging.logIt(pex);
 
@@ -69,6 +69,9 @@ public class CreateM3U implements CLICommandProcessor {
         } else if (cmd.hasOption("s") && cmd.hasOption("f")) {
             
             String fileNameToSave = cmd.getOptionValue('f');
+            if(!fileNameToSave.endsWith(".m3u")){
+                fileNameToSave+= ".m3u";
+            }
             String srcFolder = cmd.getOptionValue('s');
             String destinationFolder = cmd.hasOption("d") ? cmd.getOptionValue("d") : srcFolder;
             String maximumLength = cmd.hasOption("ml") ? cmd.getOptionValue("ml") : null;
@@ -103,6 +106,8 @@ public class CreateM3U implements CLICommandProcessor {
                 String line = M3U.getMediaItemInf(mi, false);
                 MediaFileService.getInstance().writeLineToFile(fileNameToSave, destinationFolder, line);
             }
+            System.out.println("The following playlist has been created:");
+            System.out.println(fileNameToSave+" in the folder: "+destinationFolder);
         }
 
     }
