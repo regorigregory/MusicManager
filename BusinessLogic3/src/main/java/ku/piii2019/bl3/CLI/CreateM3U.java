@@ -32,10 +32,13 @@ public class CreateM3U implements CLICommandProcessor {
 
     public static CLICommandProcessor instance = null;
 
+    public static void main(String[] args) {
+        CreateM3U.getInstance().processArgs(args);
+    }
+
     private CreateM3U() {
     }
 
-    ;
     public static CLICommandProcessor getInstance() {
         if (instance == null) {
             instance = new CreateM3U();
@@ -67,18 +70,18 @@ public class CreateM3U implements CLICommandProcessor {
                     + " | -a <artist_filter1>, <artist_filter2>, <artist_filtern>]";
             CLIHelpFormatter.printHelp(opts, usage);
         } else if (cmd.hasOption("s") && cmd.hasOption("f")) {
-            
+
             String fileNameToSave = cmd.getOptionValue('f');
-            if(!fileNameToSave.endsWith(".m3u")){
-                fileNameToSave+= ".m3u";
+            if (!fileNameToSave.endsWith(".m3u")) {
+                fileNameToSave += ".m3u";
             }
             String srcFolder = cmd.getOptionValue('s');
             String destinationFolder = cmd.hasOption("d") ? cmd.getOptionValue("d") : srcFolder;
             String maximumLength = cmd.hasOption("ml") ? cmd.getOptionValue("ml") : null;
             Double parsedMaximumLength = null;
-            if(maximumLength!=null){
+            if (maximumLength != null) {
                 parsedMaximumLength = Double.parseDouble(maximumLength);
-                parsedMaximumLength = parsedMaximumLength*60;
+                parsedMaximumLength = parsedMaximumLength * 60;
             }
             DuplicateFinder df = null;
             if (cmd.hasOption("ID3EX")) {
@@ -108,19 +111,18 @@ public class CreateM3U implements CLICommandProcessor {
             Integer currentLength = 0;
             for (MediaItem mi : filteredItems) {
                 String line = M3U.getMediaItemInf(mi, false);
-                if(parsedMaximumLength!=0){
-                    int lengthWhatIF = currentLength+mi.getLengthInSeconds();
-                    if(lengthWhatIF>parsedMaximumLength)
-                    {
-                    continue;
-                    
+                if (parsedMaximumLength != 0) {
+                    int lengthWhatIF = currentLength + mi.getLengthInSeconds();
+                    if (lengthWhatIF > parsedMaximumLength) {
+                        continue;
+
                     }
-                    currentLength+=mi.getLengthInSeconds();
+                    currentLength += mi.getLengthInSeconds();
                 }
                 MediaFileService.getInstance().writeLineToFile(fileNameToSave, destinationFolder, line);
             }
             System.out.println("The following playlist has been created:");
-            System.out.println(fileNameToSave+" in the folder: "+destinationFolder);
+            System.out.println(fileNameToSave + " in the folder: " + destinationFolder);
         }
 
     }

@@ -22,21 +22,27 @@ import org.apache.commons.cli.Options;
  * @author regor
  */
 public class DoCopy implements CLICommandProcessor {
-    
+
     public static CLICommandProcessor instance = null;
-    private DoCopy(){};
-    
-    
-    public static CLICommandProcessor getInstance(){
-        if(instance==null){
+
+    public static void main(String[] args) {
+        DoCopy.getInstance().processArgs(args);
+    }
+
+    private DoCopy() {
+    }
+
+    public static CLICommandProcessor getInstance() {
+        if (instance == null) {
             instance = new DoCopy();
         }
         return instance;
     }
+
     @Override
     public void processArgs(String... args) {
         CommandLineParser clp = DefaultParserSingleton.getInstance();
-        
+
         Options opts = DefaultOptions.getDefaultCopyOptions();
 
         try {
@@ -52,24 +58,23 @@ public class DoCopy implements CLICommandProcessor {
 
     @Override
     public void processArgsBody(CommandLine cmd, Options opts) {
-       
-        if(cmd.hasOption("h")){
+
+        if (cmd.hasOption("h")) {
             String usage = "-s <source_folder> -d <destination_folder> [-ID3EX | -FEX | -NOEX]";
             CLIHelpFormatter.printHelp(opts, usage);
-        } else if (cmd.hasOption("s") && cmd.hasOption("d")){
-        String srcFolder = cmd.getOptionValue('s');
-        String dstFolder = cmd.getOptionValue('d');
-        DuplicateFinder df = null;
-        
-        
-        if (cmd.hasOption("ID3EX")) {
-            df = new DuplicateFindFromID3();
-        } else if (cmd.hasOption("FEX")) {
-            df = new DuplicateFindFromFilename();
-        }
+        } else if (cmd.hasOption("s") && cmd.hasOption("d")) {
+            String srcFolder = cmd.getOptionValue('s');
+            String dstFolder = cmd.getOptionValue('d');
+            DuplicateFinder df = null;
 
-        MediaFileService fsi =  MediaFileService.getInstance();
-        fsi.copyMediaFiles(srcFolder, dstFolder, df);
+            if (cmd.hasOption("ID3EX")) {
+                df = new DuplicateFindFromID3();
+            } else if (cmd.hasOption("FEX")) {
+                df = new DuplicateFindFromFilename();
+            }
+
+            MediaFileService fsi = MediaFileService.getInstance();
+            fsi.copyMediaFiles(srcFolder, dstFolder, df);
         } else {
             System.out.println("The provided arguments are not valid. Use \"-h\" to view usage");
         }
@@ -77,5 +82,4 @@ public class DoCopy implements CLICommandProcessor {
 
     }
 
-  
 }
