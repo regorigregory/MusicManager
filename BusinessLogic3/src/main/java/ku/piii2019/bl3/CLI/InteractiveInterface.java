@@ -84,15 +84,15 @@ public class InteractiveInterface {
 
     public static void setAvailableOptions() {
         availableMenuOptions = new LinkedList<>();
-        MenuOption copy = new MenuOption(MenuOption.Option.COPY, ++optionID, "Copy files from one folder to another, optionally, without duplicates.");
-        MenuOption refile = new MenuOption(MenuOption.Option.REFILE, ++optionID, "Refile by artist-album a folder to a target folder.");
-        MenuOption playlist = new MenuOption(MenuOption.Option.CREATE_PLAYLIST, ++optionID, "Create playlists.");
-        MenuOption back = new MenuOption(MenuOption.Option.BACK, ++optionID, "Back to the main menu. It only works if used from a submenu.");
-        MenuOption exit = new MenuOption(MenuOption.Option.EXIT, ++optionID, "Exit this program.");
+        MenuOption back = new MenuOption(MenuOption.Option.BACK, optionID++, "Back to the main menu. It only works if used from a submenu.");
+        MenuOption copy = new MenuOption(MenuOption.Option.COPY, optionID++, "Copy files from one folder to another, optionally, without duplicates.");
+        MenuOption refile = new MenuOption(MenuOption.Option.REFILE, optionID++, "Refile by artist-album a folder to a target folder.");
+        MenuOption playlist = new MenuOption(MenuOption.Option.CREATE_PLAYLIST, optionID++, "Create playlists.");
+        MenuOption exit = new MenuOption(MenuOption.Option.EXIT, optionID++, "Exit this program.");
+         availableMenuOptions.add(back);
         availableMenuOptions.add(copy);
         availableMenuOptions.add(refile);
         availableMenuOptions.add(playlist);
-        availableMenuOptions.add(back);
         availableMenuOptions.add(exit);
         optionID = 0;
     }

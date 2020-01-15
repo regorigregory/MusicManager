@@ -32,7 +32,13 @@ public class M3U {
         StringBuilder s = new StringBuilder();
         try {
             Mp3File mp3 = new Mp3File(extractFromThis.getAbsolutePath());
-            int length = (int) mp3.getLengthInSeconds();
+            int length = extractFromThis.getLengthInSeconds();
+            
+            if(extractFromThis.getLengthInSeconds()==null){
+                    length = (int) mp3.getLengthInSeconds();
+                    extractFromThis.setLengthInSeconds(length);
+            }
+        
             String artist = extractFromThis.getArtist();
             String title = extractFromThis.getTitle();
             String album = extractFromThis.getAlbum();

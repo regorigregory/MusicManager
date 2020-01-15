@@ -21,6 +21,27 @@ public class MediaItem {
     public String album;
     public String artist;
     public String genre;
+    //Wrapper class used so that it is null initialised instead of 0 initialised.
+    public Integer lengthInSeconds;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof MediaItem)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        return this.absolutePath.equals(((MediaItem) obj).getAbsolutePath());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.absolutePath.hashCode();
+    }
 
     public String getGenre() {
         return genre;
@@ -50,25 +71,6 @@ public class MediaItem {
 
         this.absolutePath = Paths.get(absolutePath).toAbsolutePath().normalize().toString();
         return this;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof MediaItem)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        return this.absolutePath.equals(((MediaItem) obj).getAbsolutePath());
-    }
-
-    @Override
-    public int hashCode() {
-        return this.absolutePath.hashCode();
     }
 
     public MediaItem setTitle(String title) {
@@ -104,4 +106,13 @@ public class MediaItem {
         Path relativePath = sourceFolder.relativize(Paths.get(getAbsolutePath()));
         setRelativePath(relativePath.toString());
     }
+
+    public Integer getLengthInSeconds() {
+        return lengthInSeconds;
+    }
+
+    public void setLengthInSeconds(int lengthInSeconds) {
+        this.lengthInSeconds = lengthInSeconds;
+    }
+    
 }

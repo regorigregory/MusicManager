@@ -93,7 +93,7 @@ public class DefaultOptions {
              defaultM3UOptions.addOptionGroup(og);
           
             //optional length specification
-            o = Option.builder("ml").hasArg(true).longOpt("max-length").desc("The maximum length of the playlist in seconds.").required(false).build();
+            o = Option.builder("ml").hasArg(true).longOpt("max-length").desc("The maximum length of the playlist in minutes. Fractions are welcome.:) So 1.1 will result in a 1 minute 6 second playlist.").required(false).build();
             
             defaultM3UOptions.addOption(o);
            //Optional duplicate filter enabling
