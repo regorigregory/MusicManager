@@ -58,7 +58,7 @@ public class InteractiveInterface {
                       //nothing to do here. I was just curious if you wanted to return to the main menu.:)))
                     }
 
-                    Arrays.asList(args).stream().forEach(System.out::println);
+                    //Arrays.asList(args).stream().forEach(System.out::println);
 
                     if (clip != null && args.length > 0) {
                         clip.processArgs(args);

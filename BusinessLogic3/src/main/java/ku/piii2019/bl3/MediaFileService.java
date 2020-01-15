@@ -93,40 +93,19 @@ public class MediaFileService extends GenericFileService {
         return retVal;
     }
 
-  
-
-
-   
-
     public void copyMediaFiles(String srcFolder, String targetBasePath, DuplicateFinder df) {
-
-       Set<MediaItem> foundMediaItems = getAllID3MediaItems(srcFolder, df);
-       copyMediaFiles(foundMediaItems, srcFolder, targetBasePath, df);
-
-    }
-    
-    public void copyMediaFiles(Set<MediaItem> foundMediaItems, String srcFolder, String targetBasePath, DuplicateFinder df) {
-
-        Set<MediaItem> copiedItems = new HashSet<>();
-        Set<MediaItem> foundDuplicates = new HashSet<>();
+        Set[] foundAndDuplicates = getAllID3MediaItems(srcFolder, df);
+        Set<MediaItem> foundMediaItems = foundAndDuplicates[0];
+        Set<MediaItem> foundDuplicates = foundAndDuplicates[1];
 
         Path sourceFolder = getFolder(srcFolder);
         Path targetFolder = getFolder(targetBasePath);
 
         Consumer<Path> selectedConsumer = copyFilesBody(sourceFolder, targetFolder);
-        Predicate<MediaItem> processDuplicates = getProcessDuplicatesBody(df, copiedItems, foundDuplicates);
-
-        if (df != null) {
-            foundMediaItems.stream()
-                    .filter(processDuplicates)
-                    .map(MediaItem::getAbsolutePath).map(Paths::get)
-                    .forEach(selectedConsumer);
-
-        } else {
-            foundMediaItems.stream()
-                    .map(MediaItem::getAbsolutePath).map(Paths::get)
-                    .forEach(selectedConsumer);
-        }
+        Stream<MediaItem> streamInstance = foundMediaItems.stream();
+      
+        streamInstance.map(MediaItem::getAbsolutePath).map(Paths::get)
+                .forEach(selectedConsumer);
 
         if (foundDuplicates.size() > 0) {
             System.out.println("The following duplicates were excluded from the copy process:");
@@ -134,11 +113,9 @@ public class MediaFileService extends GenericFileService {
                 System.out.println(m.getAbsolutePath());
             }
         }
-
     }
-    
-     public void copyMediaFilesWithoutDirectoryStructure(Set<MediaItem> foundMediaItems, String targetBasePath, DuplicateFinder df) {
-         
+    public void copyMediaFilesWithoutDirectoryStructure(Set<MediaItem> foundMediaItems, String targetBasePath, DuplicateFinder df) {
+
         Set<MediaItem> copiedItems = new HashSet<>();
         Set<MediaItem> foundDuplicates = new HashSet<>();
 
@@ -168,7 +145,47 @@ public class MediaFileService extends GenericFileService {
 
     }
 
-    public Set<MediaItem> getAllID3MediaItems(String rootFolder, DuplicateFinder df) {
+    public Set[] getAllID3MediaItems(String rootFolder, DuplicateFinder df) {
+        Path p = Paths.get(rootFolder);
+        if (!p.isAbsolute()) {
+            Path currentWorkingFolder = Paths.get("").toAbsolutePath();
+            rootFolder = Paths.get(currentWorkingFolder.toString(), rootFolder).toString();
+        }
+        Set<MediaItem> mightHaveDuplicates = new HashSet<>();
+        Set<MediaItem> foundDuplicates = new HashSet<>();
+
+        try {
+            Stream<MediaItem> s = Files.walk(Paths.get(rootFolder)).filter(file -> file.toString().endsWith("mp3"))
+                    .map(path -> new MediaItem()
+                    .setAbsolutePath(path.toString()))
+                    .map(m -> {
+                        try {
+                            MediaInfoSourceFromID3.getInstance().addMediaInfo(m);
+                        } catch (Exception e) {
+                            CustomLogging.logIt(e);
+                            CustomLogging.logIt(m.getAbsolutePath());
+                        }
+                        return m;
+                    });
+
+            if(df!=null){
+
+                s.filter(getProcessDuplicatesBody(df, mightHaveDuplicates, foundDuplicates)).count();
+            } else {
+               s.forEach(m -> mightHaveDuplicates.add(m));
+
+            }
+
+        } catch (Exception ex) {
+            CustomLogging.logIt(ex);
+        }
+        return new Set[]{mightHaveDuplicates, foundDuplicates};
+
+    }
+    public Set<MediaItem> getAllID3MediaItemsWithoutDuplicates(String rootFolder, DuplicateFinder df){
+        if(df==null){
+            
+        }
         Path p = Paths.get(rootFolder);
         if (!p.isAbsolute()) {
             Path currentWorkingFolder = Paths.get("").toAbsolutePath();
@@ -188,37 +205,31 @@ public class MediaFileService extends GenericFileService {
                         }
                         return m;
                     });
-
-            if (df != null) {
-
-                s.filter(getProcessDuplicatesBody(df, noDuplicates, foundDuplicates));
-            } else {
-                s.forEach(m -> noDuplicates.add(m));
-            }
+           
+                
+            
+            
         } catch (Exception ex) {
             CustomLogging.logIt(ex);
         }
         return noDuplicates;
-
     }
+    public void refileAndCopyMediaItem(String basePath, MediaItem m) {
 
-        public void refileAndCopyMediaItem(String basePath, MediaItem m) {
-        
-        
         String artist = m.getArtist();
         String album = m.getAlbum();
         Path src = Paths.get(m.getAbsolutePath());
-        
+
         String fileName = Paths.get(m.getAbsolutePath()).getFileName().toString();
         Path dst = Paths.get(basePath, artist, album, m.getFilename());
         Path newDirectories = Paths.get(basePath, artist, album);
         try {
-            if(!Files.isDirectory(newDirectories)){
-            Files.createDirectories(newDirectories);
+            if (!Files.isDirectory(newDirectories)) {
+                Files.createDirectories(newDirectories);
             }
             System.out.println(dst.toString());
             Files.copy(src, dst, StandardCopyOption.REPLACE_EXISTING);
-            
+
         } catch (Exception ex) {
             CustomLogging.logIt(ex);
         }
@@ -235,8 +246,8 @@ public class MediaFileService extends GenericFileService {
         }
 
     }
-    
-     public static Predicate<MediaItem> getProcessDuplicatesBody(DuplicateFinder df, Set<MediaItem> copiedItems, Set<MediaItem> foundDuplicates) {
+
+    public static Predicate<MediaItem> getProcessDuplicatesBody(DuplicateFinder df, Set<MediaItem> copiedItems, Set<MediaItem> foundDuplicates) {
         return (MediaItem m) -> {
             Set<MediaItem> tempDuplicates = df.getDuplicates(copiedItems, m);
             if (tempDuplicates.size() > 0) {
@@ -244,10 +255,9 @@ public class MediaFileService extends GenericFileService {
                 return false;
             }
             copiedItems.add(m);
-            return true;            
+            return true;
         };
-        
+
     }
-     
 
 }

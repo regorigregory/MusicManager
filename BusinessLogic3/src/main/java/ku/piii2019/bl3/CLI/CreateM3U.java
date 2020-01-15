@@ -75,7 +75,7 @@ public class CreateM3U implements CLICommandProcessor {
         
         FilterType type = null;
 
-        Set<MediaItem> foundItems = MediaFileService.getInstance().getAllID3MediaItems(srcFolder, df);
+        Set<MediaItem> foundItems = MediaFileService.getInstance().getAllID3MediaItems(srcFolder, df)[0];
         String[] searchTerms = null;
         if (cmd.hasOption("a")) {
                 searchTerms = cmd.getOptionValue("a").split(" ");
