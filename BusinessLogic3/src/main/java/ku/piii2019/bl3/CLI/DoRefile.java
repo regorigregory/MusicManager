@@ -28,10 +28,13 @@ public class DoRefile implements CLICommandProcessor {
 
     public static CLICommandProcessor instance = null;
 
+    public static void main(String[] args) {
+        DoRefile.getInstance().processArgs(args);
+    }
+
     private DoRefile() {
     }
 
-    ;
     public static CLICommandProcessor getInstance() {
         if (instance == null) {
             instance = new DoRefile();
@@ -60,7 +63,7 @@ public class DoRefile implements CLICommandProcessor {
         if (cmd.hasOption("h")) {
             String usage = "-s <source_folder> -d <destination_folder> [-ID3EX | -FEX | -NOEX] [-g <genre_filter> | -a <artist_filter>]";
             CLIHelpFormatter.printHelp(opts, usage);
-        } else if (cmd.hasOption("s")){
+        } else if (cmd.hasOption("s")) {
 
             String srcFolder = cmd.getOptionValue("s");
             String dstFolder = cmd.hasOption("d") ? cmd.getOptionValue("d") : srcFolder;
@@ -76,16 +79,16 @@ public class DoRefile implements CLICommandProcessor {
 
             Set<MediaItem> foundItems = MediaFileService.getInstance().getAllID3MediaItems(srcFolder, df)[0];
             String searchTerms[] = null;
-            try{
-            if (cmd.hasOption("a")) {
-                searchTerms = cmd.getOptionValues("a");
-                type = SearchService.FilterType.ARTIST;
-            } else if (cmd.hasOption("g")) {
-                searchTerms = cmd.getOptionValues("g");
-                type = SearchService.FilterType.GENRE;
+            try {
+                if (cmd.hasOption("a")) {
+                    searchTerms = cmd.getOptionValues("a");
+                    type = SearchService.FilterType.ARTIST;
+                } else if (cmd.hasOption("g")) {
+                    searchTerms = cmd.getOptionValues("g");
+                    type = SearchService.FilterType.GENRE;
 
-            }
-            } catch(Exception ex){
+                }
+            } catch (Exception ex) {
                 String message = "No filter argument (genre or artist) has been specified.";
                 CustomLogging.logIt(message);
                 CustomLogging.logIt(ex);
