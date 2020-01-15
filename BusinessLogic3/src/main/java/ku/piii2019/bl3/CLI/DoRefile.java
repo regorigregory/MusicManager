@@ -63,7 +63,7 @@ public class DoRefile implements CLICommandProcessor {
         } else if (cmd.hasOption("s")){
 
             String srcFolder = cmd.getOptionValue("s");
-            String destinationFolder = cmd.hasOption("d") ? cmd.getOptionValue("d") : srcFolder;
+            String dstFolder = cmd.hasOption("d") ? cmd.getOptionValue("d") : srcFolder;
 
             DuplicateFinder df = null;
             if (cmd.hasOption("ID3EX")) {
@@ -75,21 +75,26 @@ public class DoRefile implements CLICommandProcessor {
             SearchService.FilterType type = null;
 
             Set<MediaItem> foundItems = MediaFileService.getInstance().getAllID3MediaItems(srcFolder, df)[0];
-            String[] searchTerms = null;
+            String searchTerms[] = null;
+            try{
             if (cmd.hasOption("a")) {
-                searchTerms = cmd.getOptionValue("a").split(" ");
+                searchTerms = cmd.getOptionValues("a");
                 type = SearchService.FilterType.ARTIST;
             } else if (cmd.hasOption("g")) {
-                searchTerms = cmd.getOptionValue("a").split(" ");
+                searchTerms = cmd.getOptionValues("g");
                 type = SearchService.FilterType.GENRE;
 
             }
-
+            } catch(Exception ex){
+                String message = "No filter argument (genre or artist) has been specified.";
+                CustomLogging.logIt(message);
+                CustomLogging.logIt(ex);
+            }
             SearchService searchService = new SimpleSearch();
             Set<MediaItem> filteredItems = searchService.filterBy(searchTerms, foundItems, type);
 
             for (MediaItem m : filteredItems) {
-                MediaFileService.getInstance().refileAndCopyMediaItem(srcFolder, m);
+                MediaFileService.getInstance().refileAndCopyMediaItem(dstFolder, m);
             }
         }
 

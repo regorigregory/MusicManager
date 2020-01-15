@@ -131,10 +131,10 @@ public class DefaultOptions {
             
             //Filters group xtra mile
             OptionGroup og = new OptionGroup();
-            o = Option.builder("a").hasArgs().longOpt("artist").desc("Filtering playlist by a single or multiple artists.").build();
+            o = Option.builder("a").hasArgs().valueSeparator(',').longOpt("artist").desc("Filtering playlist by a single or multiple artists. If multiple, separete with \",\" (commas).").build();
             og.addOption(o);
             
-            o = Option.builder("g").hasArgs().longOpt("genre").desc("Filtering playlist by a single or multiple genres.").build();
+            o = Option.builder("g").hasArgs().valueSeparator(',').longOpt("genre").desc("Filtering playlist by a single or multiple genres.  If multiple, separete with \",\" (commas).").build();
             og.addOption(o);
             og.setRequired(false);
             defaultRefileOptions.addOptionGroup(og);

@@ -29,7 +29,7 @@ public interface SearchService {
         if(FILTER_TYPE == FilterType.ARTIST){
             filteredList = findByArtists(filterWords, inhere);
         } else if(FILTER_TYPE == FilterType.GENRE){
-            filteredList = findByArtists(filterWords, inhere);
+            filteredList = findByGenres(filterWords, inhere);
 
         } 
         return filteredList;
