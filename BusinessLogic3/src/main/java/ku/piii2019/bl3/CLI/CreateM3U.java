@@ -6,9 +6,7 @@
 package ku.piii2019.bl3.CLI;
 
 import java.util.Set;
-import ku.piii2019.bl3.CLI.CLICommandProcessor;
-import ku.piii2019.bl3.CLI.DefaultOptions;
-import ku.piii2019.bl3.CLI.DefaultParserSingleton;
+
 import ku.piii2019.bl3.CustomLogging;
 import ku.piii2019.bl3.DuplicateFindFromFilename;
 import ku.piii2019.bl3.DuplicateFindFromID3;
@@ -21,6 +19,8 @@ import ku.piii2019.bl3.SearchService.FilterType;
 import ku.piii2019.bl3.SimpleSearch;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
@@ -49,7 +49,7 @@ public class CreateM3U implements CLICommandProcessor {
     @Override
     public void processArgs(String... args) {
         CommandLineParser clp = DefaultParserSingleton.getInstance();
-        Options opts = DefaultOptions.getDefaultM3UOptions();
+        Options opts =getDefaultOptions();
 
         try {
 
@@ -125,6 +125,58 @@ public class CreateM3U implements CLICommandProcessor {
             System.out.println(fileNameToSave + " in the folder: " + destinationFolder);
         }
 
+    }
+    
+    public Options getDefaultOptions(){
+       
+            Options defaultM3UOptions = new Options();
+            
+            Option o = null;
+            
+            o = Option.builder("h").hasArg(false).longOpt("help").desc("This screen").build();
+            defaultM3UOptions.addOption(o);
+
+            o = Option.builder("f").hasArg(true).argName("output-file").longOpt("filename").desc("Filename to be used to save the generated list.").required(false).build();
+            defaultM3UOptions.addOption(o);
+            
+            o = Option.builder("s").hasArg(true).argName("source-folder").longOpt("src").desc("Source folder to scan. If no artist or genre filter is given, then every single file in the folder will be processed.").required(false).build();
+            defaultM3UOptions.addOption(o);
+            
+            o = Option.builder("d").hasArg(true).argName("destination-folder").longOpt("dsc").desc("Optional destination folder to save the m3u file. If not specified, it will be saved in the src folder.").required(false).build();
+            defaultM3UOptions.addOption(o);
+            
+            //Filters group
+            OptionGroup og = new OptionGroup();
+            o = Option.builder("a").hasArgs().valueSeparator(',').longOpt("artist").desc("Filtering playlist by a single or multiple artists.").build();
+            og.addOption(o);
+            
+            o = Option.builder("g").hasArgs().valueSeparator(',').longOpt("genre").desc("Filtering playlist by a single or multiple genres.").build();
+            og.addOption(o);
+              og.addOption(o);
+            og.setRequired(false);
+             defaultM3UOptions.addOptionGroup(og);
+          
+            //optional length specification
+            o = Option.builder("ml").hasArg(true).longOpt("max-length").desc("The maximum length of the playlist in minutes. Fractions are welcome.:) So 1.1 will result in a 1 minute 6 second playlist.").required(false).build();
+            
+            defaultM3UOptions.addOption(o);
+           //Optional duplicate filter enabling
+           
+            og = new OptionGroup();
+            o = Option.builder("ID3EX").hasArg(false).longOpt("exclude-ID3").desc("Excluding duplicates based on ID3 tag.").required(false).build();
+            og.addOption(o);
+            
+            o = Option.builder("FEX").hasArg(false).longOpt("exclude-FNAME").desc("Excluding duplicates based on filename.").required(false).build();
+            
+            og.addOption(o);
+            
+            o = Option.builder("NOEX").hasArg(false).longOpt("no-exclusion").desc("No exclusion, duplicates will be copied.").required(false).build();
+            
+            og.addOption(o);
+            defaultM3UOptions.addOptionGroup(og);
+     
+        
+        return defaultM3UOptions;
     }
 
 }
