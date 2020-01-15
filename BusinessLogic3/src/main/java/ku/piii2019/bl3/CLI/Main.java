@@ -5,6 +5,8 @@
  */
 package ku.piii2019.bl3.CLI;
 
+import ku.piii2019.bl3.CustomLogging;
+
 /**
  *
  * @author regor
@@ -12,6 +14,8 @@ package ku.piii2019.bl3.CLI;
 public class Main {
     public static void main(String[] args){
         
+        CustomLogging.getInstance();
+        CustomLogging.defaultSetup();
         InteractiveCLIInterface.interrogateUser();
         
         

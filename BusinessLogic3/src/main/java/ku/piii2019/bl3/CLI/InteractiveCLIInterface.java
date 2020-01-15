@@ -88,11 +88,13 @@ public class InteractiveCLIInterface {
         MenuOption copy = new MenuOption(MenuOption.Option.COPY, optionID++, "Copy files from one folder to another, optionally, without duplicates.");
         MenuOption refile = new MenuOption(MenuOption.Option.REFILE, optionID++, "Refile by artist-album a folder to a target folder.");
         MenuOption playlist = new MenuOption(MenuOption.Option.CREATE_PLAYLIST, optionID++, "Create playlists.");
+        MenuOption setLogLevel = new MenuOption(MenuOption.Option.SET_LOG_LEVEL, optionID++, "Set the log level and output file.");
         MenuOption exit = new MenuOption(MenuOption.Option.EXIT, optionID++, "Exit this program.");
-         availableMenuOptions.add(back);
+        availableMenuOptions.add(back);
         availableMenuOptions.add(copy);
         availableMenuOptions.add(refile);
         availableMenuOptions.add(playlist);
+        availableMenuOptions.add(setLogLevel);
         availableMenuOptions.add(exit);
         optionID = 0;
     }

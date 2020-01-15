@@ -90,7 +90,7 @@ public class DoRefile implements CLICommandProcessor {
                 }
             } catch (Exception ex) {
                 String message = "No filter argument (genre or artist) has been specified.";
-                CustomLogging.logIt(message);
+                CustomLogging.logIt(message, null);
                 CustomLogging.logIt(ex);
             }
             SearchService searchService = new SimpleSearch();

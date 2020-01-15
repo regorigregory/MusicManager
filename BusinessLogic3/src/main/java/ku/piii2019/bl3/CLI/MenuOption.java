@@ -17,7 +17,8 @@ public class MenuOption {
         BACK(null),
         EXIT(null),
         REFILE(DoRefile.getInstance()),
-        CREATE_PLAYLIST(CreateM3U.getInstance());
+        CREATE_PLAYLIST(CreateM3U.getInstance()),
+        SET_LOG_LEVEL(SetLogLevel.getInstance());
         
         
         CLICommandProcessor CLIPro = null;
