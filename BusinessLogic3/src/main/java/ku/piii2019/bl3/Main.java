@@ -17,6 +17,8 @@ public class Main {
     public static void main(String... args) {
         //-s c://test -d c://test2 -ID3EX
         //yes, redirection.
+        CustomLogging.getInstance();
+        CustomLogging.defaultSetup();
         ku.piii2019.bl3.CLI.Main.main(args);
         
         

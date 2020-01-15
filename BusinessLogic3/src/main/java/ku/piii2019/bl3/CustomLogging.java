@@ -4,6 +4,9 @@
  * and open the template in the editor.
  */
 package ku.piii2019.bl3;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,9 +32,9 @@ public class CustomLogging {
         return LOGGER_INSTANCE;
     }
     public static void defaultSetup(){
+        CustomLogging.getInstance();
         CustomLogging.getInstance().setLevel(DEFAULT_LOG_LEVEL);
         CustomLogging.getInstance().addHandler(getConsoleHandler());
-     
 
     }
     
@@ -94,6 +97,16 @@ public class CustomLogging {
             pathString = fileName;
         }
         try{
+            Path candidateFilePath = Paths.get(fileName);
+            Path candidateFolder = candidateFilePath.getParent();
+            
+            if(!Files.isDirectory(candidateFolder)){
+                Files.createDirectories(candidateFolder);
+            }
+            if(!Files.exists(candidateFilePath)){
+                Files.createFile(candidateFilePath);
+            }
+            
             Handler h =new FileHandler(pathString);
             h.setEncoding("UTF-8");
             h.setFormatter(sf);

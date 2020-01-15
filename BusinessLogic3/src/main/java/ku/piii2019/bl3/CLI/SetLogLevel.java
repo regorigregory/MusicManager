@@ -135,7 +135,7 @@ public class SetLogLevel implements CLICommandProcessor {
 
         defaultLoggingOptions.addOptionGroup(fileOrConsoleGroup);
 
-        o = Option.builder("-s").longOpt("LEVEL").hasArg(true).argName("<LEVEL>").desc("Set the logging level to this value.").required(false).build();
+        o = Option.builder("l").longOpt("LEVEL").hasArg(true).argName("<LEVEL>").desc("Set the logging level to this value.").required(false).build();
         defaultLoggingOptions.addOption(o);
 
 //             o = Option.builder("m").hasArg(false).longOpt("move").desc("Using this flag, it will move instead of copying it.").required(false).build();
