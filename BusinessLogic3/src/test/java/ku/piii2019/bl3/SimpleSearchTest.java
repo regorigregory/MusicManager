@@ -139,7 +139,7 @@ public class SimpleSearchTest {
         Set<MediaItem> result = instance.find(thisSearchTerm, inHere);
         assertEquals(expResult, result);
     }
-    @Ignore
+    
     @Test
     public void testMediaInfoIsNull() {
         Set<MediaItem> inHere = SearchTestHelper.getIncompleteMediaInfoSet();

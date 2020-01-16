@@ -164,7 +164,7 @@ public class MediaFileService extends GenericFileService {
                             MediaInfoSourceFromID3.getInstance().addMediaInfo(m);
                         } catch (Exception e) {
                             CustomLogging.logIt(e);
-                            CustomLogging.logIt(m.getAbsolutePath());
+                            CustomLogging.logIt(m.getAbsolutePath(), null);
                         }
                         return m;
                     });

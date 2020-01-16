@@ -16,7 +16,7 @@ import java.util.Scanner;
  *
  * @author regor
  */
-public class InteractiveInterface {
+public class InteractiveCLIInterface {
 
     private static int optionID = 0;
     static List<MenuOption> availableMenuOptions;
@@ -29,6 +29,7 @@ public class InteractiveInterface {
         MenuOption selectedOption = new MenuOption(MenuOption.Option.START, 0, "Starting interactive mode");
 
         while (selectedOption.getOp() != MenuOption.Option.EXIT) {
+          
             System.out.println("What would you like to do today? Please select:");
             //What if the user enters something other than int?
             printAvailableOptions();
@@ -88,11 +89,13 @@ public class InteractiveInterface {
         MenuOption copy = new MenuOption(MenuOption.Option.COPY, optionID++, "Copy files from one folder to another, optionally, without duplicates.");
         MenuOption refile = new MenuOption(MenuOption.Option.REFILE, optionID++, "Refile by artist-album a folder to a target folder.");
         MenuOption playlist = new MenuOption(MenuOption.Option.CREATE_PLAYLIST, optionID++, "Create playlists.");
+        MenuOption setLogLevel = new MenuOption(MenuOption.Option.SET_LOG_LEVEL, optionID++, "Set the log level and output file.");
         MenuOption exit = new MenuOption(MenuOption.Option.EXIT, optionID++, "Exit this program.");
-         availableMenuOptions.add(back);
+        availableMenuOptions.add(back);
         availableMenuOptions.add(copy);
         availableMenuOptions.add(refile);
         availableMenuOptions.add(playlist);
+        availableMenuOptions.add(setLogLevel);
         availableMenuOptions.add(exit);
         optionID = 0;
     }

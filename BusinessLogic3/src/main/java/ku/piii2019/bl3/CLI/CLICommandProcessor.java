@@ -15,4 +15,5 @@ import org.apache.commons.cli.Options;
 public interface CLICommandProcessor {
     public  void processArgs(String... args);
     public  void processArgsBody(CommandLine cmd, Options opts);
+    public Options getDefaultOptions();
 }

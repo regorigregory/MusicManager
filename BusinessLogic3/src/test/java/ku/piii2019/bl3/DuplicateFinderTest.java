@@ -116,7 +116,7 @@ public class DuplicateFinderTest {
     /**
      * Test of getAllDuplicates method, of class DuplicateFindFromFilename.
      */
-    @Ignore
+    
     @Test
     public void testGetAllDuplicates() {
         System.out.println("getAllDuplicates");

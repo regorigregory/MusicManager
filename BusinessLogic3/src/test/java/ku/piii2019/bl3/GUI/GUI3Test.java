@@ -3,15 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ku.piii2019.bl3;
+package ku.piii2019.bl3.GUI;
 
 /**
  *
- * @author James
+ * @author k1721863
  */
-class ArraySet {
-
-    public ArraySet() {
-    }
+public class GUI3Test {
     
 }
