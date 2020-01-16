@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ku.piii2019.bl3.GUI;
+package ku.piii2019.bl3.AssignmentTests;
 
 /**
  *
  * @author k1721863
  */
-public class GUI7Test {
+public class GUI6Test {
     
 }
