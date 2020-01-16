@@ -6,6 +6,8 @@
 package ku.piii2019.bl3.CLI;
 
 import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.ConsoleHandler;
 import ku.piii2019.bl3.CustomLogging;
 
 /**
@@ -15,9 +17,7 @@ import ku.piii2019.bl3.CustomLogging;
 public class Playground {
 
     public static void main(String... args) {
-        CustomLogging.getInstance();
-        CustomLogging.defaultSetup();
-        CustomLogging.logIt( "hi", Level.SEVERE);
+
     }
 
 }

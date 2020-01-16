@@ -31,18 +31,14 @@ public class CustomLogging {
     public static Logger getInstance() {
         if (LOGGER_INSTANCE == null) {
             LOGGER_INSTANCE = Logger.getLogger(CustomLogging.class.getName());
+            LOGGER_INSTANCE.setUseParentHandlers(false);
+            LOGGER_INSTANCE.addHandler(getConsoleHandler());
+            LOGGER_INSTANCE.setLevel(DEFAULT_LOG_LEVEL);
         }
         return LOGGER_INSTANCE;
     }
 
-    public static void defaultSetup() {
 
-        CustomLogging.getInstance();
-        CustomLogging.getInstance().setLevel(DEFAULT_LOG_LEVEL);
-        removeRootLoggerHandlers();
-        Logger.getLogger("").addHandler(getConsoleHandler());
-
-    }
 
     public static void logIt(Exception ex) {
         ex.printStackTrace();
@@ -54,12 +50,13 @@ public class CustomLogging {
         }
         CustomLogging.getInstance().log(level, msg);
     }
-
+    public static void printIt(String msg){
+        System.out.println(msg);
+    }
     public static void printHandlers() {
         Handler[] handlers = getInstance().getHandlers();
         System.out.println(handlers.length);
         Arrays.asList(handlers).stream().forEach(System.out::println);
-
     }
 
     public static void setDefaultFilePath(String path) {
@@ -88,6 +85,15 @@ public class CustomLogging {
             CustomLogging.getInstance().removeHandler(h);
         }
     }
+    
+    public static void removeAllFileHandlers() {
+        Handler[] handlers = CustomLogging.getInstance().getHandlers();
+        for (Handler h : handlers) {
+            if(h instanceof FileHandler){
+             CustomLogging.getInstance().removeHandler(h);
+            }
+        }
+    }
 
     public static Handler getConsoleHandler() {
         ConsoleHandler ch = new ConsoleHandler();
@@ -104,11 +110,20 @@ public class CustomLogging {
         }
         try {
             Path candidateFilePath = Paths.get(fileName);
-            Path candidateFolder = candidateFilePath.getParent();
-
+            Path candidateFolder = null;
+            try{
+            candidateFolder = candidateFilePath.getParent().normalize().toAbsolutePath();
+            }
+            catch(Exception ex){
+                
+            }
+            if(candidateFolder==null){
+                candidateFolder = Paths.get("./");
+                candidateFilePath = Paths.get(candidateFolder.toString(), candidateFilePath.toString()); 
+            }
             if (!Files.isDirectory(candidateFolder)) {
                 Files.createDirectories(candidateFolder);
-            }
+            } 
             if (!Files.exists(candidateFilePath)) {
                 Files.createFile(candidateFilePath);
             }
@@ -123,26 +138,14 @@ public class CustomLogging {
         }
         return null;
     }
-
+    public static void printAmountOfHandlers(){
+        System.out.println(getInstance().getHandlers().length);
+    }
+     public static void printAmountOfFileHandlers(){
+        int num = (int) Arrays.asList(getInstance().getHandlers()).stream().filter(x->x instanceof FileHandler).count();
+        CustomLogging.printIt("The number of file handlers: "+num);
+    }
     public static Level getDEFAULT_LOG_LEVEL() {
         return DEFAULT_LOG_LEVEL;
-    }
-
-    public static Logger removeRootLoggerHandlers() {
-        /* This code has been unashamedly inspired by:
-        https://www.vogella.com/tutorials/Logging/article.html
-         */
-
-        Logger rootLogger = Logger.getLogger("");
-        Handler[] handlers = rootLogger.getHandlers();
-
-        /*inspirational part over*/
-        for (Handler h : handlers) {
-
-            rootLogger.removeHandler(h);
-
-        }
-        return rootLogger;
-
     }
 }

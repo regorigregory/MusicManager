@@ -29,6 +29,7 @@ public class InteractiveCLIInterface {
         MenuOption selectedOption = new MenuOption(MenuOption.Option.START, 0, "Starting interactive mode");
 
         while (selectedOption.getOp() != MenuOption.Option.EXIT) {
+          
             System.out.println("What would you like to do today? Please select:");
             //What if the user enters something other than int?
             printAvailableOptions();

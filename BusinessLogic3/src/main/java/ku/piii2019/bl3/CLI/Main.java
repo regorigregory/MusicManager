@@ -15,7 +15,6 @@ public class Main {
     public static void main(String[] args){
         
         CustomLogging.getInstance();
-        CustomLogging.defaultSetup();
         InteractiveCLIInterface.interrogateUser();
         
         
