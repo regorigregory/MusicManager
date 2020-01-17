@@ -43,6 +43,9 @@ public class SimpleSearch implements SearchService {
             }
             String pattern = "(.*)" + thisSearchTerm.toLowerCase().trim() + "(.*)";
             inhere.stream().filter(m -> {
+                String artist = m.getArtist()==null ? "undefined" : m.getArtist();
+                m.setArtist(artist);
+                
                 return m.getArtist().toLowerCase().matches(pattern);
             }
             ).forEach(m->matchingItems.add(m));
@@ -66,6 +69,8 @@ public class SimpleSearch implements SearchService {
             }
             String pattern = "(.*)" + thisSearchTerm.toLowerCase().trim() + "(.*)";
             inhere.stream().filter(m -> {
+                String genre = m.getGenre()==null ? "undefined" : m.getGenre();
+                m.setGenre(genre);
                 return m.getGenre().toLowerCase().matches(pattern);
             }
             ).forEach(m->matchingItems.add(m));
