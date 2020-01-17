@@ -220,7 +220,10 @@ public class FXMLController implements Initializable {
         yourList.setItems(result);
 
     }
-
+    @FXML
+    private void searchByGenreOrArtist(){
+        throw new UnsupportedOperationException("Yet to be implemented");
+    }
     @FXML
     private void saveAsM3U(ActionEvent event) {
 
