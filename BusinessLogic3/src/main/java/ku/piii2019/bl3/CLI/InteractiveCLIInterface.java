@@ -34,22 +34,21 @@ public class InteractiveCLIInterface {
             //What if the user enters something other than int?
             printAvailableOptions();
             String userSelectedOption = sc.nextLine();
-            MenuOption selected = null;
             try {
                 int selectedMenuID = Integer.parseInt(userSelectedOption);
-                selected = getSelectedOption(selectedMenuID);
+                selectedOption = getSelectedOption(selectedMenuID);
                 //processOption(selected);
             } catch (Exception ex) {
                 System.out.println("\r\nError. The entered option has to be a single integer value.\r\n");
             }
-            if (selected != null) {
-                while (selected.getOp() != MenuOption.Option.BACK) {
+            if (selectedOption != null && selectedOption.getOp()!=MenuOption.Option.EXIT) {
+                while (selectedOption.getOp() != MenuOption.Option.BACK) {
 
                     System.out.println("Your choice is:");
-                    System.out.println(selected.getOptionText());
+                    System.out.println(selectedOption.getOptionText());
                     System.out.println("For help use \"-h\" or \"--help\".");
 
-                    CLICommandProcessor clip = selected.getOp().getProcessor();
+                    CLICommandProcessor clip = selectedOption.getOp().getProcessor();
                     String[] args = sc.nextLine().split(" ");
                     try {
                         if (MenuOption.Option.BACK == getSelectedOption(Integer.parseInt(args[0])).getOp()) {
@@ -69,6 +68,7 @@ public class InteractiveCLIInterface {
             }
 
         }
+        System.exit(0);
 
     }
 
