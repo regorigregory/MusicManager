@@ -11,11 +11,14 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import ku.piii2019.bl3.FileService;
+import ku.piii2019.bl3.MediaFileService;
 import ku.piii2019.bl3.MediaItem;
 import ku.piii2019.bl3.Worksheet8TestHelper;
 
@@ -29,9 +32,9 @@ public class AssignmentTestHelpers {
     public static final OutputStream SELECTED_OUTPUT = new ByteArrayOutputStream();
 
     public static void setCustomConsoleOutput() {
-        try{
-        SELECTED_OUTPUT.flush();
-        } catch(Exception ex){
+        try {
+            SELECTED_OUTPUT.flush();
+        } catch (Exception ex) {
             System.out.println("Flushing the outputstream failed");
             ex.printStackTrace();
         }
@@ -74,10 +77,63 @@ public class AssignmentTestHelpers {
         m1.stream().forEach(m -> m.relativizeMyself(Paths.get(tempPath)));
         m2.stream().forEach(m -> m.relativizeMyself(Paths.get(copyTempPath)));
 
-        List<String> relPaths1 = m1.stream().map(m->m.getRelativePath()).collect(Collectors.toList());
-        List<String> relPaths2 = m2.stream().map(m->m.getRelativePath()).collect(Collectors.toList());
+        List<String> relPaths1 = m1.stream().map(m -> m.getRelativePath()).collect(Collectors.toList());
+        List<String> relPaths2 = m2.stream().map(m -> m.getRelativePath()).collect(Collectors.toList());
 
         return relPaths1.stream().allMatch(s -> relPaths2.contains(s));
+    }
+
+    public static LinkedHashMap<String, LinkedHashMap<String, LinkedList<MediaItem>>>
+            getMediaFilesIndexedByArtistAndAlbum(Set<MediaItem> allItems) {
+
+        LinkedHashMap<String, LinkedHashMap<String, LinkedList<MediaItem>>> organisedList = new LinkedHashMap<>();
+
+        for (MediaItem m : allItems) {
+
+            String artist = m.getArtist().toLowerCase().trim();
+            organisedList.putIfAbsent(artist, new LinkedHashMap<>());
+
+            String album = m.getAlbum().toLowerCase().trim();
+            organisedList.get(artist).putIfAbsent(album, new LinkedList<>());
+
+            if (!organisedList.get(artist).get(album).contains(m)) {
+                organisedList.get(artist).get(album).add(m);
+            }
+        }
+        return organisedList;
+    }
+
+    public static LinkedHashMap<String, LinkedList<MediaItem>>
+            getAllMediaByArtist(Set<MediaItem> allItems) {
+
+        LinkedHashMap<String, LinkedList<MediaItem>> organisedList = new LinkedHashMap<>();
+        for (MediaItem m : allItems) {
+
+            String artist = m.getArtist().toLowerCase().trim();
+            organisedList.putIfAbsent(artist, new LinkedList<>());
+
+            if (!organisedList.get(artist).contains(m)) {
+                organisedList.get(artist).add(m);
+            }
+        }
+        return organisedList;
+    }
+
+    public static LinkedHashMap<String, LinkedList<MediaItem>>
+            getAllMediaByGenre(Set<MediaItem> allItems) {
+
+        LinkedHashMap<String, LinkedList<MediaItem>> organisedList = new LinkedHashMap<>();
+
+        for (MediaItem m : allItems) {
+
+            String genre = m.getGenre().toLowerCase().trim();
+            organisedList.putIfAbsent(genre, new LinkedList<>());
+
+            if (!organisedList.get(genre).contains(m)) {
+                organisedList.get(genre).add(m);
+            }
+        }
+        return organisedList;
     }
 
 }
