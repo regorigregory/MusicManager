@@ -8,7 +8,6 @@ package ku.piii2019.bl3.AssignmentTests;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -25,10 +24,7 @@ import org.junit.Test;
 import static ku.piii2019.bl3.AssignmentTests.AssignmentTestHelpers.*;
 import ku.piii2019.bl3.MediaFileService;
 import ku.piii2019.bl3.MediaItem;
-import ku.piii2019.bl3.SearchService.FilterType;
-import ku.piii2019.bl3.SimpleSearch;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 import ku.piii2019.bl3.CLI.CreateM3U;
 
 /**
