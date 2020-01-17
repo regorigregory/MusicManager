@@ -73,6 +73,7 @@
                     <MenuItem text="Cut" onAction="#cutToClipboard"/>
                     <MenuItem text="Paste" onAction="#pasteFromClipboardToIndex"/>
                     <MenuItem text="Search" onAction="#searchByGenreOrArtist"/>
+                    <MenuItem text="Bulk edit meta tags in selected table's selected elements" onAction="#bulkEditSimpleMetaTags"/>
                     <!--todo-->
                     
                     <SeparatorMenuItem  />

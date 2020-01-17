@@ -91,7 +91,10 @@ public class FXMLController implements Initializable {
         }
         open(referenceToTheTable, collectionRootB);
     }
-
+    @FXML
+    public void bulkEditSimpleMetaTags(){
+        throw new UnsupportedOperationException("Yet to come");
+    }
     @FXML
     public void exportM3USelectedTable() {
         TableView referenceToTheTable = getTableInFocus();
