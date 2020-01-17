@@ -91,10 +91,32 @@ public class FXMLController implements Initializable {
         }
         open(referenceToTheTable, collectionRootB);
     }
+
     @FXML
-    public void bulkEditSimpleMetaTags(){
-        throw new UnsupportedOperationException("Yet to come");
+    public void bulkEditSimpleMetaTags() {
+        TableView referenceToTheTable = getTableInFocus();
+
+        if (referenceToTheTable == null) {
+            PopUps.alertUser(new String[]{"No table selected.", "No table selected.", "Please select a table before you start this iperation."});
+            return;
+        }
+        ObservableList<MediaItem> currentlySelectedElements = referenceToTheTable.getSelectionModel().getSelectedItems();
+        if (currentlySelectedElements.size() == 0) {
+            PopUps.alertUser(new String[]{"No selected elements in focused table.", "No selected elements in focused table.", "Please select the items you would like to bulk edit before selecting this option."});
+            return;
+        }
+      
+        UserParams response = PopUps.showSimpleMetaBulkEdit();
+        if (response != null) {
+            System.out.println(response.getKey());
+            System.out.println(response.getValue());
+            for (MediaItem editItem : currentlySelectedElements){
+                MediaInfoSourceFromID3.updateMetaTag(editItem, response.getKey(), response.getValue());
+            }
+
+        }
     }
+
     @FXML
     public void exportM3USelectedTable() {
         TableView referenceToTheTable = getTableInFocus();
@@ -225,35 +247,37 @@ public class FXMLController implements Initializable {
         yourList.setItems(result);
 
     }
+
     @FXML
-    private void searchByGenreOrArtist(){
+    private void searchByGenreOrArtist() {
         UserParams results = PopUps.showSearchDialog();
-        if(results!=null){
+        if (results != null) {
             System.out.println(results.getValue());
             System.out.println(results.getKey());
 
             ObservableList<MediaItem> elements = tableView1.getItems();
-            
+
             elements.addAll(tableView2.getItems());
             System.out.println(elements.size());
             Set<MediaItem> convertedElements = new HashSet(elements);
             System.out.println(convertedElements.size());
 
-            Set<MediaItem> found =new HashSet<>();
-            
-            if(results.getKey().equals("artist")){
+            Set<MediaItem> found = new HashSet<>();
+
+            if (results.getKey().equals("artist")) {
                 System.out.println("Search by artist processed");
                 found = new SimpleSearch().findByArtists(new String[]{results.getValue()}, convertedElements);
-            } else if(results.getKey().equals("genre")){
-                   System.out.println("Search by genre processed");
+            } else if (results.getKey().equals("genre")) {
+                System.out.println("Search by genre processed");
 
                 found = new SimpleSearch().findByGenres(new String[]{results.getValue()}, convertedElements);
             }
-            System.out.println("Found elements"+found.size());
+            System.out.println("Found elements" + found.size());
             tableView3.getItems().addAll(FXCollections.observableArrayList(found));
         }
 
     }
+
     @FXML
     private void saveAsM3U(ActionEvent event) {
 
@@ -274,7 +298,7 @@ public class FXMLController implements Initializable {
         Window stage = MainApp.getPrimaryStage();
 
         File file = fileChooser.showSaveDialog(stage);
-  
+
         try {
             file.delete();
             file.createNewFile();
@@ -349,15 +373,18 @@ public class FXMLController implements Initializable {
         }
 
     }
+
     @FXML
-    private void goodbye(){
+    private void goodbye() {
         System.exit(0);
     }
-    @FXML 
-    private void showAbout(){
+
+    @FXML
+    private void showAbout() {
         String[] args = new String[]{"Programming III assignment.", "Programming III assignment.", "Created by Gergo Endresz (k1721863). "};
         PopUps.alertUser(args);
     }
+
     public TableView getTableInFocus() {
         TableView focusedTable = null;
         if (MainApp.getPrimaryStage().getScene().focusOwnerProperty().get() instanceof TableView) {
@@ -365,7 +392,7 @@ public class FXMLController implements Initializable {
         }
         return focusedTable;
     }
-    
+
     @FXML
     private void openIn(ActionEvent event) {
         TableView referenceToTheTable = getDirections.urinaryAction(event);

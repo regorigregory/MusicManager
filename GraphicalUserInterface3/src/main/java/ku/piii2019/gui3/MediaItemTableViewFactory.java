@@ -37,13 +37,8 @@ public class MediaItemTableViewFactory {
     static public void processInput(MediaItem editItem, String newValue, String editProperty)
     {
         System.out.println("New value is " + newValue + " for property " + editProperty);
-        try{
-        Field editedField = editItem.getClass().getDeclaredField(editProperty);
-        editedField.set(editItem, newValue);
-        }catch(Exception ex){
-            CustomLogging.logIt(ex);
-        }
-        MediaInfoSourceFromID3.updateBasicMetaTags(editItem);
+        MediaInfoSourceFromID3.updateMetaTag(editItem, editProperty, newValue);
+      
 
     }
     public static List<MediaItemColumnInfo> makeColumnInfoList() {
