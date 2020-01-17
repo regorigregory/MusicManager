@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -224,8 +225,30 @@ public class FXMLController implements Initializable {
     @FXML
     private void searchByGenreOrArtist(){
         SearchParams results = PopUps.showSearchDialog();
-        System.out.println(results.artistOrGenre);
-                System.out.println(results.searchPhrase);
+        if(results!=null){
+            System.out.println(results.getSearchPhrase());
+            System.out.println(results.getArtistOrGenre());
+
+            ObservableList<MediaItem> elements = tableView1.getItems();
+            
+            elements.addAll(tableView2.getItems());
+            System.out.println(elements.size());
+            Set<MediaItem> convertedElements = new HashSet(elements);
+            System.out.println(convertedElements.size());
+
+            Set<MediaItem> found =new HashSet<>();
+            
+            if(results.getArtistOrGenre().equals("artist")){
+                System.out.println("Search by artist processed");
+                found = new SimpleSearch().findByArtists(new String[]{results.getSearchPhrase()}, convertedElements);
+            } else if(results.getArtistOrGenre().equals("genre")){
+                   System.out.println("Search by genre processed");
+
+                found = new SimpleSearch().findByGenres(new String[]{results.getSearchPhrase()}, convertedElements);
+            }
+            System.out.println("Found elements"+found.size());
+            tableView3.getItems().addAll(FXCollections.observableArrayList(found));
+        }
 
     }
     @FXML

@@ -61,8 +61,8 @@ public class PopUps {
         Callback<ButtonType, SearchParams> resultConverter = (ButtonType bt) -> {
             System.out.println(bt.getButtonData());
             if (bt.getButtonData() == ButtonBar.ButtonData.YES) {
-                return new SearchParams(textField.getText(),
-                        dropDown.getValue());
+                return new SearchParams(dropDown.getValue(), textField.getText()
+                        );
             }
             return null;
         };
@@ -78,12 +78,29 @@ public class PopUps {
 
     public static class SearchParams {
 
-        String artistOrGenre;
-        String searchPhrase;
+        private String artistOrGenre;
+        private String searchPhrase;
 
         SearchParams(String ag, String needle) {
             artistOrGenre = ag;
             searchPhrase = needle;
         }
+
+        public String getArtistOrGenre() {
+            return artistOrGenre;
+        }
+
+        public void setArtistOrGenre(String artistOrGenre) {
+            this.artistOrGenre = artistOrGenre;
+        }
+
+        public String getSearchPhrase() {
+            return searchPhrase;
+        }
+
+        public void setSearchPhrase(String searchPhrase) {
+            this.searchPhrase = searchPhrase;
+        }
+        
     }
 }
