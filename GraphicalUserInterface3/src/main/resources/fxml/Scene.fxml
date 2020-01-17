@@ -23,7 +23,7 @@
                GridPane.vgrow="ALWAYS"        
                GridPane.rowIndex="1">
     </TableView>
- <Button fx:id="button1" 
+    <Button fx:id="button1" 
             GridPane.columnIndex="0" 
             GridPane.rowIndex="2" 
             text="Clear table 3" 
@@ -43,7 +43,7 @@
             text="Clear table 2" 
             onAction="#clearTable" id="2" />
     
-      <TableView fx:id="tableView3" 
+    <TableView fx:id="tableView3" 
                GridPane.columnIndex="2" 
                GridPane.columnSpan="1" 
                GridPane.hgrow="ALWAYS" 
@@ -51,7 +51,7 @@
                GridPane.rowIndex="1">
     </TableView>
     
-     <Button fx:id="button3" 
+    <Button fx:id="button3" 
             GridPane.columnIndex="2" 
             GridPane.rowIndex="2" 
             text="Clear table 3" 
@@ -60,79 +60,54 @@
   
     <MenuBar fx:id="menuBar" >
         <menus>
-            <Menu text="Table 1">
+            
+            <Menu text="File">
                 <items>
-                    <MenuItem text="Open Collection..." onAction="#openIn" id="1"/>
-                    <MenuItem text="Open Collection A" onAction="#openA" id="1"/>
-                    <MenuItem text="Open Collection B" onAction="#openB" id="1"/>
-                    <MenuItem text="Open Collections A and B" onAction="#openAB" id="1"/>
+                    <MenuItem text="Open Collection..." onAction="#openInIntoSelected"/>
+                    <MenuItem text="Open Collection A" onAction="#openAIntoSelected"/>
+                    <MenuItem text="Open Collection B" onAction="#openBIntoSelected"/>
+                    <MenuItem text="Export table in focus as M3U" onAction="#exportM3USelectedTable"/>
+                    <MenuItem text="Create playlist and refile selected items from all tables" onAction="#refileSelectedTracks"/>
+       
+                </items>
+            </Menu>
+            
+            
+             <Menu text="Edit">
+                <items>
+                    <!--todo: convert to focus detection and also, if no focus, pop an alert!-->
+                    <MenuItem text="Copy" onAction="#toClipboard"/>
+                    <MenuItem text="Cut" onAction="#cutToClipboard"/>
+                    <MenuItem text="Paste" onAction="#fromClipboardToIndex"/>
+                     <!--todo-->
+                    
+                    <SeparatorMenuItem  />
+                    
                     <MenuItem text="Show Table 1 items missing from Table 2" onAction="#showMissing" id="1:2"/>
                     <MenuItem text="Insert Table 1 contents into Table 2" onAction="#insertOneToAnother" id="1:2"/>
                     <MenuItem text="Show Table 1 items missing from Table 3" onAction="#showMissing" id="1:3"/>
                     <MenuItem text="Insert Table 1 contents into Table 3" onAction="#insertOneToAnother" id="1:3"/>
                     <SeparatorMenuItem  />
-                    <MenuItem text="Copy selected elements." id="1" onAction="#toClipboard" />
-                    <MenuItem text="Insert clipboard elements to table 3" id="3" onAction="#fromClipboard" />
-
-                    
-                    <!-- This needs to be implemented if required -->
-                </items>
-            </Menu>
-            <Menu text="Table 2">
-                <items>
-                    <MenuItem text="Open Collection..." onAction="#openIn" id="2"/>
-                    <MenuItem text="Open Collection A" onAction="#openA" id="2" />
-                    <MenuItem text="Open Collection B" onAction="#openB" id="2" />
-                    <MenuItem text="Open Collections A and B" onAction="#openAB" id="2" />
                     <MenuItem text="Show Table 2 items missing from Table 1" onAction="#showMissing" id="2:1"/>
                     <MenuItem text="Insert Table 2 contents into Table 1"  onAction="#insertOneToAnother" id="2:1"/>
                     <MenuItem text="Show Table 2 items missing from Table 3" onAction="#showMissing" id="2:3"/>
                     <MenuItem text="Insert Table 2 contents into Table 3"  onAction="#insertOneToAnother" id="2:3"/>
-                    
                     <SeparatorMenuItem  />
-                    <MenuItem text="Copy selected elements." id="2" onAction="#toClipboard" />
-                    <MenuItem text="Insert clipboard elements to table 3" id="3" onAction="#fromClipboard" />  
-
-                </items>
-            </Menu>
-            <Menu text="Table 3">
-                <items>
-                    <MenuItem text="Open Collection..." onAction="#openIn" id="3"/>
-                    <MenuItem text="Open Collection A" onAction="#openA" id="3" />
-                    <MenuItem text="Open Collection B" onAction="#openB" id="3" />
-                    <MenuItem text="Open Collections A and B" onAction="#openAB" />
-                    
                     <MenuItem text="Show Table 3 items missing from Table 1" onAction="#showMissing" id="3:1"/>
                     <MenuItem text="Insert Table 3 contents into Table 1"  onAction="#insertOneToAnother" id="3:1"/>
                     <MenuItem text="Show Table 3 items missing from Table 2" onAction="#showMissing" id="3:2"/>
                     <MenuItem text="Insert Table 3 contents into Table 2"  onAction="#insertOneToAnother" id="3:2"/>
-                     
-                    <SeparatorMenuItem  />
-                    <MenuItem text="Copy selected elements." id="3" onAction="#toClipboard" />
-                    <MenuItem text="Insert clipboard elements to this list" id="3" onAction="#fromClipboard" />  
-                    <MenuItem text="Save list as M3U" id="3" onAction="#saveAsM3U" /> 
-                    <MenuItem text="Copy list to a new folder with m3u" id="3" onAction="#saveAsM3UandCopy" /> 
-                    <MenuItem text="Copy and refile selected tracks" onAction="#refileSelectedTracks" />
-
-
-
                 </items>
             </Menu>
-            <Menu text="Edit">
-                <items>
-                    <MenuItem text="Swap" onAction="#swap" />                    
-                    <MenuItem text="Copy" onAction="#toClipboard" id="3"/>
-                    <MenuItem text="Cut" onAction="#cutToClipboard" id ="3" />
-                    <MenuItem text="Paste" onAction="#fromClipboardToIndex" id="3"/>
-                </items>
-            </Menu>
+            
+                       
             <Menu text="Help">
                 <items>
                     <MenuItem text="Search" disable="true"/>
                     <MenuItem text="Online Manual" visible="false"/>
                     <SeparatorMenuItem />
                     <MenuItem text="About" />
-                     <MenuItem text="Exit"/>
+                    <MenuItem text="Exit"/>
 
                 </items>
             </Menu>
