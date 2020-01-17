@@ -22,6 +22,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Window;
 import ku.piii2019.bl3.FileService;
+import ku.piii2019.gui3.PopUps.SearchParams;
 
 public class FXMLController implements Initializable {
 
@@ -102,7 +103,7 @@ public class FXMLController implements Initializable {
         Set<MediaItem> tableDataSet = new LinkedHashSet(tableData);
         if (tableDataSet.size() == 0) {
             String[] args = new String[]{"Table " + referenceToTheTable.getId() + " is empty", "Table " + referenceToTheTable.getId() + " is empty", "Please add items to table " + referenceToTheTable.getId() + " before trying to save an M3U List"};
-            ErrorPopups.alertUser(args);
+            PopUps.alertUser(args);
             return;
         }
         FileChooser fileChooser = new FileChooser();
@@ -133,7 +134,7 @@ public class FXMLController implements Initializable {
         TableView source = getTableInFocus();
         if (source == null) {
             String[] args = new String[]{"No table in focus.", "Please select a table.", "Before cutting from a table, please, select one."};
-            ErrorPopups.alertUser(args);
+            PopUps.alertUser(args);
             return source;
         }
         this.clipboard = FXCollections.observableArrayList(source.getSelectionModel().getSelectedItems());
@@ -154,7 +155,7 @@ public class FXMLController implements Initializable {
         TableView source = getTableInFocus();
         if (source == null) {
             String[] args = new String[]{"No table in focus.", "Please select a table.", "Before cutting from a table, please, select one."};
-            ErrorPopups.alertUser(args);
+            PopUps.alertUser(args);
             return;
         }
 
@@ -222,7 +223,10 @@ public class FXMLController implements Initializable {
     }
     @FXML
     private void searchByGenreOrArtist(){
-        throw new UnsupportedOperationException("Yet to be implemented");
+        SearchParams results = PopUps.showSearchDialog();
+        System.out.println(results.artistOrGenre);
+                System.out.println(results.searchPhrase);
+
     }
     @FXML
     private void saveAsM3U(ActionEvent event) {
@@ -234,7 +238,7 @@ public class FXMLController implements Initializable {
         Set<MediaItem> tableDataSet = new LinkedHashSet(tableData);
         if (tableDataSet.size() == 0) {
             String[] args = new String[]{"Table " + table.getId() + " is empty", "Table " + table.getId() + " is empty", "Please add items to table " + table.getId() + " before trying to save an M3U List"};
-            ErrorPopups.alertUser(args);
+            PopUps.alertUser(args);
             return;
         }
         FileChooser fileChooser = new FileChooser();
@@ -266,7 +270,7 @@ public class FXMLController implements Initializable {
         TableView source = getTableInFocus();
         if (source == null) {
             String[] args = new String[]{"No table in focus.", "Please select a table.", "Before cutting from a table, please, select one."};
-            ErrorPopups.alertUser(args);
+            PopUps.alertUser(args);
             return;
         }
         ObservableList<MediaItem> tableData
@@ -274,7 +278,7 @@ public class FXMLController implements Initializable {
         Set<MediaItem> tableDataSet = new LinkedHashSet(tableData);
         if (tableDataSet.size() == 0) {
             String[] args = new String[]{"Table 3 is empty", "Table 3 is empty", "Please add items to table 3 before trying to save an M3U List"};
-            ErrorPopups.alertUser(args);
+            PopUps.alertUser(args);
             return;
         }
         FileChooser fileChooser = new FileChooser();
@@ -326,7 +330,7 @@ public class FXMLController implements Initializable {
     @FXML 
     private void showAbout(){
         String[] args = new String[]{"Programming III assignment.", "Programming III assignment.", "Created by Gergo Endresz (k1721863). "};
-        ErrorPopups.alertUser(args);
+        PopUps.alertUser(args);
     }
     public TableView getTableInFocus() {
         TableView focusedTable = null;
