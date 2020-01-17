@@ -102,6 +102,9 @@ public class DragEventController {
                 int index = passedIndex;
                 if(maxIndex<passedIndex){
                     index = index-removedElements.size();
+                    if(index<0){
+                        index=0;
+                    }
                 }
                 
                 int targetRowCount = target.getItems().size();
