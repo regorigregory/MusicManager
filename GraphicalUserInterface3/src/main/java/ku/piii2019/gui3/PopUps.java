@@ -39,9 +39,9 @@ public class PopUps {
 
     }
 
-    public static SearchParams showSearchDialog() {
+    public static UserParams showSearchDialog() {
         Dialog dialog = new Dialog();
-        dialog.setTitle("Dialog Test");
+        dialog.setTitle("Search");
         dialog.setHeaderText("Please specify a searchphrase to insert matched elements into table 3.");
 
         DialogPane dp = dialog.getDialogPane();
@@ -58,10 +58,10 @@ public class PopUps {
         dp.getButtonTypes().add(cancel);
         
         dp.setContent(new VBox(8, textField, dropDown));
-        Callback<ButtonType, SearchParams> resultConverter = (ButtonType bt) -> {
+        Callback<ButtonType, UserParams> resultConverter = (ButtonType bt) -> {
             System.out.println(bt.getButtonData());
             if (bt.getButtonData() == ButtonBar.ButtonData.YES) {
-                return new SearchParams(dropDown.getValue(), textField.getText()
+                return new UserParams(dropDown.getValue(), textField.getText()
                         );
             }
             return null;
@@ -69,37 +69,76 @@ public class PopUps {
         dialog.setResultConverter(resultConverter);
         
         
-        Optional<SearchParams> results = dialog.showAndWait();
+        Optional<UserParams> results = dialog.showAndWait();
         if(results.isPresent()){
             return results.get();
         }
       return null;
     }
 
-    public static class SearchParams {
+    
+    
+    public static UserParams showSimpleMetaBulkEdit() {
+        Dialog dialog = new Dialog();
+        dialog.setTitle("Bulk edit multiple meta tags");
+        dialog.setHeaderText("Please specify which meta tag (artist, genre or title) you would like to edit for the currently selected elements in the table in focus.");
 
-        private String artistOrGenre;
-        private String searchPhrase;
+        DialogPane dp = dialog.getDialogPane();
+        TextField textField = new TextField("<enter new value here>");
+        String[] options = new String[]{"artist", "title", "album"};
+        ComboBox<String> dropDown = new ComboBox(FXCollections.observableArrayList(options));
+        dropDown.getSelectionModel().selectFirst();
+        
+        
 
-        SearchParams(String ag, String needle) {
-            artistOrGenre = ag;
-            searchPhrase = needle;
+        ButtonType buttonOK = new ButtonType("Update selected elements' meta tags.", ButtonBar.ButtonData.YES); 
+        dp.getButtonTypes().add(buttonOK);
+        ButtonType cancel = new ButtonType("Cancel", ButtonBar.ButtonData.NO);
+        dp.getButtonTypes().add(cancel);
+        
+        dp.setContent(new VBox(8, textField, dropDown));
+        Callback<ButtonType, UserParams> resultConverter = (ButtonType bt) -> {
+            System.out.println(bt.getButtonData());
+            if (bt.getButtonData() == ButtonBar.ButtonData.YES) {
+                return new UserParams(dropDown.getValue(), textField.getText()
+                        );
+            }
+            return null;
+        };
+        dialog.setResultConverter(resultConverter);
+        
+        
+        Optional<UserParams> results = dialog.showAndWait();
+        if(results.isPresent()){
+            return results.get();
+        }
+      return null;
+    }
+    
+    public static class UserParams {
+
+        private String key;
+        private String value;
+
+        UserParams(String ag, String needle) {
+            key = ag;
+            value = needle;
         }
 
-        public String getArtistOrGenre() {
-            return artistOrGenre;
+        public String getKey() {
+            return key;
         }
 
-        public void setArtistOrGenre(String artistOrGenre) {
-            this.artistOrGenre = artistOrGenre;
+        public void setKey(String artistOrGenre) {
+            this.key = artistOrGenre;
         }
 
-        public String getSearchPhrase() {
-            return searchPhrase;
+        public String getValue() {
+            return value;
         }
 
-        public void setSearchPhrase(String searchPhrase) {
-            this.searchPhrase = searchPhrase;
+        public void setValue(String searchPhrase) {
+            this.value = searchPhrase;
         }
         
     }

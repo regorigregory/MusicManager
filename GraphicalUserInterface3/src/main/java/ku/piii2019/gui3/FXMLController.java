@@ -23,7 +23,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Window;
 import ku.piii2019.bl3.FileService;
-import ku.piii2019.gui3.PopUps.SearchParams;
+import ku.piii2019.gui3.PopUps.UserParams;
 
 public class FXMLController implements Initializable {
 
@@ -224,10 +224,10 @@ public class FXMLController implements Initializable {
     }
     @FXML
     private void searchByGenreOrArtist(){
-        SearchParams results = PopUps.showSearchDialog();
+        UserParams results = PopUps.showSearchDialog();
         if(results!=null){
-            System.out.println(results.getSearchPhrase());
-            System.out.println(results.getArtistOrGenre());
+            System.out.println(results.getValue());
+            System.out.println(results.getKey());
 
             ObservableList<MediaItem> elements = tableView1.getItems();
             
@@ -238,13 +238,13 @@ public class FXMLController implements Initializable {
 
             Set<MediaItem> found =new HashSet<>();
             
-            if(results.getArtistOrGenre().equals("artist")){
+            if(results.getKey().equals("artist")){
                 System.out.println("Search by artist processed");
-                found = new SimpleSearch().findByArtists(new String[]{results.getSearchPhrase()}, convertedElements);
-            } else if(results.getArtistOrGenre().equals("genre")){
+                found = new SimpleSearch().findByArtists(new String[]{results.getValue()}, convertedElements);
+            } else if(results.getKey().equals("genre")){
                    System.out.println("Search by genre processed");
 
-                found = new SimpleSearch().findByGenres(new String[]{results.getSearchPhrase()}, convertedElements);
+                found = new SimpleSearch().findByGenres(new String[]{results.getValue()}, convertedElements);
             }
             System.out.println("Found elements"+found.size());
             tableView3.getItems().addAll(FXCollections.observableArrayList(found));
