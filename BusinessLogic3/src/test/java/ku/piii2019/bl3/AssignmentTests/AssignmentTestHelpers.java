@@ -109,7 +109,8 @@ public class AssignmentTestHelpers {
         LinkedHashMap<String, LinkedList<MediaItem>> organisedList = new LinkedHashMap<>();
         for (MediaItem m : allItems) {
 
-            String artist = m.getArtist().toLowerCase().trim();
+            String artist = m.getArtist() == null ? "undefined" : m.getArtist().toLowerCase().trim();
+
             organisedList.putIfAbsent(artist, new LinkedList<>());
 
             if (!organisedList.get(artist).contains(m)) {
@@ -126,7 +127,8 @@ public class AssignmentTestHelpers {
 
         for (MediaItem m : allItems) {
 
-            String genre = m.getGenre().toLowerCase().trim();
+            String genre = m.getGenre() == null ? "undefined" : m.getGenre().toLowerCase().trim();
+
             organisedList.putIfAbsent(genre, new LinkedList<>());
 
             if (!organisedList.get(genre).contains(m)) {

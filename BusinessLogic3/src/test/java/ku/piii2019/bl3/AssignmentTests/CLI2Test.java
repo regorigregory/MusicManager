@@ -36,8 +36,8 @@ import org.junit.Ignore;
  */
 public class CLI2Test {
 
-    public static final String TO_BE_COPIED_PATH = Paths.get("../CLI1_TEST").normalize().toAbsolutePath().toString();
-    public static final boolean DELETE_TEMP_FOLDERS = false;
+    public static final String TO_BE_COPIED_PATH = Paths.get("../CLI2_TEST").normalize().toAbsolutePath().toString();
+    public static final boolean DELETE_TEMP_FOLDERS = true;
     public static final MediaFileService FS_INSTANCE = MediaFileService.getInstance();
     public static Set<MediaItem> ALL_MEDIA_ITEMS;
     public static LinkedHashMap<String, LinkedList<MediaItem>> BY_ARTIST;
@@ -70,7 +70,6 @@ public class CLI2Test {
         
 
     }
-    @Ignore
     @Test
     
     public void testFilterByArtist(){
@@ -89,8 +88,7 @@ public class CLI2Test {
         }
     
     }
-    
-    @Ignore
+  
     @Test
     
     public void testFilterByGenre(){
@@ -99,17 +97,19 @@ public class CLI2Test {
      
         Random rand = new Random();
         int randomIndex = rand.nextInt(max);
-        String artistName = genres.get(randomIndex);
-        List<MediaItem> genreMedia = BY_ARTIST.get(genres.get(randomIndex));
         
-        Set<MediaItem> foundItems = new SimpleSearch().filterBy(new String[]{artistName}, ALL_MEDIA_ITEMS, FilterType.GENRE);
+        String genreName = genres.get(randomIndex);
+        List<MediaItem> genreMedia = BY_GENRE.get(genres.get(randomIndex));
+        
+        Set<MediaItem> foundItems = new SimpleSearch().filterBy(new String[]{genreName}, ALL_MEDIA_ITEMS, FilterType.GENRE);
         
         assertEquals(genreMedia.size(), foundItems.size());
+        
         for(MediaItem m : foundItems){
             assertTrue(genreMedia.contains(m));
         }
     }
-    @Ignore
+
     @Test
      public void testFilterByMultipleArtists(){
         List<String> artists = new LinkedList(BY_ARTIST.keySet());
@@ -134,7 +134,7 @@ public class CLI2Test {
     
     }
     
-    @Ignore
+  
     @Test
     
     public void testFilterByMultipleGenres(){
