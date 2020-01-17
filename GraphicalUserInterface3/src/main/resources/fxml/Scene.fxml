@@ -71,7 +71,7 @@
                     <!--todo: convert to focus detection and also, if no focus, pop an alert!-->
                     <MenuItem text="Copy" onAction="#toClipboard"/>
                     <MenuItem text="Cut" onAction="#cutToClipboard"/>
-                    <MenuItem text="Paste" onAction="#fromClipboardToIndex"/>
+                    <MenuItem text="Paste" onAction="#pasteFromClipboardToIndex"/>
                     <!--todo-->
                     
                     <SeparatorMenuItem  />

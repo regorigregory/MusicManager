@@ -150,7 +150,7 @@ public class FXMLController implements Initializable {
     }
 
     @FXML
-    private void fromClipboardToIndex() {
+    private void pasteFromClipboardToIndex() {
         TableView source = getTableInFocus();
         if (source == null) {
             String[] args = new String[]{"No table in focus.", "Please select a table.", "Before cutting from a table, please, select one."};
@@ -174,6 +174,8 @@ public class FXMLController implements Initializable {
 
             currentList.addAll(highestIndex + 1, this.clipboard);
             source.setItems(currentList);
+        } else {
+            source.setItems(this.clipboard);
         }
     }
 
