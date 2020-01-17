@@ -138,4 +138,35 @@ public class AssignmentTestHelpers {
         return organisedList;
     }
 
+    public static String getSampleM3UText() {
+        return "#EXTM3U\n"
+                + "#EXTINF:17, After Many Days - Cannibal Eyes(from the album After Many Days)\n"
+                + "C:\\gdrive\\NetBeansProjects\\music-manager-assignment\\test_folders\\original_filenames\\collection-A\\After Many Days\\After Many Days\\Cannibal Eyes - clip.mp3\n"
+                + "#EXTINF:8, Freak Fandango Orchestra - No means no(from the album Tales of a Dead Fish)\n"
+                + "C:\\gdrive\\NetBeansProjects\\music-manager-assignment\\test_folders\\original_filenames\\collection-A\\Freak Fandango Orchestra\\Tales of a Dead Fish\\Freak Fandango Orchestra - No means no - clip.mp3\n"
+                + "#EXTINF:12, Richard Stallman - Guantanamero(from the album GNU)\n"
+                + "C:\\gdrive\\NetBeansProjects\\music-manager-assignment\\test_folders\\original_filenames\\collection-B\\Richard Stallman - Guantanamero - clip.mp3\n"
+                + "#EXTINF:10, DARKPOP BAND ANGELIQUE - PERFECT WORLD (AMBIENT)(from the album PERFECT WORLD)\n"
+                + "C:\\gdrive\\NetBeansProjects\\music-manager-assignment\\test_folders\\original_filenames\\collection-A\\DARKPOP BAND ANGELIQUE\\PERFECT WORLD\\DARKPOP BAND ANGELIQUE - PERFECT WORLD (AMBIENT) - clip.mp3\n"
+                + "#EXTINF:61, Omnibrain - Neverending(from the album Omnibrain)\n"
+                + "C:\\gdrive\\NetBeansProjects\\music-manager-assignment\\test_folders\\original_filenames\\collection-A\\Omnibrain - Neverending - clip - Copy.mp3";
+    }
+       public static String getSampleM3UTextWithOneArtist() {
+        return "#EXTM3U\n"
+                + "#EXTINF:17, After Many Days - Cannibal Eyes(from the album After Many Days)\n"
+                + "C:\\gdrive\\NetBeansProjects\\music-manager-assignment\\test_folders\\original_filenames\\collection-A\\After Many Days\\After Many Days\\Cannibal Eyes - clip.mp3\n"
+                + "#EXTINF:8, After Many Days - No means no(from the album Tales of a Dead Fish)\n"
+                + "C:\\gdrive\\NetBeansProjects\\music-manager-assignment\\test_folders\\original_filenames\\collection-A\\Freak Fandango Orchestra\\Tales of a Dead Fish\\Freak Fandango Orchestra - No means no - clip.mp3\n"
+                + "#EXTINF:12, After Many Days - Guantanamero(from the album GNU)\n"
+                + "C:\\gdrive\\NetBeansProjects\\music-manager-assignment\\test_folders\\original_filenames\\collection-B\\Richard Stallman - Guantanamero - clip.mp3\n"
+                + "#EXTINF:10, After Many Days - PERFECT WORLD (AMBIENT)(from the album PERFECT WORLD)\n"
+                + "C:\\gdrive\\NetBeansProjects\\music-manager-assignment\\test_folders\\original_filenames\\collection-A\\DARKPOP BAND ANGELIQUE\\PERFECT WORLD\\DARKPOP BAND ANGELIQUE - PERFECT WORLD (AMBIENT) - clip.mp3\n"
+                + "#EXTINF:61, After Many Days - Neverending(from the album Omnibrain)\n"
+                + "C:\\gdrive\\NetBeansProjects\\music-manager-assignment\\test_folders\\original_filenames\\collection-A\\Omnibrain - Neverending - clip - Copy.mp3";
+    }
+    
+    public static int getSampleM3ULength(){
+        return 17+8+12+10+61;
+    }
+
 }

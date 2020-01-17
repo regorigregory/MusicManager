@@ -81,7 +81,7 @@ public class CreateM3U implements CLICommandProcessor {
             Double parsedMaximumLength = null;
             if (maximumLength != null) {
                 parsedMaximumLength = Double.parseDouble(maximumLength);
-                parsedMaximumLength = parsedMaximumLength * 60;
+                parsedMaximumLength = parsedMaximumLength*60;
             }
             DuplicateFinder df = null;
             if (cmd.hasOption("ID3EX")) {
