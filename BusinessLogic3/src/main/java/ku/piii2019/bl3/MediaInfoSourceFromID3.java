@@ -7,6 +7,7 @@ package ku.piii2019.bl3;
 
 import com.mpatric.mp3agic.*;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -108,6 +109,15 @@ public class MediaInfoSourceFromID3 implements MediaInfoSource {
         } catch (Exception ex) {
             CustomLogging.logIt(ex);
         } 
+    }
+        public static void updateMetaTag(MediaItem editItem, String editProperty, String newValue){
+        try{
+        Field editedField = editItem.getClass().getDeclaredField(editProperty);
+        editedField.set(editItem, newValue);
+        } catch(Exception e){
+            CustomLogging.logIt("Trying to edit MediaItem's non existent field.", Level.SEVERE);
+        }
+        MediaInfoSourceFromID3.updateBasicMetaTags(editItem);
     }
 
 }
