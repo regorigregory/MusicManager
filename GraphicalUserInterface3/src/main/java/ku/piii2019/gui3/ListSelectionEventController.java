@@ -9,8 +9,7 @@ package ku.piii2019.gui3;
 import javafx.scene.control.TableView;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.SelectionMode;
-import javafx.collections.ObservableList;
-import ku.piii2019.bl3.*;
+
 /**
  *
  * @author Regory Gregory

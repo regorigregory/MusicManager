@@ -19,7 +19,6 @@ import javafx.scene.control.MultipleSelectionModel;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableRow;
 import javafx.scene.input.DragEvent;
-import java.util.stream.Stream;
 import javafx.collections.ObservableList;
 
 /**

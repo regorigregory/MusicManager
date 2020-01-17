@@ -44,7 +44,7 @@
     </TableView>
    
   
-    <MenuBar fx:id="menuBar" >
+    <MenuBar fx:id="menuBar" GridPane.columnSpan="3" >
         <menus>
             
             <Menu text="File">
@@ -100,7 +100,7 @@
                     <MenuItem text="Search" disable="true"/>
                     <MenuItem text="Online Manual" visible="false"/>
                     <SeparatorMenuItem />
-                    <MenuItem text="About" />
+                    <MenuItem text="About" onAction="#showAbout"/>
                    
 
                 </items>

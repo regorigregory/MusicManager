@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -18,15 +18,10 @@ import javafx.collections.ModifiableObservableListBase;
 import javafx.scene.control.TableView;
 import javafx.stage.DirectoryChooser;
 import ku.piii2019.bl3.*;
-import java.lang.UnsupportedOperationException;
-import javafx.beans.property.SimpleListProperty;
-import javafx.scene.Node;
-import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Window;
 import ku.piii2019.bl3.FileService;
-import ku.piii2019.bl3.MediaFileService;
 
 public class FXMLController implements Initializable {
 
@@ -104,7 +99,7 @@ public class FXMLController implements Initializable {
 
         ObservableList<MediaItem> tableData
                 = referenceToTheTable.getItems();
-        Set<MediaItem> tableDataSet = new HashSet(tableData);
+        Set<MediaItem> tableDataSet = new LinkedHashSet(tableData);
         if (tableDataSet.size() == 0) {
             String[] args = new String[]{"Table " + referenceToTheTable.getId() + " is empty", "Table " + referenceToTheTable.getId() + " is empty", "Please add items to table " + referenceToTheTable.getId() + " before trying to save an M3U List"};
             ErrorPopups.alertUser(args);
@@ -216,7 +211,7 @@ public class FXMLController implements Initializable {
         List<MediaItem> yourRealList = yourList.getItems();
 
         DuplicateFinder df = new DuplicateFindFromID3();
-        Set<MediaItem> missingElements = df.getMissingItems(new HashSet(myRealList), new HashSet(yourRealList));
+        Set<MediaItem> missingElements = df.getMissingItems(new LinkedHashSet(myRealList), new LinkedHashSet(yourRealList));
 
         ObservableList<MediaItem> result = FXCollections.observableArrayList(missingElements);
 
@@ -231,7 +226,7 @@ public class FXMLController implements Initializable {
 
         ObservableList<MediaItem> tableData
                 = table.getItems();
-        Set<MediaItem> tableDataSet = new HashSet(tableData);
+        Set<MediaItem> tableDataSet = new LinkedHashSet(tableData);
         if (tableDataSet.size() == 0) {
             String[] args = new String[]{"Table " + table.getId() + " is empty", "Table " + table.getId() + " is empty", "Please add items to table " + table.getId() + " before trying to save an M3U List"};
             ErrorPopups.alertUser(args);
@@ -244,7 +239,7 @@ public class FXMLController implements Initializable {
         Window stage = MainApp.getPrimaryStage();
 
         File file = fileChooser.showSaveDialog(stage);
-        //I know, it is not really MVC....
+  
         try {
             file.delete();
             file.createNewFile();
@@ -271,7 +266,7 @@ public class FXMLController implements Initializable {
         }
         ObservableList<MediaItem> tableData
                 = source.getItems();
-        Set<MediaItem> tableDataSet = new HashSet(tableData);
+        Set<MediaItem> tableDataSet = new LinkedHashSet(tableData);
         if (tableDataSet.size() == 0) {
             String[] args = new String[]{"Table 3 is empty", "Table 3 is empty", "Please add items to table 3 before trying to save an M3U List"};
             ErrorPopups.alertUser(args);
@@ -322,6 +317,11 @@ public class FXMLController implements Initializable {
     @FXML
     private void goodbye(){
         System.exit(0);
+    }
+    @FXML 
+    private void showAbout(){
+        String[] args = new String[]{"Programming III assignment.", "Programming III assignment.", "Created by Gergo Endresz (k1721863). "};
+        ErrorPopups.alertUser(args);
     }
     public TableView getTableInFocus() {
         TableView focusedTable = null;
