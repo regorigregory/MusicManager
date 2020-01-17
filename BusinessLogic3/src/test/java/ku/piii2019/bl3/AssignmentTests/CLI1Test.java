@@ -8,6 +8,7 @@ package ku.piii2019.bl3.AssignmentTests;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,7 +34,7 @@ public class CLI1Test {
 
     public static final String TO_BE_COPIED_PATH = Paths.get("../CLI1_TEST").normalize().toAbsolutePath().toString();
     public static final String COPY_TARGET_PATH = TO_BE_COPIED_PATH + "_TEMP";
-    public static final boolean DELETE_TEMP_FOLDERS = false;
+    public static final boolean DELETE_TEMP_FOLDERS = true;
     public static final MediaFileService FS_INSTANCE = MediaFileService.getInstance();
 
     @BeforeClass
@@ -123,12 +124,11 @@ public class CLI1Test {
     
     
     //Please modify file paths according to your settings.
-    @Ignore
+ 
     @Test
     public void testIfDuplicatesAreOutput() {
         String outputShouldBe = TO_BE_COPIED_PATH+"\\short_filenames\\collection-A\\file2.mp3\n"
                 + TO_BE_COPIED_PATH+"\\short_filenames\\collection-B\\directory1\\item1.mp3\n"
-                + TO_BE_COPIED_PATH+"\\original_filenames\\collection-B\\Orxata Sound System\\Richard Stallman - Guantanamero - clip.mp3\n"
                 + TO_BE_COPIED_PATH+"\\original_filenames\\collection-A\\Orxata Sound System\\fuster meets guevara - clip.mp3\n"
                 +  TO_BE_COPIED_PATH+"\\short_filenames\\collection-A\\file1.mp3\n"
                 +  TO_BE_COPIED_PATH+"\\original_filenames\\collection-A\\Freak Fandango Orchestra\\Freak Fandango Orchestra - No means no - clip.mp3";
@@ -146,10 +146,9 @@ public class CLI1Test {
         output = output.substring(index);
         String[] actualLines = output.split("\r\n");
         assertEquals(outputLinesShouldBe.length, actualLines.length);
-        for(int i = 0; i<actualLines.length; i++){
-            assertEquals(Paths.get(actualLines[i]).normalize(), Paths.get(outputLinesShouldBe[i]).normalize());
-            
-        }
+        List<Path> checkTo = Arrays.asList(actualLines).stream().map(s->Paths.get(s).normalize().toAbsolutePath()).collect(Collectors.toList());
+        boolean foundAll = Arrays.asList(outputLinesShouldBe).stream().map(s->Paths.get(s).normalize().toAbsolutePath()).allMatch(p->checkTo.contains(p));
+        assertTrue(foundAll);
  
     }
 
