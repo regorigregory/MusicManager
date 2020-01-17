@@ -34,6 +34,7 @@ public interface FileService {
  
     static Consumer<Path> copyFilesBody(Path sourceFolder, Path targetFolder) {
         return (Path filePath) -> {
+            
             Path relativePath = sourceFolder.relativize(filePath);
             Path targetPath = Paths.get(targetFolder.toString(), relativePath.toString());
             Path newFolder = getFolder(targetPath.getParent().toString());

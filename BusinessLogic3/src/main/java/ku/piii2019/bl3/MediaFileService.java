@@ -99,8 +99,8 @@ public class MediaFileService extends GenericFileService {
         Set<MediaItem> foundMediaItems = foundAndDuplicates[0];
         Set<MediaItem> foundDuplicates = foundAndDuplicates[1];
 
-        Path sourceFolder = getFolder(srcFolder);
-        Path targetFolder = getFolder(targetBasePath);
+        Path sourceFolder = getFolder(srcFolder).normalize().toAbsolutePath();
+        Path targetFolder = getFolder(targetBasePath).normalize().toAbsolutePath();
 
         Consumer<Path> selectedConsumer = copyFilesBody(sourceFolder, targetFolder);
         Stream<MediaItem> streamInstance = foundMediaItems.stream();
