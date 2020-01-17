@@ -404,11 +404,5 @@ public class FXMLController implements Initializable {
         return focusedTable;
     }
 
-    public TableView getTableInFocus() {
-        TableView focusedTable = null;
-        if (MainApp.getPrimaryStage().getScene().focusOwnerProperty().get() instanceof TableView) {
-            focusedTable = (TableView) MainApp.getPrimaryStage().getScene().focusOwnerProperty().get();
-        }
-        return focusedTable;
-    }
+
 }
