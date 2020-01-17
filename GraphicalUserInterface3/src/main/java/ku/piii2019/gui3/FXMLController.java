@@ -57,11 +57,10 @@ public class FXMLController implements Initializable {
         MediaItemTableViewFactory.makeTable(tableView1, columns);
         MediaItemTableViewFactory.makeTable(tableView2, columns);
         MediaItemTableViewFactory.makeTable(tableView3, columns);
-        
+
         tableView1.setEditable(true);
         tableView2.setEditable(true);
         tableView3.setEditable(true);
-
 
         this.getDirections = new DirectionTeller(new TableView[]{tableView1, tableView2, tableView3});
         this.selectionController = new ListSelectionEventController(new TableView[]{tableView1, tableView2, tableView3});
@@ -151,6 +150,7 @@ public class FXMLController implements Initializable {
     private void openIn(ActionEvent event) {
         TableView referenceToTheTable = getDirections.urinaryAction(event);
         open(referenceToTheTable, null);
+        System.out.println(getTableInFocus().toString());
     }
 
     @FXML
@@ -322,8 +322,17 @@ public class FXMLController implements Initializable {
         Window stage = MainApp.getPrimaryStage();
 
         File directory = fileChooser.showDialog(stage);
-        for(MediaItem m : tableSelection1){
+        for (MediaItem m : tableSelection1) {
             MediaFileService.getInstance().refileAndCopyMediaItem(directory.getAbsolutePath(), m);
         }
+
+    }
+
+    public TableView getTableInFocus() {
+        TableView focusedTable = null;
+        if (MainApp.getPrimaryStage().getScene().focusOwnerProperty().get() instanceof TableView) {
+            focusedTable = (TableView) MainApp.getPrimaryStage().getScene().focusOwnerProperty().get();
+        }
+        return focusedTable;
     }
 }
