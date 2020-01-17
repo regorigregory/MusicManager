@@ -5,30 +5,25 @@
  */
 package ku.piii2019.bl3.AssignmentTests;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
+
 import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static ku.piii2019.bl3.AssignmentTests.AssignmentTestHelpers.*;
-import ku.piii2019.bl3.DuplicateFindFromFilename;
-import ku.piii2019.bl3.DuplicateFindFromID3;
-import ku.piii2019.bl3.DuplicateFinder;
 import ku.piii2019.bl3.MediaFileService;
 import ku.piii2019.bl3.MediaItem;
 import ku.piii2019.bl3.SearchService.FilterType;
 import ku.piii2019.bl3.SimpleSearch;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
+
 
 /**
  *
