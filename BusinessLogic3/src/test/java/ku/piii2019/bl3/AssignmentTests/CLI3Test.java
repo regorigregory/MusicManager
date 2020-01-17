@@ -8,6 +8,7 @@ package ku.piii2019.bl3.AssignmentTests;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -77,9 +78,10 @@ public class CLI3Test {
 
         assertEquals(extractedLength, sampleM3ULength);
     }
+    
     @Test
     public void testIfM3UFileIsCreated() {
-        int testLength = 1/60*20;
+        double testLength = 1.0/60*20;
         List<String> artistNames = new LinkedList(BY_ARTIST.keySet());
         int max = artistNames.size();
 
@@ -105,7 +107,7 @@ public class CLI3Test {
   
     @Test
     public void testm3UDurationByArtist() {
-        double testLengthsInMinutes = 1/60*20;
+        double testLengthsInMinutes = 1.0/60*40;
         List<String> artistNames = new LinkedList(BY_ARTIST.keySet());
         int max = artistNames.size();
 
@@ -114,6 +116,58 @@ public class CLI3Test {
         String fileName = "testm3UDurationByArtist_10.m3u";
         String selectedArtist = artistNames.get(randomIndex);
         String[] args = new String[]{"-s", TO_BE_COPIED_PATH.toString(), "-f", fileName, "-a", selectedArtist, "-ml", String.valueOf(testLengthsInMinutes)};
+        System.out.println("Selected artist:"+selectedArtist);
+        CreateM3U.getInstance().processArgs(args);
+        Path completeFilePath = Paths.get(TO_BE_COPIED_PATH.toString(), fileName);
+        int extractedLength = 0;
+        String contents = "";
+        try {
+            contents = Files.readString(completeFilePath);
+            extractedLength = extractLengthFromM3U(contents);
+        } catch (Exception e) {
+            System.out.println("Reading the created file was not possible. The file's path:" + completeFilePath.toString());
+        }
+        String assertFailureMessage = "The contents were:\r\n"+contents;
+        assertEquals(assertFailureMessage, getNumberOfArtists(contents), 1);
+        
+        assertTrue(testLengthsInMinutes > extractedLength/60);
+        //assertEquals(checkIfOneArtist(contents), 1);
+//        Path filePath = Paths.get(TO_BE_COPIED_PATH.toString(), fileName)
+//        Integer[] array = new Integer[];
+
+    }
+    @Test
+    public void testm3UDurationByMultipleArtists() {
+        double testLengthsInMinutes = 1.0*5;
+        String fileName = "testm3UDurationByArtist_300.m3u";
+         
+         
+        List<String> artistNames = new LinkedList(BY_ARTIST.keySet());
+        
+        int max = artistNames.size();
+        Random rand = new Random();
+        int randomIndex = rand.nextInt(max);
+        
+        
+       
+        String selectedArtist1 = artistNames.get(randomIndex);
+        System.out.println("Selected artist1:"+selectedArtist1);
+        randomIndex = rand.nextInt(max);
+        
+        String selectedArtist2 = artistNames.get(randomIndex);
+        System.out.println("Selected artist2:"+selectedArtist2);
+        randomIndex = rand.nextInt(max);
+        
+        String selectedArtist3 = artistNames.get(randomIndex);
+        System.out.println("Selected artist3:"+selectedArtist3);
+        
+        Set<String> artists = new HashSet<>();
+        artists.add(selectedArtist1);
+        artists.add(selectedArtist2);
+        artists.add(selectedArtist3);
+        artists.toArray();
+        int numberOfArtists = artists.size();
+        String[] args = new String[]{"-s", TO_BE_COPIED_PATH.toString(), "-f", fileName, "-a", selectedArtist1+","+selectedArtist2+","+selectedArtist3, "-ml", String.valueOf(testLengthsInMinutes)};
 
         CreateM3U.getInstance().processArgs(args);
         Path completeFilePath = Paths.get(TO_BE_COPIED_PATH.toString(), fileName);
@@ -125,9 +179,12 @@ public class CLI3Test {
         } catch (Exception e) {
             System.out.println("Reading the created file was not possible. The file's path:" + completeFilePath.toString());
         }
-        assertEquals(getNumberOfArtists(contents), 1);
+        assertEquals(getNumberOfArtists(contents), numberOfArtists);
         
-        assertTrue(testLengthsInMinutes > extractedLength/60);
+        
+        String assertFailureMessage = "testLengthsInMinutes: "+testLengthsInMinutes+"; extractedLength/60"+extractedLength/60;
+        
+        assertTrue(assertFailureMessage, testLengthsInMinutes > extractedLength/60);
         //assertEquals(checkIfOneArtist(contents), 1);
 //        Path filePath = Paths.get(TO_BE_COPIED_PATH.toString(), fileName)
 //        Integer[] array = new Integer[];
@@ -154,7 +211,7 @@ public class CLI3Test {
         Matcher matcher = p.matcher(sampleText);
         LinkedList extractedArtists = new LinkedList<>();
         while (matcher.find()) {
-            String temp = matcher.group(4);
+            String temp = matcher.group(4).trim();
             extractedArtists.add(temp);
         }
         return new HashSet(extractedArtists).size();
