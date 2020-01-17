@@ -24,16 +24,13 @@ import ku.piii2019.bl3.MediaFileService;
 import ku.piii2019.bl3.MediaItem;
 import org.junit.Ignore;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+
 /**
  *
  * @author k1721863
  */
 
 
-@RunWith(Parameterized.class)
 public class CLI4Test {
 
     public static final String TO_BE_COPIED_PATH = Paths.get("../CLI3_TEST").normalize().toAbsolutePath().toString();
@@ -45,24 +42,10 @@ public class CLI4Test {
     public static LinkedHashMap<String, LinkedList<MediaItem>> BY_GENRE;
     public DuplicateFinder df;
     public String currentDfCommand;
-    @Parameters
-    public static Collection<Object[]> returnTestClasses()
-    {
-        return Arrays.asList(
-                new Object[]{null, "-NOEX"},
-                new Object[]{new DuplicateFindFromFilename(), "-FEX"},
-                new Object[]{new DuplicateFindFromID3(), "-ID3EX"}
-        );
 
-    }
-    
-    private CLI4Test(Object df, Object cliArgument){
-        this.df = (DuplicateFinder) df;
-        this.currentDfCommand = (String) cliArgument;
-    }
+   
 
-    
-    
+
     @BeforeClass
     public static void setUpClass() {
         copyOriginalTestFolders(TO_BE_COPIED_PATH);
@@ -93,19 +76,13 @@ public class CLI4Test {
 
     @Ignore
     @Test
-    public void checkIfDestinationFolderIsCreated() {
+    public void checkIfDestinationRootFolderIsCreated() {
         throw new UnsupportedOperationException("Yet to come!");
     }
 
     @Ignore
     @Test
     public void checkDirectoryStructure() {
-        throw new UnsupportedOperationException("Yet to come!");
-    }
-
-    @Ignore
-    @Test
-    public void checkFilteredDirectoryStructure() {
         throw new UnsupportedOperationException("Yet to come!");
     }
 
@@ -120,7 +97,13 @@ public class CLI4Test {
     public void checkFilteredGenres() {
         throw new UnsupportedOperationException("Yet to come!");
     }
-    
+
+    @Ignore
+    @Test
+    public void checkFilteredDirectoryStructure() {
+        throw new UnsupportedOperationException("Yet to come!");
+    }
+
     @Ignore
     @Test
     public void checkFilesWithoutDuplicates() {

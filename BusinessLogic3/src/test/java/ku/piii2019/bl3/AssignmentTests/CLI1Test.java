@@ -123,7 +123,7 @@ public class CLI1Test {
     
     
     //Please modify file paths according to your settings.
-    
+    @Ignore
     @Test
     public void testIfDuplicatesAreOutput() {
         String outputShouldBe = TO_BE_COPIED_PATH+"\\short_filenames\\collection-A\\file2.mp3\n"
