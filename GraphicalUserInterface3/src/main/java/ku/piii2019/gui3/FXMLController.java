@@ -106,7 +106,7 @@ public class FXMLController implements Initializable {
                 = referenceToTheTable.getItems();
         Set<MediaItem> tableDataSet = new HashSet(tableData);
         if (tableDataSet.size() == 0) {
-            String[] args = new String[]{"Table "+referenceToTheTable.getId()+" is empty", "Table "+referenceToTheTable.getId()+" is empty", "Please add items to table "+referenceToTheTable.getId()+" before trying to save an M3U List"};
+            String[] args = new String[]{"Table " + referenceToTheTable.getId() + " is empty", "Table " + referenceToTheTable.getId() + " is empty", "Please add items to table " + referenceToTheTable.getId() + " before trying to save an M3U List"};
             ErrorPopups.alertUser(args);
             return;
         }
@@ -133,25 +133,35 @@ public class FXMLController implements Initializable {
 
     }
 
-  
-
     @FXML
-    private void toClipboard(ActionEvent e) {
-        TableView source = getDirections.urinaryAction(e);
+    private TableView toClipboard() {
+        TableView source = getTableInFocus();
+        if (source == null) {
+            String[] args = new String[]{"No table in focus.", "Please select a table.", "Before cutting from a table, please, select one."};
+            ErrorPopups.alertUser(args);
+            return source;
+        }
         this.clipboard = FXCollections.observableArrayList(source.getSelectionModel().getSelectedItems());
-
+        return source;
     }
 
     @FXML
     private void cutToClipboard(ActionEvent e) {
-        TableView source = getDirections.urinaryAction(e);
-        this.toClipboard(e);
+        TableView source = this.toClipboard();
+        if (source == null) {
+            return;
+        }
         source.getItems().removeAll(FXCollections.observableArrayList(this.clipboard));
     }
 
     @FXML
-    private void fromClipboardToIndex(ActionEvent e) {
-        TableView source = getDirections.urinaryAction(e);
+    private void fromClipboardToIndex() {
+        TableView source = getTableInFocus();
+        if (source == null) {
+            String[] args = new String[]{"No table in focus.", "Please select a table.", "Before cutting from a table, please, select one."};
+            ErrorPopups.alertUser(args);
+            return;
+        }
 
         ObservableList<Integer> selectedIndices = source.getSelectionModel().getSelectedIndices();
 
@@ -215,6 +225,113 @@ public class FXMLController implements Initializable {
     }
 
     @FXML
+    private void saveAsM3U(ActionEvent event) {
+
+        TableView table = getDirections.urinaryAction(event);
+
+        ObservableList<MediaItem> tableData
+                = table.getItems();
+        Set<MediaItem> tableDataSet = new HashSet(tableData);
+        if (tableDataSet.size() == 0) {
+            String[] args = new String[]{"Table " + table.getId() + " is empty", "Table " + table.getId() + " is empty", "Please add items to table " + table.getId() + " before trying to save an M3U List"};
+            ErrorPopups.alertUser(args);
+            return;
+        }
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new ExtensionFilter("M3U files", "*.m3u"));
+        fileChooser.setTitle("Select save location and filename");
+
+        Window stage = MainApp.getPrimaryStage();
+
+        File file = fileChooser.showSaveDialog(stage);
+        //I know, it is not really MVC....
+        try {
+            file.delete();
+            file.createNewFile();
+
+        } catch (IOException ioex) {
+            CustomLogging.logIt(ioex);
+        }
+
+        String destinationFolder = file.getParent();
+        String fileName = file.getName();
+
+        MediaFileService.getInstance().saveM3UFile(tableDataSet, fileName, destinationFolder, false);
+
+    }
+
+    @FXML
+    private void saveAsM3UandCopyWithRelativePaths(ActionEvent event) {
+
+        TableView source = getTableInFocus();
+        if (source == null) {
+            String[] args = new String[]{"No table in focus.", "Please select a table.", "Before cutting from a table, please, select one."};
+            ErrorPopups.alertUser(args);
+            return;
+        }
+        ObservableList<MediaItem> tableData
+                = source.getItems();
+        Set<MediaItem> tableDataSet = new HashSet(tableData);
+        if (tableDataSet.size() == 0) {
+            String[] args = new String[]{"Table 3 is empty", "Table 3 is empty", "Please add items to table 3 before trying to save an M3U List"};
+            ErrorPopups.alertUser(args);
+            return;
+        }
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new ExtensionFilter("M3U files", "*.m3u"));
+        fileChooser.setTitle("Select save directory and m3u filename.");
+
+        Window stage = MainApp.getPrimaryStage();
+
+        File file = fileChooser.showSaveDialog(stage);
+
+        try {
+            file.delete();
+            file.createNewFile();
+
+        } catch (IOException ioex) {
+            CustomLogging.logIt(ioex);
+        }
+
+        String destinateionFolder = file.getParent();
+        String fileName = file.getName();
+        MediaFileService.getInstance().saveM3UFile(tableDataSet, fileName, destinateionFolder, true);
+
+        MediaFileService.getInstance().copyMediaFilesWithoutDirectoryStructure(tableDataSet, destinateionFolder, null);
+    }
+
+    @FXML
+    private void refileSelectedTracks() {
+        ObservableList<MediaItem> tableSelection1 = FXCollections.observableArrayList(tableView1.getSelectionModel().getSelectedItems());
+        ObservableList<MediaItem> tableSelection2 = FXCollections.observableArrayList(tableView2.getSelectionModel().getSelectedItems());
+        ObservableList<MediaItem> tableSelection3 = FXCollections.observableArrayList(tableView3.getSelectionModel().getSelectedItems());
+        tableSelection1.addAll(tableSelection2);
+        tableSelection2.addAll(tableSelection3);
+
+        DirectoryChooser fileChooser = new DirectoryChooser();
+        fileChooser.setTitle("Select save directory and m3u filename.");
+
+        Window stage = MainApp.getPrimaryStage();
+
+        File directory = fileChooser.showDialog(stage);
+        for (MediaItem m : tableSelection1) {
+            MediaFileService.getInstance().refileAndCopyMediaItem(directory.getAbsolutePath(), m);
+        }
+
+    }
+    @FXML
+    private void goodbye(){
+        System.exit(0);
+    }
+    public TableView getTableInFocus() {
+        TableView focusedTable = null;
+        if (MainApp.getPrimaryStage().getScene().focusOwnerProperty().get() instanceof TableView) {
+            focusedTable = (TableView) MainApp.getPrimaryStage().getScene().focusOwnerProperty().get();
+        }
+        return focusedTable;
+    }
+    
+    @FXML
     private void openIn(ActionEvent event) {
         TableView referenceToTheTable = getDirections.urinaryAction(event);
         open(referenceToTheTable, null);
@@ -250,19 +367,17 @@ public class FXMLController implements Initializable {
         dst.setItems(newList);
     }
 
-
-
     private void open(TableView table, String collectionRoot) {
         if (collectionRoot == null) {
             DirectoryChooser dirChooser = new DirectoryChooser();
             dirChooser.setTitle("Open Media Folder for Table " + getDirections.getTableNumber(table));
             File path = null;
-            try{
-            path = dirChooser.showDialog(null).getAbsoluteFile();
-            } catch (Exception ex){
+            try {
+                path = dirChooser.showDialog(null).getAbsoluteFile();
+            } catch (Exception ex) {
                 //CustomLogging.getInstance().logIt();
             }
-            if(path==null){
+            if (path == null) {
                 return;
             }
             collectionRoot = path.toString();
@@ -296,113 +411,5 @@ public class FXMLController implements Initializable {
                 = FXCollections.observableArrayList(collectionA);
         referenceToEitherTable.setItems(dataForTableViewAndModel);
     }
-
-    @FXML
-    private void clearTable(ActionEvent event) {
-        TableView table = getDirections.urinaryAction(event);
-        //table.getItems().removeAll();
-        throw new UnsupportedOperationException("This has not been implemented yet!");
-
-    }
-
-    @FXML
-    private void saveAsM3U(ActionEvent event) {
-        
-        TableView table = getDirections.urinaryAction(event);
-        
-        ObservableList<MediaItem> tableData
-                = table.getItems();
-        Set<MediaItem> tableDataSet = new HashSet(tableData);
-        if (tableDataSet.size() == 0) {
-            String[] args = new String[]{"Table "+table.getId()+" is empty", "Table "+table.getId()+" is empty", "Please add items to table "+table.getId()+" before trying to save an M3U List"};
-            ErrorPopups.alertUser(args);
-            return;
-        }
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new ExtensionFilter("M3U files", "*.m3u"));
-        fileChooser.setTitle("Select save location and filename");
-
-        Window stage = MainApp.getPrimaryStage();
-
-        File file = fileChooser.showSaveDialog(stage);
-        //I know, it is not really MVC....
-        try {
-            file.delete();
-            file.createNewFile();
-
-        } catch (IOException ioex) {
-            CustomLogging.logIt(ioex);
-        }
-
-        String destinationFolder = file.getParent();
-        String fileName = file.getName();
-
-        MediaFileService.getInstance().saveM3UFile(tableDataSet, fileName, destinationFolder, false);
-
-    }
-
-    @FXML
-    private void saveAsM3UandCopy(ActionEvent event) {
-
-        TableView table = getDirections.urinaryAction(event);
-        ObservableList<MediaItem> tableData
-                = table.getItems();
-        Set<MediaItem> tableDataSet = new HashSet(tableData);
-        if (tableDataSet.size() == 0) {
-            String[] args = new String[]{"Table 3 is empty", "Table 3 is empty", "Please add items to table 3 before trying to save an M3U List"};
-            ErrorPopups.alertUser(args);
-            return;
-        }
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new ExtensionFilter("M3U files", "*.m3u"));
-        fileChooser.setTitle("Select save directory and m3u filename.");
-
-        Window stage = MainApp.getPrimaryStage();
-
-        File file = fileChooser.showSaveDialog(stage);
-
-        try {
-            file.delete();
-            file.createNewFile();
-
-        } catch (IOException ioex) {
-            CustomLogging.logIt(ioex);
-        }
-
-        String destinateionFolder = file.getParent();
-        String fileName = file.getName();
-        MediaFileService.getInstance().saveM3UFile(tableDataSet, fileName, destinateionFolder, true);
-
-        MediaFileService.getInstance().copyMediaFilesWithoutDirectoryStructure(tableDataSet, destinateionFolder, null);
-    }
-
-    @FXML
-    private void refileSelectedTracks(ActionEvent event) {
-        ObservableList<MediaItem> tableSelection1 = FXCollections.observableArrayList(tableView1.getSelectionModel().getSelectedItems());
-        ObservableList<MediaItem> tableSelection2 = FXCollections.observableArrayList(tableView2.getSelectionModel().getSelectedItems());
-        ObservableList<MediaItem> tableSelection3 = FXCollections.observableArrayList(tableView3.getSelectionModel().getSelectedItems());
-        tableSelection1.addAll(tableSelection2);
-        tableSelection2.addAll(tableSelection3);
-
-        DirectoryChooser fileChooser = new DirectoryChooser();
-        fileChooser.setTitle("Select save directory and m3u filename.");
-
-        Window stage = MainApp.getPrimaryStage();
-
-        File directory = fileChooser.showDialog(stage);
-        for (MediaItem m : tableSelection1) {
-            MediaFileService.getInstance().refileAndCopyMediaItem(directory.getAbsolutePath(), m);
-        }
-
-    }
-
-    public TableView getTableInFocus() {
-        TableView focusedTable = null;
-        if (MainApp.getPrimaryStage().getScene().focusOwnerProperty().get() instanceof TableView) {
-            focusedTable = (TableView) MainApp.getPrimaryStage().getScene().focusOwnerProperty().get();
-        }
-        return focusedTable;
-    }
-
 
 }

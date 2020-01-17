@@ -23,11 +23,7 @@
                GridPane.vgrow="ALWAYS"        
                GridPane.rowIndex="1">
     </TableView>
-    <Button fx:id="button1" 
-            GridPane.columnIndex="0" 
-            GridPane.rowIndex="2" 
-            text="Clear table 3" 
-            onAction="#clearTable" id="1" />
+ 
     
     <TableView fx:id="tableView2" 
                GridPane.columnIndex="1" 
@@ -37,11 +33,7 @@
                GridPane.rowIndex="1">
     </TableView>
     
-    <Button fx:id="button2" 
-            GridPane.columnIndex="1" 
-            GridPane.rowIndex="2" 
-            text="Clear table 2" 
-            onAction="#clearTable" id="2" />
+   
     
     <TableView fx:id="tableView3" 
                GridPane.columnIndex="2" 
@@ -50,12 +42,6 @@
                GridPane.vgrow="ALWAYS"        
                GridPane.rowIndex="1">
     </TableView>
-    
-    <Button fx:id="button3" 
-            GridPane.columnIndex="2" 
-            GridPane.rowIndex="2" 
-            text="Clear table 3" 
-            onAction="#clearTable" id="3" />
    
   
     <MenuBar fx:id="menuBar" >
@@ -66,20 +52,27 @@
                     <MenuItem text="Open Collection..." onAction="#openInIntoSelected"/>
                     <MenuItem text="Open Collection A" onAction="#openAIntoSelected"/>
                     <MenuItem text="Open Collection B" onAction="#openBIntoSelected"/>
-                    <MenuItem text="Export table in focus as M3U" onAction="#exportM3USelectedTable"/>
+                    
+                    <SeparatorMenuItem  />
+
+                    <MenuItem text="Export selected table as M3U" onAction="#exportM3USelectedTable"/>
+                    <MenuItem text="Create playlist (relative) and copy items to path from selected table" onAction="#saveAsM3UandCopyWithRelativePaths"/>
                     <MenuItem text="Create playlist and refile selected items from all tables" onAction="#refileSelectedTracks"/>
-       
+                    
+                    <SeparatorMenuItem  />
+
+                    <MenuItem text="Exit" onAction="#goodbye"/>
                 </items>
             </Menu>
             
             
-             <Menu text="Edit">
+            <Menu text="Edit">
                 <items>
                     <!--todo: convert to focus detection and also, if no focus, pop an alert!-->
                     <MenuItem text="Copy" onAction="#toClipboard"/>
                     <MenuItem text="Cut" onAction="#cutToClipboard"/>
                     <MenuItem text="Paste" onAction="#fromClipboardToIndex"/>
-                     <!--todo-->
+                    <!--todo-->
                     
                     <SeparatorMenuItem  />
                     
@@ -97,6 +90,7 @@
                     <MenuItem text="Insert Table 3 contents into Table 1"  onAction="#insertOneToAnother" id="3:1"/>
                     <MenuItem text="Show Table 3 items missing from Table 2" onAction="#showMissing" id="3:2"/>
                     <MenuItem text="Insert Table 3 contents into Table 2"  onAction="#insertOneToAnother" id="3:2"/>
+                    
                 </items>
             </Menu>
             
@@ -107,7 +101,7 @@
                     <MenuItem text="Online Manual" visible="false"/>
                     <SeparatorMenuItem />
                     <MenuItem text="About" />
-                    <MenuItem text="Exit"/>
+                   
 
                 </items>
             </Menu>
