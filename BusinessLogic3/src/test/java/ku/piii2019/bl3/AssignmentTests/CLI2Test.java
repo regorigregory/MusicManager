@@ -64,7 +64,6 @@ public class CLI2Test {
 
     }
 
-    @Ignore
 
     @Test
 
@@ -85,7 +84,7 @@ public class CLI2Test {
 
     }
 
-    @Ignore
+    
 
     @Test
 
@@ -108,7 +107,6 @@ public class CLI2Test {
         }
     }
 
-    @Ignore
 
     @Test
     public void testFilterByMultipleArtists() {
@@ -132,7 +130,6 @@ public class CLI2Test {
 
     }
 
-    @Ignore
     @Test
 
     public void testFilterByMultipleGenres() {
