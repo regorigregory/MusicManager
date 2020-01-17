@@ -67,7 +67,7 @@ public class CLI3Test {
     public void tearDown() {
 
     }
-    @Ignore
+    //@Ignore
 
     @Test
     public void testExtractDurationFromM3U() {
@@ -77,7 +77,7 @@ public class CLI3Test {
 
         assertEquals(extractedLength, sampleM3ULength);
     }
-    @Ignore
+    //@Ignore
 
     @Test
     public void testIfM3UFileIsCreated() {
@@ -99,14 +99,14 @@ public class CLI3Test {
             System.out.println("Deleting the test file failed. File path:" + completeFilePath.toString());
         }
     }
-    @Ignore
+    //@Ignore
 
     @Test
     public void checkIfOneArtist() {
         assertEquals(getNumberOfArtists(getSampleM3UTextWithOneArtist()), 1);
     }
 
-    @Ignore
+    //@Ignore
 
     @Test
     public void testm3UDurationByArtist() {
@@ -139,7 +139,7 @@ public class CLI3Test {
 //        Integer[] array = new Integer[];
 
     }
-    @Ignore
+    //@Ignore
 
     @Test
     public void testm3UDurationByMultipleArtists() {
